@@ -60,11 +60,10 @@ class BackEnd:
             #todo: define spatial resolution
             resolution.update({'spatial':[100,100]})
             resolution.update({'temporal':timedelta(1)})
+            #todo: define projection t_srs?
             #todo: define appropriate output data type?
             print("daterange is {}".format(daterange))
             jim[node.id]=coll.load_collection(t_srs=3857,temporal_extent=daterange,resolution=resolution,otype='GDT_Float32',rule='overwrite', nodata=0)
-            # result=coll.load_collection(t_srs=3857,temporal_extent=daterange,resolution=resolution,otype='GDT_Float32')
-            # result=coll.load_collection(temporal_extent=daterange,resolution=resolution,otype='GDT_Float32')
             return jim[node.id]
         elif node.graph['process_id'] == 'array_element':
             if 'index' in node.graph['parameters']:
@@ -112,8 +111,6 @@ class BackEnd:
                         jim[node.id]*=value
                     if node.graph['process_id'] == 'divide':
                         jim[node.id]/=value
-            #todo: try to avoid copy
-            # return Cube(result)
             return jim[node.id]
         elif node.graph['process_id'] == 'reduce':
             if verbose:
@@ -125,10 +122,7 @@ class BackEnd:
                 if jim[node.graph['parameters']['reducer']['from_node']] is None:
                     jim[node.id]=None
                     return[node.id]
-                    # raise AttributeError("Error: reducer not implemented")
                 else:
-                    # print("node is: {}".format(node.graph))
-                    # jim[node.graph['parameters']['data']['from_node']].dimension['band']=node.name
                     jim[node.id]=jim[node.graph['parameters']['reducer']['from_node']]
                     return jim[node.id]
             elif node.graph['parameters']['dimension'] == 'temporal':
@@ -152,7 +146,6 @@ class BackEnd:
                     else:
                         raise ValueError("Error: jim_reduced is False")
                 else:
-                    # jim[node['parameters']['data']['from_node']].dimension['temporal']=node.name
                     jim[node.id]=jim[node.graph['parameters']['data']['from_node']]
                     return jim[node.id]
         elif node.graph['process_id'] == 'aggregate_polygon':
@@ -195,8 +188,6 @@ class BackEnd:
 
     def process(self, graph):
         verbose=True
-        # print("ordering")
-        # self.order("dependency")
         jim={}
         if verbose:
             print("initialize")
@@ -210,44 +201,45 @@ class BackEnd:
             if verbose:
                 print("finished is: {}".format(finished))
             finished=True
-            # print(type(graph.nodes))
-            # print(graph.nodes)
             for node in graph.nodes.values():
-                # print(type(node))
-                # print(node)
                 print("processing node {}".format(node.id))
-                if jim[node.id] is None:
-                    self.processNode(graph, node.id, jim)
-                elif verbose:
-                    print("skipping node {} that was already calculated".format(node.id))
-                    continue
-                if jim[node.id] is None:
+                if jim[node.id] is not None:
                     if verbose:
-                        print("could not calculate result for node {}".format(node.id))
+                        print("skipping node {} that was already calculated".format(node.id))
                     continue
                 else:
+                    self.processNode(graph, node.id, jim)
+                if jim[node.id] is not None:
                     if verbose:
                         print("calculated result for {}".format(node.id))
                         print("type of jim returned: {}".format(type(jim[node.id])))
-                        if isinstance(jim[node.id],pj.Jim):
+                    if isinstance(jim[node.id],pj.Jim):
+                        if verbose:
                             print("number of planes returned: {}".format(jim[node.id].properties.nrOfPlane()))
                             print("number of bands returned: {}".format(jim[node.id].properties.nrOfBand()))
-                        elif isinstance(jim[node.id],pj.JimVect):
+                    elif isinstance(jim[node.id],pj.JimVect):
+                        if verbose:
                             print("number of features calculated: {}".format(jim[node.id].properties.getFeatureCount()))
-                        # if not isinstance(jim[node.id],Jim):
-                        #     raise TypeError("Error: jim is not a Jim")
+                    else:
+                        raise TypeError("Error: result should either be Jim or JimVect")
+                else:
+                    if verbose:
+                        print("could not calculate result for node {}".format(node.id))
+                    continue
 
-            #test
-            if verbose:
-                ntodo=0;
-                for node in graph.nodes.values():
-                    if jim[node.id] is None:
-                        if not ntodo:
+            ntodo=0;
+            for node in graph.nodes.values():
+                if jim[node.id] is None:
+                    if not ntodo:
+                        if verbose:
                             print("nodes to do:")
+                    if verbose:
                         print(node.id)
-                        ntodo+=1
-                if ntodo:
-                    finished=False
+                    ntodo+=1
+            if ntodo:
+                finished=False
+            elif verbose:
+                print("All nodes processed")
 
-        #todo: garbage collect jim and check for remaining None values in jim
+        #todo: garbage collect jim (delete all Jim instances for without references from_node
 
