@@ -142,6 +142,10 @@ for instance: evi_jeodpp.json
 Python3:
 
 ```python
+from openeo_pg_parser_python.translate_process_graph import translate_graph
+from openeo_pg_parser_python.validate_process_graph import validate_graph
+from jeodpp_backend import BackEnd
+
 jeodpp=BackEnd('jeodpp')
 graph = translate_graph("evi_jeodpp.json")
 jeodpp.process(graph)
