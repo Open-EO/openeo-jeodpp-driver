@@ -1,7 +1,7 @@
 from datetime import time, timedelta, datetime
 import sys
 import os
-sys.path.append('/scratch2/openeo/openeo-pg-parser-python/src/openeo_pg_parser_python')
+#sys.path.append('/scratch2/openeo/openeo-pg-parser-python/src/openeo_pg_parser_python')
 import graph
 from openEO import Collection
 import pyjeo as pj
