@@ -20,8 +20,9 @@ as json file
  
 Check available [examples](https://jeodpp.jrc.ec.europa.eu/apps/gitlab/jeodpp/openeo/tree/master/back_end/tests/process_graphs)
 
+for instance: evi_jeodpp.json
+
 ```json
-for instance: evi_jeodpp.json (in tests/process_graphs))
 {
   "dc": {
     "process_id": "load_collection",
