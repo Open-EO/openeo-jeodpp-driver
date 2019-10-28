@@ -13,7 +13,7 @@ to generate random node id names
 Create [process graph](https://open-eo.github.io/openeo-api/processgraphs/)
 as json file
 
-for instance: evi_jeodpp.json
+for instance: evi_jeodpp.json (in tests/process_graphs))
 
 Python3:
 ```
