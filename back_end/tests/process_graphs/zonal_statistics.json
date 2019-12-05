@@ -2,7 +2,7 @@
     "dc": {
         "process_id": "load_collection",
         "description": "Loading the data; The order of the specified bands is important for the following reduce operation.",
-        "parameters": {
+        "arguments": {
             "id": "S2MSI2A",
             "spatial_extent": {
                 "west": 16.1,
@@ -17,14 +17,14 @@
     "mintime": {
         "process_id": "reduce",
         "description": "Compute a min time composite by reducing the temporal dimension",
-        "parameters": {
+        "arguments": {
             "data": {"from_node": "dc"},
             "dimension": "temporal",
             "reducer": {
                 "callback": {
                     "min": {
                         "process_id": "median",
-                        "parameters": {
+                        "arguments": {
                             "data": {"from_argument": "data"}
                         },
                         "result": true
@@ -36,7 +36,7 @@
     "aggreg1": {
         "process_id": "aggregate_polygon",
         "description": "aggregate polygon using mean value",
-        "parameters": {
+        "arguments": {
             "data": {"from_node": "mintime"},
             "polygons": {
                 "type": "Polygon",
@@ -54,7 +54,7 @@
                 "callback": {
                     "mean1": {
                         "process_id": "median",
-                        "parameters": {
+                        "arguments": {
                             "data": {"from_argument": "data"}
                         },
                         "result": true
@@ -65,7 +65,7 @@
     },
     "save": {
         "process_id": "save_result",
-        "parameters": {
+        "arguments": {
             "data": {"from_node": "aggreg1"},
             "format": "JSON"
         },

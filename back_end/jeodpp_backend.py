@@ -1,9 +1,7 @@
 from datetime import time, timedelta, datetime
-import sys
 import os
-sys.path.append('/scratch2/openeo/openeo-pg-parser-python/src/openeo_pg_parser_python')
 import graph
-from openEO import Collection
+from jeolib import Collection
 import pyjeo as pj
 
 class BackEnd:
@@ -14,13 +12,13 @@ class BackEnd:
         verbose=True
         node=graph.nodes[nodeid]
         if node.graph['process_id'] == 'save_result':
-            if node.graph['parameters']['data']['from_node'] not in jim:
+            if node.graph['arguments']['data']['from_node'] not in jim:
                 print("cannot save result yet")
                 jim[node.id]=None
                 return jim[node.id]
-            if jim[node.graph['parameters']['data']['from_node']]:
+            if jim[node.graph['arguments']['data']['from_node']]:
                 print("saving result")
-                jim[node.id]=jim[node.graph['parameters']['data']['from_node']]
+                jim[node.id]=jim[node.graph['arguments']['data']['from_node']]
                 if isinstance(jim[node.id],pj.Jim):
                     pathname=os.path.join('/tmp',node.id+'.tif')
                     jim[node.id].io.write(pathname,co=['COMPRESS=LZW','TILED=YES'])
@@ -38,44 +36,68 @@ class BackEnd:
             if verbose:
                 print("load_collection")
             coll=Collection()
+            coll.filterOn('productType',node.graph['arguments']['id'])
+            properties={}
+            #test
+            # properties['cloudCoverPercentage']='<10'
+            # if 'properties' in node.graph['arguments']:
+            #     if 'eo:cloud_cover' in 
             #filter on bounding box (defined in lat/lon)
+            spatial_extent={}
+            spatial_extent['west']=node.graph['arguments']['spatial_extent']['west']
+            spatial_extent['east']=node.graph['arguments']['spatial_extent']['east']
+            spatial_extent['north']=node.graph['arguments']['spatial_extent']['north']
+            spatial_extent['south']=node.graph['arguments']['spatial_extent']['south']
+            if 'crs' in node.graph['arguments']['spatial_extent']:
+                spatial_extent['crs']=node.graph['arguments']['spatial_extent']['crs']
             if verbose:
-                print(type(node.graph['parameters']['spatial_extent']['west']))
-                print(node.graph['parameters']['spatial_extent']['west'])
-            coll.filter_bbox(west=node.graph['parameters']['spatial_extent']['west'],
-                             east=node.graph['parameters']['spatial_extent']['east'],
-                             north=node.graph['parameters']['spatial_extent']['north'],
-                             south=node.graph['parameters']['spatial_extent']['south'])
-            coll.filterOn('productType',node.graph['parameters']['id'])
+                print(spatial_extent)
+            # coll.filter_bbox(west=node.graph['arguments']['spatial_extent']['west'],
+            #                  east=node.graph['arguments']['spatial_extent']['east'],
+            #                  north=node.graph['arguments']['spatial_extent']['north'],
+            #                  south=node.graph['arguments']['spatial_extent']['south'])
             #filter on dates:
-            daterange = [datetime.strptime(d, '%Y-%m-%d') for d in node.graph['parameters']['temporal_extent']]
-            dateString=[single_date.strftime('%Y-%m-%dT%H:%M:%S') for single_date in daterange]
-            coll.filter_daterange(dateString)
+
+            print("temporal_extent: {}".format(node.graph['arguments']['temporal_extent']))
+            # daterange = [datetime.strptime(d, '%Y-%m-%dT%H:%M:%S') for d in node.graph['arguments']['temporal_extent']]
+            daterange = [datetime.strptime(d,"%Y-%m-%dT%H:%M:%S.%fZ") for d in node.graph['arguments']['temporal_extent']]
+            print("daterange: {}".format(daterange))
+            # self.filter_daterange(dateString)
+            # daterange = [datetime.strptime(d, '%Y-%m-%d') for d in node.graph['arguments']['temporal_extent']]
+            # dateString=[single_date.strftime('%Y-%m-%dT%H:%M:%S') for single_date in daterange]
+            # coll.filter_daterange(dateString)
             #make sure the following filters are called after filtering dates and bounding box)
             #filter spectral bands
-            print("filter bands: {}".format(node.graph['parameters']['bands']))
-            coll.filter_bands(node.graph['parameters']['bands'])
+            bands=None
+            if 'bands' in node.graph['arguments']:
+                bands=node.graph['arguments']['bands']
+                # print("filter bands: {}".format(node.graph['arguments']['bands']))
+                # coll.filter_bands(node.graph['arguments']['bands'])
             #define spatial and temporal resolution to load collection as data cube.
             resolution={}
             #todo: define spatial resolution
-            resolution.update({'spatial':[100,100]})
+            resolution.update({'spatial':[10,10]})
             resolution.update({'temporal':timedelta(1)})
             #todo: define projection t_srs?
             #todo: define appropriate output data type?
             print("daterange is {}".format(daterange))
-            jim[node.id]=coll.load_collection(t_srs=3857,temporal_extent=daterange,resolution=resolution,otype='GDT_Float32',rule='overwrite', nodata=0)
+            # jim[node.id]=coll.load_collection(spatial_extent,temporal_extent=daterange,bands=bands,resolution=resolution,t_srs=3857,otype='GDT_Float32',rule='overwrite', nodata=0)
+            #todo: support empty projection t_srs to keep original?
+            jim[node.id]=coll.load_collection(spatial_extent,temporal_extent=daterange,bands=bands, properties=properties,resolution=resolution,t_srs=32632,otype='GDT_Float32',rule='overwrite', nodata=0)
+            #test
+            print("return Jim {}".format(jim[node.id]))
             return jim[node.id]
         elif node.graph['process_id'] == 'array_element':
-            if 'index' in node.graph['parameters']:
+            if 'index' in node.graph['arguments']:
                 if verbose:
-                    print("array_element with index {}".format(node.graph['parameters']['index']))
-                if jim[node.graph['parameters']['data']['from_node']] is None:
+                    print("array_element with index {}".format(node.graph['arguments']['index']))
+                if jim[node.graph['arguments']['data']['from_node']] is None:
                     jim[node.id]=None
                     return jim[node.id]
                 else:
                     #todo: support other type of indexing
-                    # result=Cube(jim[node.graph['parameters']['data']['from_node']])
-                    jim[node.id]=pj.geometry.cropBand(jim[node.graph['parameters']['data']['from_node']],node.graph['parameters']['index'])
+                    # result=Cube(jim[node.graph['arguments']['data']['from_node']])
+                    jim[node.id]=pj.geometry.cropBand(jim[node.graph['arguments']['data']['from_node']],node.graph['arguments']['index'])
                     if jim[node.id].properties.nrOfBand() > 1:
                         raise AttributeError("Error: number of bands is {}".format(jim[node.id].properties.nrOfBand()))
                     return jim[node.id]
@@ -85,7 +107,7 @@ class BackEnd:
             if verbose:
                 print("arithmetic {}".format(node.graph['process_id']))
             jim[node.id]=None
-            for data in node.graph['parameters']['data']:
+            for data in node.graph['arguments']['data']:
                 print("data is: {}".format(data))
                 if isinstance(data,dict):
                     if verbose:
@@ -114,31 +136,32 @@ class BackEnd:
             return jim[node.id]
         elif node.graph['process_id'] == 'reduce':
             if verbose:
-                print("reducing {}".format(node.graph['parameters']['dimension']))
-            if node.graph['parameters']['dimension'] == 'spectral':
-                if jim[node.graph['parameters']['data']['from_node']] is None:
+                print("reducing {}".format(node.graph['arguments']['dimension']))
+            if 'spectral' in node.graph['arguments']['dimension']:
+            # if node.graph['arguments']['dimension'] == 'spectral' or node.graph['arguments']['dimension'] == 'spectral_bands':
+                if jim[node.graph['arguments']['data']['from_node']] is None:
                     jim[node.id]=None
                     return[node.id]
-                if jim[node.graph['parameters']['reducer']['from_node']] is None:
+                if jim[node.graph['arguments']['reducer']['from_node']] is None:
                     jim[node.id]=None
                     return[node.id]
                 else:
-                    jim[node.id]=jim[node.graph['parameters']['reducer']['from_node']]
+                    jim[node.id]=jim[node.graph['arguments']['reducer']['from_node']]
                     return jim[node.id]
-            elif node.graph['parameters']['dimension'] == 'temporal':
-                if jim[node.graph['parameters']['data']['from_node']] is None:
+            elif node.graph['arguments']['dimension'] == 'temporal':
+                if jim[node.graph['arguments']['data']['from_node']] is None:
                     jim[node.id]=None
                     return[node.id]
-                reducer_node=graph.nodes[node.graph['parameters']['reducer']['from_node']]
+                reducer_node=graph.nodes[node.graph['arguments']['reducer']['from_node']]
                 if verbose:
                     print("node is: {}".format(node.graph))
                     print("reducer node is: {}".format(reducer_node))
-                if jim[node.graph['parameters']['reducer']['from_node']] is None:
+                if jim[node.graph['arguments']['reducer']['from_node']] is None:
                     rule=reducer_node.graph['process_id']
                     if verbose:
                         print("reducer graph is: {}".format(reducer_node.graph))
                         print("rule: {}".format(rule))
-                    jim[reducer_node.id]=pj.Jim(jim[node.graph['parameters']['data']['from_node']])
+                    jim[reducer_node.id]=pj.Jim(jim[node.graph['arguments']['data']['from_node']])
                     jim[reducer_node.id].geometry.reducePlane(rule)
                     if jim[reducer_node.id] is not None:
                         jim[node.id]=jim[reducer_node.id]
@@ -146,32 +169,32 @@ class BackEnd:
                     else:
                         raise ValueError("Error: jim_reduced is False")
                 else:
-                    jim[node.id]=jim[node.graph['parameters']['data']['from_node']]
+                    jim[node.id]=jim[node.graph['arguments']['data']['from_node']]
                     return jim[node.id]
         elif node.graph['process_id'] == 'aggregate_polygon':
             if verbose:
                 print("aggregating polygon")
-            if jim[node.graph['parameters']['data']['from_node']] is None:
+            if jim[node.graph['arguments']['data']['from_node']] is None:
                 return None
-            reducer_node=graph.nodes[node.graph['parameters']['reducer']['from_node']]
+            reducer_node=graph.nodes[node.graph['arguments']['reducer']['from_node']]
             if verbose:
                 print("node is: {}".format(node.graph))
                 print("reducer node is: {}".format(reducer_node))
-            if jim[node.graph['parameters']['reducer']['from_node']] is None:
+            if jim[node.graph['arguments']['reducer']['from_node']] is None:
                 rule=reducer_node.graph['process_id']
                 if verbose:
                     print("reducer graph is: {}".format(reducer_node.graph))
                     print("rule: {}".format(rule))
 
-                for points in node.graph['parameters']['polygons']['coordinates']:
-                    wktstring=node.graph['parameters']['polygons']['type']
+                for points in node.graph['arguments']['polygons']['coordinates']:
+                    wktstring=node.graph['arguments']['polygons']['type']
                     wktstring+=' (('
                     wktstring+=",".join(" ".join(str(coordinate) for coordinate in point) for point in points)
                     wktstring+='))'
                     invect=pj.JimVect(wkt=wktstring,output=os.path.join('/vsimem/invect.sqlite'))
                 #todo: support multiple invect
                 outvect=os.path.join('/vsimem',node.id+'.sqlite')
-                jim[reducer_node.id]=jim[node.graph['parameters']['data']['from_node']].geometry.aggregate_vector(invect,rule,outvect,co=['OVERWRITE=TRUE'])
+                jim[reducer_node.id]=jim[node.graph['arguments']['data']['from_node']].geometry.aggregate_vector(invect,rule,outvect,co=['OVERWRITE=TRUE'])
 
                 if jim[reducer_node.id] is not None:
                     jim[node.id]=jim[reducer_node.id]
@@ -179,8 +202,8 @@ class BackEnd:
                 else:
                     raise ValueError("Error: could not aggregate polygon")
             else:
-                # jim[node['parameters']['data']['from_node']].dimension['temporal']=node.name
-                return jim[node.graph['parameters']['data']['from_node']]
+                # jim[node['arguments']['data']['from_node']].dimension['temporal']=node.name
+                return jim[node.graph['arguments']['data']['from_node']]
         elif node.graph['process_id'] in ['min', 'max', 'mean', 'median', 'stdev', 'centroid']:#callback function
             if verbose:
                 print("we are in callback function with {}".format(node.graph['process_id']))

@@ -98,6 +98,6 @@ if __name__ == '__main__':
     # test_translate_process_graph()
     # test_evi()
     jeodpp=BackEnd('jeodpp')
-    graph = translate_graph(os.path.join(PG_FOLDER, "evi_jeodpp.json"))
+    graph = translate_graph(os.path.join(PG_FOLDER, "min_evi_1_jeodpp.json"))
     print(graph)
     jeodpp.process(graph)
