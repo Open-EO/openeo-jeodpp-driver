@@ -1,5 +1,7 @@
 from datetime import time, timedelta, datetime
+from osgeo import gdal
 import os
+import json
 import graph
 from jeolib import Collection
 import pyjeo as pj
@@ -76,16 +78,20 @@ class BackEnd:
             #define spatial and temporal resolution to load collection as data cube.
             resolution={}
             #todo: define spatial resolution
-            resolution.update({'spatial':[10,10]})
+            #test
+            resolution.update({'spatial':[100,100]})
             resolution.update({'temporal':timedelta(1)})
             #todo: define projection t_srs?
             #todo: define appropriate output data type?
             print("daterange is {}".format(daterange))
             # jim[node.id]=coll.load_collection(spatial_extent,temporal_extent=daterange,bands=bands,resolution=resolution,t_srs=3857,otype='GDT_Float32',rule='overwrite', nodata=0)
             #todo: support empty projection t_srs to keep original?
-            jim[node.id]=coll.load_collection(spatial_extent,temporal_extent=daterange,bands=bands, properties=properties,resolution=resolution,t_srs=32632,otype='GDT_Float32',rule='overwrite', nodata=0)
             #test
-            print("return Jim {}".format(jim[node.id]))
+            jim[node.id]=coll.load_collection(spatial_extent,temporal_extent=daterange,bands=bands, properties=properties,resolution=resolution,t_srs=32633,otype='GDT_Float32',rule='overwrite', nodata=0)
+            # jim[node.id]=coll.load_collection(spatial_extent,temporal_extent=daterange,bands=bands, properties=properties,resolution=resolution,t_srs=None,otype='GDT_Float32',rule='overwrite', nodata=0)
+            #test
+            if verbose:
+                print("return Jim {}".format(jim[node.id]))
             return jim[node.id]
         elif node.graph['process_id'] == 'array_element':
             if 'index' in node.graph['arguments']:
@@ -185,13 +191,21 @@ class BackEnd:
                 if verbose:
                     print("reducer graph is: {}".format(reducer_node.graph))
                     print("rule: {}".format(rule))
-
-                for points in node.graph['arguments']['polygons']['coordinates']:
-                    wktstring=node.graph['arguments']['polygons']['type']
-                    wktstring+=' (('
-                    wktstring+=",".join(" ".join(str(coordinate) for coordinate in point) for point in points)
-                    wktstring+='))'
-                    invect=pj.JimVect(wkt=wktstring,output=os.path.join('/vsimem/invect.sqlite'))
+                if 'polygons' in node.graph['arguments']:
+                    geojson=node.graph['arguments']['polygons']
+                    print(json.dumps(geojson))
+                    print(geojson)
+                    invect=pj.JimVect(json.dumps(geojson),verbose=1)
+                    # ds=gdal.OpenEx(geojson)
+                    # lyr = ds.GetLayer()
+                else:
+                    raise ValueError("Error: only polygons supported in geojson format")
+                # for points in node.graph['arguments']['polygons']['coordinates']:
+                #     wktstring=node.graph['arguments']['polygons']['type']
+                #     wktstring+=' (('
+                #     wktstring+=",".join(" ".join(str(coordinate) for coordinate in point) for point in points)
+                #     wktstring+='))'
+                # invect=pj.JimVect(wkt=wktstring,output=os.path.join('/vsimem/invect.sqlite'))
                 #todo: support multiple invect
                 outvect=os.path.join('/vsimem',node.id+'.sqlite')
                 jim[reducer_node.id]=jim[node.graph['arguments']['data']['from_node']].geometry.aggregate_vector(invect,rule,outvect,co=['OVERWRITE=TRUE'])
