@@ -28,6 +28,7 @@ class BackEnd:
                     jim[node.id].io.write(pathname,co=['COMPRESS=LZW','TILED=YES'])
                 elif isinstance(jim[node.id],pj.JimVect):
                     pathname=os.path.join('/tmp',node.id+'.sqlite')
+                    print("saved result: {}".format(jim[node.id].np()))
                     jim[node.id].io.write(pathname)
                 else:
                     raise TypeError("Error: {} type not supported for writing".format(type(jim[node.id])))
@@ -200,8 +201,8 @@ class BackEnd:
                     print(json.dumps(geojson))
                     print(geojson)
                     invect=pj.JimVect(json.dumps(geojson),verbose=1)
-                    print(invect)
                     print(invect.np().shape)
+                    print(invect.np())
                     # ds=gdal.OpenEx(geojson)
                     # lyr = ds.GetLayer()
                 else:
@@ -214,12 +215,14 @@ class BackEnd:
                 # invect=pj.JimVect(wkt=wktstring,output=os.path.join('/vsimem/invect.sqlite'))
                 #todo: support multiple invect
                 outvect=os.path.join('/vsimem',node.id+'.sqlite')
-                jim[reducer_node.id]=pj.geometry.extract(invect, jim[node.content['arguments']['data']['from_node']] ,outvect, rule, co=['OVERWRITE=TRUE'])
+                jim[reducer_node.id]=pj.geometry.extract(invect, jim[node.content['arguments']['data']['from_node']],outvect, rule, co=['OVERWRITE=TRUE'])
 
                 if jim[reducer_node.id] is not None:
                     jim[node.id]=jim[reducer_node.id]
                     print("output vector has {} features".format(jim[node.id].properties.getFeatureCount()))
-                    print('extracted shape: {}'.format(jim[node.id].np().shape))
+                    print("output vector has fields: {}".format(jim[node.id].properties.getFieldNames()))
+                    print('extracted vector: {}'.format(jim[node.id].np()))
+                    jim[node.id].io.write()
                     return jim[node.id]
                 else:
                     raise ValueError("Error: could not aggregate polygon")
