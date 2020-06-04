@@ -10,12 +10,17 @@
         "south": 46.464349400461145,
         "crs": "EPSG:4326"
       },
+      "bands": [
+        "B2",
+        "B4",
+        "B8"
+      ],
       "temporal_extent": [
         "2018-06-04T00:00:00.000Z",
         "2018-06-23T00:00:00.000Z"
       ]
     },
-    "result": false
+    "result": true
   },
   "reduce1": {
     "process_id": "reduce",
@@ -32,7 +37,7 @@
               "data": {
                 "from_argument": "data"
               },
-              "index": 7
+              "index": 2
             },
             "result": false
           },
@@ -42,7 +47,7 @@
               "data": {
                 "from_argument": "data"
               },
-              "index": 3
+              "index": 1
             },
             "result": false
           },
@@ -78,7 +83,7 @@
               "data": {
                 "from_argument": "data"
               },
-              "index": 7
+              "index": 2
             },
             "result": false
           },
@@ -88,7 +93,7 @@
               "data": {
                 "from_argument": "data"
               },
-              "index": 3
+              "index": 1
             },
             "result": false
           },
@@ -98,7 +103,7 @@
               "data": {
                 "from_argument": "data"
               },
-              "index": 1
+              "index": 0
             },
             "result": false
           },

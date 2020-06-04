@@ -12,7 +12,7 @@
             },
             "temporal_extent": [
                 "2018-06-04T00:00:00.000Z",
-                "2018-06-23T00:00:00.000Z"
+                "2018-06-15T00:00:00.000Z"
             ],
             "bands": ["B8"]
         }
@@ -37,11 +37,11 @@
         }
     },
     "aggreg1": {
-        "process_id": "aggregate_polygon",
-        "description": "aggregate polygon using mean value",
+        "process_id": "aggregate_spatial",
+        "description": "aggregate spatial using mean value",
         "arguments": {
             "data": {"from_node": "mintime"},
-            "polygons": {
+            "geometries": {
                 "type": "Polygon",
                 "coordinates": [
                     [
