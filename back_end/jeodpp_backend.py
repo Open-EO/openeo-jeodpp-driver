@@ -10,7 +10,7 @@ class BackEnd:
     def __init__(self, name=None):
         self.name = name
 
-    def processNode(self, graph, nodeid, jim):
+    def processNode(self, graph, nodeid, jim, virtual=None):
         verbose=True
         print('graph.nodes: {}'.format(graph.nodes))
         #node=graph.nodes[nodeid]
@@ -30,6 +30,8 @@ class BackEnd:
                     pathname=os.path.join('/tmp',node.id+'.sqlite')
                     print("saved result: {}".format(jim[node.id].np()))
                     jim[node.id].io.write(pathname)
+                elif isinstance(jim[node.id],Collection):
+                    raise TypeError("Error: {} virtual cube not implemented yet".format(type(jim[node.id])))
                 else:
                     raise TypeError("Error: {} type not supported for writing".format(type(jim[node.id])))
                 return jim[node.id]
@@ -92,7 +94,10 @@ class BackEnd:
             #todo: support empty projection t_srs to keep original?
             #test
             #jim[node.id]=coll.load_collection(spatial_extent,temporal_extent=daterange,bands=bands, properties=properties,resolution=resolution,t_srs=32632,otype='GDT_Float32',rule='overwrite', nodata=0)
-            jim[node.id]=coll.load_collection(t_srs=None,resolution=resolution,bands=bands, otype='GDT_Float32',rule='overwrite', nodata=0)
+            if virtual is None:
+                jim[node.id]=coll.load_collection(t_srs=None,resolution=resolution,bands=bands, otype='GDT_Float32',rule='overwrite', nodata=0)
+            else:
+                jim[node.id]=coll
             # jim[node.id]=coll.load_collection(spatial_extent,temporal_extent=daterange,bands=bands, properties=properties,resolution=resolution,t_srs=None,otype='GDT_Float32',rule='overwrite', nodata=0)
             #test
             if verbose:
@@ -106,12 +111,17 @@ class BackEnd:
                     jim[node.id]=None
                     return jim[node.id]
                 else:
-                    #todo: support other type of indexing
-                    # result=Cube(jim[node.content['arguments']['data']['from_node']])
-                    jim[node.id]=pj.geometry.cropBand(jim[node.content['arguments']['data']['from_node']],node.content['arguments']['index'])
-                    if jim[node.id].properties.nrOfBand() > 1:
-                        raise AttributeError("Error: number of bands is {}".format(jim[node.id].properties.nrOfBand()))
-                    return jim[node.id]
+                    if isinstance(jim[node.content['arguments']['data']['from_node']],pj.Jim):
+                        #todo: support other type of indexing
+                        # result=Cube(jim[node.content['arguments']['data']['from_node']])
+                        jim[node.id]=pj.geometry.cropBand(jim[node.content['arguments']['data']['from_node']],node.content['arguments']['index'])
+                        if jim[node.id].properties.nrOfBand() > 1:
+                            raise AttributeError("Error: number of bands is {}".format(jim[node.id].properties.nrOfBand()))
+                        return jim[node.id]
+                    elif isinstance(jim[node.content['arguments']['data']['from_node']],pj.JimVect):
+                        raise TypeError("Error: {} array_element not implemented for JimVect".format(type(jim[node.id])))
+                    elif isinstance(jim[node.content['arguments']['data']['from_node']],Collection):
+                        raise TypeError("Error: {} array element not implemented for Collection".format(type(jim[node.id])))
             else:
                 raise AttributeError("Error: only index is supported for array_element")
         elif node.content['process_id'] in ['sum','subtract','product','divide']:
@@ -130,20 +140,27 @@ class BackEnd:
                         value=jim[data['from_node']]
                 else:
                     value=data
-                if jim[node.id] is None:
-                    jim[node.id]=value
-                else:
-                    if node.content['process_id'] == 'sum':
-                        jim[node.id]+=value
-                    if node.content['process_id'] == 'subtract':
-                        jim[node.id]-=value
-                    if node.content['process_id'] == 'product':
-                        #test
-                        print(jim[node.id])
-                        print(value)
-                        jim[node.id]*=value
-                    if node.content['process_id'] == 'divide':
-                        jim[node.id]/=value
+                #value should be of type pj.Jim
+
+                if isinstance(value,pj.Jim):
+                    if jim[node.id] is None:
+                        jim[node.id]=value
+                    else:
+                        if node.content['process_id'] == 'sum':
+                            jim[node.id]+=value
+                        if node.content['process_id'] == 'subtract':
+                            jim[node.id]-=value
+                        if node.content['process_id'] == 'product':
+                            #test
+                            print(jim[node.id])
+                            print(value)
+                            jim[node.id]*=value
+                        if node.content['process_id'] == 'divide':
+                            jim[node.id]/=value
+                elif isinstance(value,pj.JimVect):
+                    raise TypeError("Error: arithmetic not implemented for JimVect")
+                elif isinstance(value,Collection):
+                    raise TypeError("Error: arithmetic not implemented for Collection")
             return jim[node.id]
         elif node.content['process_id'] == 'reduce':
             if verbose:
@@ -172,13 +189,18 @@ class BackEnd:
                     if verbose:
                         print("reducer graph is: {}".format(reducer_node.content))
                         print("rule: {}".format(rule))
-                    jim[reducer_node.id]=pj.Jim(jim[node.content['arguments']['data']['from_node']])
-                    jim[reducer_node.id].geometry.reducePlane(rule)
-                    if jim[reducer_node.id] is not None:
-                        jim[node.id]=jim[reducer_node.id]
-                        return jim[node.id]
-                    else:
-                        raise ValueError("Error: jim_reduced is False")
+                    if isinstance(jim[node.content['arguments']['data']['from_node']],pj.Jim):
+                        jim[reducer_node.id]=pj.Jim(jim[node.content['arguments']['data']['from_node']])
+                        jim[reducer_node.id].geometry.reducePlane(rule)
+                        if jim[reducer_node.id] is not None:
+                            jim[node.id]=jim[reducer_node.id]
+                            return jim[node.id]
+                        else:
+                            raise ValueError("Error: jim_reduced is False")
+                    elif isinstance(jim[node.content['arguments']['data']['from_node']],pj.JimVect):
+                        raise TypeError("Error: reduce not implemented for JimVect")
+                    elif isinstance(jim[node.content['arguments']['data']['from_node']],Collection):
+                        raise TypeError("Error: reduce not implemented for Collection")
                 else:
                     jim[node.id]=jim[node.content['arguments']['data']['from_node']]
                     return jim[node.id]
@@ -215,7 +237,14 @@ class BackEnd:
                 # invect=pj.JimVect(wkt=wktstring,output=os.path.join('/vsimem/invect.sqlite'))
                 #todo: support multiple invect
                 outvect=os.path.join('/vsimem',node.id+'.sqlite')
-                jim[reducer_node.id]=pj.geometry.extract(invect, jim[node.content['arguments']['data']['from_node']],outvect, rule, co=['OVERWRITE=TRUE'])
+
+                if isinstance(jim[node.content['arguments']['data']['from_node']],pj.Jim):
+                    jim[reducer_node.id]=pj.geometry.extract(invect, jim[node.content['arguments']['data']['from_node']], outvect, rule, co=['OVERWRITE=TRUE'])
+                elif isinstance(jim[node.content['arguments']['data']['from_node']],Collection):
+                    #todo
+                    jim[reducer_node.id]=jim[node.content['arguments']['data']['from_node']].aggregate_spatial(invect, rule, outvect, buffer=0):
+                elif isinstance(jim[node.content['arguments']['data']['from_node']],pj.JimVect):
+                    raise TypeError("Error: aggretate_spatial not implemented for JimVect")
 
                 if jim[reducer_node.id] is not None:
                     jim[node.id]=jim[reducer_node.id]
@@ -234,7 +263,7 @@ class BackEnd:
                 print("we are in callback function with {}".format(node.content['process_id']))
             return None
 
-    def process(self, graph):
+    def process(self, graph, virtual=None):
         verbose=True
         jim={}
         if verbose:
@@ -259,7 +288,7 @@ class BackEnd:
                         print("skipping node {} that was already calculated".format(node.id))
                     continue
                 else:
-                    self.processNode(graph, node.id, jim)
+                    self.processNode(graph, node.id, jim, virtual)
                 if jim[node.id] is not None:
                     if verbose:
                         print("calculated result for {}".format(node.id))
@@ -271,6 +300,9 @@ class BackEnd:
                     elif isinstance(jim[node.id],pj.JimVect):
                         if verbose:
                             print("number of features calculated: {}".format(jim[node.id].properties.getFeatureCount()))
+                    elif isinstance(jim[node.id],Collection):
+                        if verbose:
+                            print("Node is collection not loaded in memory")
                     else:
                         raise TypeError("Error: result should either be Jim or JimVect")
                 else:
