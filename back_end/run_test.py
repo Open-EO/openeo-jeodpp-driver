@@ -11,10 +11,10 @@ from openeo_pg_parser_python import graph
 from jeodpp_backend import BackEnd
 
 jeodpp=BackEnd('jeodpp')
-graph = translate_process_graph("tests/process_graphs/zonal_statistics_timeseries.json")
 graph = translate_process_graph("tests/process_graphs/zonal_statistics_test.json")
 graph = translate_process_graph("tests/process_graphs/min_evi_jeodpp.json")
 graph = translate_process_graph("tests/process_graphs/zonal_statistics.json")
+graph = translate_process_graph("tests/process_graphs/zonal_statistics_timeseries.json")
 
 print(graph)
 jeodpp.process(graph)

@@ -18,11 +18,11 @@
         }
     },
     "aggreg1": {
-        "process_id": "aggregate_polygon",
-        "description": "aggregate polygon using mean value",
+        "process_id": "aggregate_spatial",
+        "description": "aggregate spatial using mean value",
         "arguments": {
             "data": {"from_node": "dc"},
-            "polygons": {
+            "geometries": {
                 "type": "FeatureCollection",
                 "crs": {
                     "type": "name",
