@@ -268,6 +268,7 @@ class BackEnd:
                     bandname=jim[node.content['arguments']['data']['from_node']].dimension['band']
                     jim[reducer_node.id]=pj.geometry.extract(invect, jim[node.content['arguments']['data']['from_node']], outvect, rule, bandname=bandname, planename=planename, co=['OVERWRITE=TRUE'])
                 elif isinstance(jim[node.content['arguments']['data']['from_node']],Collection):
+                    print("rule is: {}".format(rule))
                     jim[reducer_node.id]=jim[node.content['arguments']['data']['from_node']].aggregate_spatial(invect, rule, outvect)
                 elif isinstance(jim[node.content['arguments']['data']['from_node']],pj.JimVect):
                     raise TypeError("Error: aggretate_spatial not implemented for JimVect")
