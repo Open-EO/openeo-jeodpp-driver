@@ -31,20 +31,20 @@ class BackEnd:
                         print("Directory {} created".format(pathname))
                     else:
                         print("Directory {} already exists".format(pathname))
-                    #to save as multi-temporal GeoTIFF, 1 file per band
-                    # for iband, band in enumerate(bands):
-                    # for iband, band in enumerate(jim[node.id].dimension['band']):
-                    #     jimband=pj.geometry.cropBand(jim[node.id],iband)
-                    #     jimband.geometry.plane2band()
-                    #     jimband.io.write(os.path.join(pathname,band+'.tif'),co=['COMPRESS=LZW','TILED=YES'])
                     #to save as multi-spectral GeoTIFF, 1 file per acquisition time
                     print("jim has {} planes".format(jim[node.id].properties.nrOfPlane()))
-                    for iplane, theDate in enumerate(jim[node.id].dimension['temporal']):
-                        print("cropPlane {}".format(iplane))
-                        jimplane=pj.geometry.cropPlane(jim[node.id],iplane)
-                        jimplane.properties.setNoDataVals(0)
-                        jimplane.io.write(os.path.join(pathname,theDate.strftime('%Y%m%d')+'.tif'),co=['COMPRESS=LZW','TILED=YES'])
-                    # jim[node.id].io.write(pathname,co=['COMPRESS=LZW','TILED=YES'])
+                    if jim[node.id].properties.nrOfPlane() > 1:
+                        if jim[node.id].properties.nrOfBand() > 1:
+                            for iplane, theDate in enumerate(jim[node.id].dimension['temporal']):
+                                print("cropPlane {}".format(iplane))
+                                jimplane=pj.geometry.cropPlane(jim[node.id],iplane)
+                                jimplane.properties.setNoDataVals(0)
+                                jimplane.io.write(os.path.join(pathname,theDate.strftime('%Y%m%d')+'.tif'),co=['COMPRESS=LZW','TILED=YES'])
+                            return jim[node.id]
+                        else:
+                            jim[node.id].geometry.plane2band()
+                    jim[node.id].io.write(pathname,co=['COMPRESS=LZW','TILED=YES'])
+                    return jim[node.id]
                 elif isinstance(jim[node.id],pj.JimVect):
                     pathname=os.path.join('/tmp',node.id+'.sqlite')
                     print("saved result: {}".format(jim[node.id].np()))
@@ -53,7 +53,6 @@ class BackEnd:
                     raise TypeError("Error: {} virtual cube not implemented yet".format(type(jim[node.id])))
                 else:
                     raise TypeError("Error: {} type not supported for writing".format(type(jim[node.id])))
-                return jim[node.id]
             else:
                 print("cannot save result yet")
                 jim[node.id]=None
@@ -258,7 +257,9 @@ class BackEnd:
                 outvect=os.path.join('/vsimem',node.id+'.sqlite')
 
                 if isinstance(jim[node.content['arguments']['data']['from_node']],pj.Jim):
-                    jim[reducer_node.id]=pj.geometry.extract(invect, jim[node.content['arguments']['data']['from_node']], outvect, rule, co=['OVERWRITE=TRUE'])
+                    planename=jim[node.content['arguments']['data']['from_node']].dimension['temporal']
+                    bandname=jim[node.content['arguments']['data']['from_node']].dimension['bands']
+                    jim[reducer_node.id]=pj.geometry.extract(invect, jim[node.content['arguments']['data']['from_node']], outvect, rule, bandname=bandame, planename=planename, co=['OVERWRITE=TRUE'])
                 elif isinstance(jim[node.content['arguments']['data']['from_node']],Collection):
                     jim[reducer_node.id]=jim[node.content['arguments']['data']['from_node']].aggregate_spatial(invect, rule, outvect)
                 elif isinstance(jim[node.content['arguments']['data']['from_node']],pj.JimVect):
