@@ -26,7 +26,7 @@ class BackEnd:
                 if isinstance(jim[node.id],pj.Jim):
                     pathname=os.path.join('/tmp',node.id+'.tif')
                     # Create target Directory if don't exist
-                    if not os.path.exists(pathnamne):
+                    if not os.path.exists(pathname):
                         os.mkdir(pathname)
                         print("Directory {} created".format(pathname))
                     else:
