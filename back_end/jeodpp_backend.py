@@ -10,7 +10,7 @@ class BackEnd:
     def __init__(self, name=None):
         self.name = name
 
-    def processNode(self, graph, nodeid, jim, virtual=None):
+    def processNode(self, graph, nodeid, jim, virtual=False):
         verbose=True
         print('graph.nodes: {}'.format(graph.nodes))
         #node=graph.nodes[nodeid]
@@ -25,7 +25,26 @@ class BackEnd:
                 jim[node.id]=jim[node.content['arguments']['data']['from_node']]
                 if isinstance(jim[node.id],pj.Jim):
                     pathname=os.path.join('/tmp',node.id+'.tif')
-                    jim[node.id].io.write(pathname,co=['COMPRESS=LZW','TILED=YES'])
+                    # Create target Directory if don't exist
+                    if not os.path.exists(pathnamne):
+                        os.mkdir(pathname)
+                        print("Directory {} created".format(pathname))
+                    else:
+                        print("Directory {} already exists".format(pathname))
+                    #to save as multi-temporal GeoTIFF, 1 file per band
+                    # for iband, band in enumerate(bands):
+                    # for iband, band in enumerate(jim[node.id].dimension['band']):
+                    #     jimband=pj.geometry.cropBand(jim[node.id],iband)
+                    #     jimband.geometry.plane2band()
+                    #     jimband.io.write(os.path.join(args.output,band+'.tif'),co=['COMPRESS=LZW','TILED=YES'])
+                    #to save as multi-spectral GeoTIFF, 1 file per acquisition time
+                    print("jim has {} planes".format(jim[node.id].properties.nrOfPlane()))
+                    for iplane, theDate in enumerate(jim[node.id].dimension['temporal']):
+                        print("cropPlane {}".format(iplane))
+                        jimplane=pj.geometry.cropPlane(jim[node.id],iplane)
+                        jimplane.properties.setNoDataVals(0)
+                        jimplane.io.write(os.path.join(args.pathname,theDate.strftime('%Y%m%d')+'.tif'),co=['COMPRESS=LZW','TILED=YES'])
+                    # jim[node.id].io.write(pathname,co=['COMPRESS=LZW','TILED=YES'])
                 elif isinstance(jim[node.id],pj.JimVect):
                     pathname=os.path.join('/tmp',node.id+'.sqlite')
                     print("saved result: {}".format(jim[node.id].np()))
@@ -48,7 +67,7 @@ class BackEnd:
             #test
             # properties['cloudCoverPercentage']='<10'
             # if 'properties' in node.content['arguments']:
-            #     if 'eo:cloud_cover' in 
+            #     if 'eo:cloud_cover' in
             #filter on bounding box (defined in lat/lon)
             spatial_extent={}
             spatial_extent['west']=node.content['arguments']['spatial_extent']['west']
@@ -94,10 +113,10 @@ class BackEnd:
             #todo: support empty projection t_srs to keep original?
             #test
             #jim[node.id]=coll.load_collection(spatial_extent,temporal_extent=daterange,bands=bands, properties=properties,resolution=resolution,t_srs=32632,otype='GDT_Float32',rule='overwrite', nodata=0)
-            if virtual is None:
-                jim[node.id]=coll.load_collection(t_srs=None,resolution=resolution,bands=bands, otype='GDT_Float32',rule='overwrite', nodata=0)
-            else:
+            if virtual:
                 jim[node.id]=coll
+            else:
+                jim[node.id]=coll.load_collection(t_srs=None,resolution=resolution,bands=bands, otype='GDT_Float32',rule='overwrite', nodata=0)
             # jim[node.id]=coll.load_collection(spatial_extent,temporal_extent=daterange,bands=bands, properties=properties,resolution=resolution,t_srs=None,otype='GDT_Float32',rule='overwrite', nodata=0)
             #test
             if verbose:
@@ -241,8 +260,7 @@ class BackEnd:
                 if isinstance(jim[node.content['arguments']['data']['from_node']],pj.Jim):
                     jim[reducer_node.id]=pj.geometry.extract(invect, jim[node.content['arguments']['data']['from_node']], outvect, rule, co=['OVERWRITE=TRUE'])
                 elif isinstance(jim[node.content['arguments']['data']['from_node']],Collection):
-                    #todo
-                    jim[reducer_node.id]=jim[node.content['arguments']['data']['from_node']].aggregate_spatial(invect, rule, outvect, buffer=0):
+                    jim[reducer_node.id]=jim[node.content['arguments']['data']['from_node']].aggregate_spatial(invect, rule, outvect)
                 elif isinstance(jim[node.content['arguments']['data']['from_node']],pj.JimVect):
                     raise TypeError("Error: aggretate_spatial not implemented for JimVect")
 
@@ -263,7 +281,7 @@ class BackEnd:
                 print("we are in callback function with {}".format(node.content['process_id']))
             return None
 
-    def process(self, graph, virtual=None):
+    def process(self, graph, virtual=False):
         verbose=True
         jim={}
         if verbose:
