@@ -36,14 +36,14 @@ class BackEnd:
                     # for iband, band in enumerate(jim[node.id].dimension['band']):
                     #     jimband=pj.geometry.cropBand(jim[node.id],iband)
                     #     jimband.geometry.plane2band()
-                    #     jimband.io.write(os.path.join(args.output,band+'.tif'),co=['COMPRESS=LZW','TILED=YES'])
+                    #     jimband.io.write(os.path.join(pathname,band+'.tif'),co=['COMPRESS=LZW','TILED=YES'])
                     #to save as multi-spectral GeoTIFF, 1 file per acquisition time
                     print("jim has {} planes".format(jim[node.id].properties.nrOfPlane()))
                     for iplane, theDate in enumerate(jim[node.id].dimension['temporal']):
                         print("cropPlane {}".format(iplane))
                         jimplane=pj.geometry.cropPlane(jim[node.id],iplane)
                         jimplane.properties.setNoDataVals(0)
-                        jimplane.io.write(os.path.join(args.pathname,theDate.strftime('%Y%m%d')+'.tif'),co=['COMPRESS=LZW','TILED=YES'])
+                        jimplane.io.write(os.path.join(pathname,theDate.strftime('%Y%m%d')+'.tif'),co=['COMPRESS=LZW','TILED=YES'])
                     # jim[node.id].io.write(pathname,co=['COMPRESS=LZW','TILED=YES'])
                 elif isinstance(jim[node.id],pj.JimVect):
                     pathname=os.path.join('/tmp',node.id+'.sqlite')
