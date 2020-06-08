@@ -257,7 +257,7 @@ class BackEnd:
                 outvect=os.path.join('/vsimem',node.id+'.sqlite')
 
                 if isinstance(jim[node.content['arguments']['data']['from_node']],pj.Jim):
-                    planename=jim[node.content['arguments']['data']['from_node']].dimension['temporal']
+                    planename=jim[node.content['arguments']['data']['from_node']].dimension['temporal'].strftime('%Y%m%d')
                     bandname=jim[node.content['arguments']['data']['from_node']].dimension['band']
                     jim[reducer_node.id]=pj.geometry.extract(invect, jim[node.content['arguments']['data']['from_node']], outvect, rule, bandname=bandname, planename=planename, co=['OVERWRITE=TRUE'])
                 elif isinstance(jim[node.content['arguments']['data']['from_node']],Collection):
