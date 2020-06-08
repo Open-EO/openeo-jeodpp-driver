@@ -259,7 +259,7 @@ class BackEnd:
                 if isinstance(jim[node.content['arguments']['data']['from_node']],pj.Jim):
                     planename=jim[node.content['arguments']['data']['from_node']].dimension['temporal']
                     bandname=jim[node.content['arguments']['data']['from_node']].dimension['band']
-                    jim[reducer_node.id]=pj.geometry.extract(invect, jim[node.content['arguments']['data']['from_node']], outvect, rule, bandname=bandame, planename=planename, co=['OVERWRITE=TRUE'])
+                    jim[reducer_node.id]=pj.geometry.extract(invect, jim[node.content['arguments']['data']['from_node']], outvect, rule, bandname=bandname, planename=planename, co=['OVERWRITE=TRUE'])
                 elif isinstance(jim[node.content['arguments']['data']['from_node']],Collection):
                     jim[reducer_node.id]=jim[node.content['arguments']['data']['from_node']].aggregate_spatial(invect, rule, outvect)
                 elif isinstance(jim[node.content['arguments']['data']['from_node']],pj.JimVect):
