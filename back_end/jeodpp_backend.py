@@ -49,6 +49,7 @@ class BackEnd:
                     pathname=os.path.join('/tmp',node.id+'.sqlite')
                     print("saved result: {}".format(jim[node.id].np()))
                     jim[node.id].io.write(pathname)
+                    pj.JimVect(jim[node.id],output=pathname).io.write()
                 elif isinstance(jim[node.id],Collection):
                     raise TypeError("Error: {} virtual cube not implemented yet".format(type(jim[node.id])))
                 else:
