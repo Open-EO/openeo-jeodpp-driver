@@ -23,8 +23,8 @@ class BackEnd:
             if jim[node.content['arguments']['data']['from_node']]:
                 print("saving result")
                 jim[node.id]=jim[node.content['arguments']['data']['from_node']]
+                pathname=os.path.join('/tmp',node.id)
                 if isinstance(jim[node.id],pj.Jim):
-                    pathname=os.path.join('/tmp',node.id+'.tif')
                     # Create target Directory if don't exist
                     if not os.path.exists(pathname):
                         os.mkdir(pathname)
@@ -43,12 +43,11 @@ class BackEnd:
                             return jim[node.id]
                         else:
                             jim[node.id].geometry.plane2band()
-                    jim[node.id].io.write(pathname,co=['COMPRESS=LZW','TILED=YES'])
+                    jim[node.id].io.write(pathname+'.tif',co=['COMPRESS=LZW','TILED=YES'])
                     return jim[node.id]
                 elif isinstance(jim[node.id],pj.JimVect):
-                    pathname=os.path.join('/tmp',node.id+'.sqlite')
                     print("saved result: {}".format(jim[node.id].np()))
-                    jim[node.id].io.write(pathname)
+                    jim[node.id].io.write(pathname+'.sqlite')
                 elif isinstance(jim[node.id],Collection):
                     raise TypeError("Error: {} virtual cube not implemented yet".format(type(jim[node.id])))
                 else:
@@ -257,7 +256,8 @@ class BackEnd:
                 outvect=os.path.join('/vsimem',node.id+'.sqlite')
 
                 if isinstance(jim[node.content['arguments']['data']['from_node']],pj.Jim):
-                    planename=jim[node.content['arguments']['data']['from_node']].dimension['temporal'].strftime('%Y%m%d')
+                    times=jim[node.content['arguments']['data']['from_node']].dimension['temporal']
+                    planename=[t.strftime('%Y%m%d') for t in times]
                     bandname=jim[node.content['arguments']['data']['from_node']].dimension['band']
                     jim[reducer_node.id]=pj.geometry.extract(invect, jim[node.content['arguments']['data']['from_node']], outvect, rule, bandname=bandname, planename=planename, co=['OVERWRITE=TRUE'])
                 elif isinstance(jim[node.content['arguments']['data']['from_node']],Collection):
