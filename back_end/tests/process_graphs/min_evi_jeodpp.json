@@ -30,12 +30,12 @@
       },
       "dimension": "spectral_bands",
       "reducer": {
-        "callback": {
+        "process_graph": {
           "arrayelement1": {
             "process_id": "array_element",
             "arguments": {
               "data": {
-                "from_argument": "data"
+                "from_parameter": "data"
               },
               "index": 2
             },
@@ -45,7 +45,7 @@
             "process_id": "array_element",
             "arguments": {
               "data": {
-                "from_argument": "data"
+                "from_parameter": "data"
               },
               "index": 1
             },
@@ -81,7 +81,7 @@
             "process_id": "array_element",
             "arguments": {
               "data": {
-                "from_argument": "data"
+                "from_parameter": "data"
               },
               "index": 2
             },
@@ -91,7 +91,7 @@
             "process_id": "array_element",
             "arguments": {
               "data": {
-                "from_argument": "data"
+                "from_parameter": "data"
               },
               "index": 1
             },
@@ -101,7 +101,7 @@
             "process_id": "array_element",
             "arguments": {
               "data": {
-                "from_argument": "data"
+                "from_parameter": "data"
               },
               "index": 0
             },
@@ -198,11 +198,11 @@
       },
       "dimension": "temporal",
       "reducer": {
-        "callback": {
+        "process_graph": {
           "r1": {
             "arguments": {
               "data": {
-                "from_argument": "data"
+                "from_parameter": "data"
               }
             },
             "process_id": "min",
