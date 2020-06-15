@@ -184,6 +184,7 @@ class BackEnd:
             return jim[node.id]
         elif node.content['process_id'] == 'reduce_dimension':
             if verbose:
+                print(node)
                 print("reducing {}".format(node.content['arguments']['dimension']))
             if 'spectral' in node.content['arguments']['dimension']:
             # if node.content['arguments']['dimension'] == 'spectral' or node.content['arguments']['dimension'] == 'spectral_bands':

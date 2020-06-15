@@ -18,5 +18,5 @@ graph = translate_process_graph("tests/process_graphs/zonal_statistics_timeserie
 graph = translate_process_graph("tests/process_graphs/evi_eodc.json")
 
 print(graph)
-jeodpp.process(graph)
+jeodpp.process(graph.sort())
 #jeodpp.process(graph,virtual=True)
