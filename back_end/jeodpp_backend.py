@@ -179,7 +179,7 @@ class BackEnd:
                 elif isinstance(value,Collection):
                     raise TypeError("Error: arithmetic not implemented for Collection")
             return jim[node.id]
-        elif node.content['process_id'] == 'reduce':
+        elif node.content['process_id'] == 'reduce_dimension':
             if verbose:
                 print("reducing {}".format(node.content['arguments']['dimension']))
             if 'spectral' in node.content['arguments']['dimension']:
@@ -193,7 +193,9 @@ class BackEnd:
                 else:
                     jim[node.id]=jim[node.content['arguments']['reducer']['from_node']]
                     return jim[node.id]
-            elif node.content['arguments']['dimension'] == 'temporal':
+        elif node.content['process_id'] == 'aggregate_temporal':
+            #todo: not tested yet in openeo API v1.0
+            if node.content['arguments']['dimension'] == 'temporal':
                 if jim[node.content['arguments']['data']['from_node']] is None:
                     jim[node.id]=None
                     return[node.id]
@@ -221,6 +223,8 @@ class BackEnd:
                 else:
                     jim[node.id]=jim[node.content['arguments']['data']['from_node']]
                     return jim[node.id]
+            else:
+                raise TypeError("Error: reduce not implemented for dimension different than temporal")
         elif node.content['process_id'] == 'aggregate_spatial':
             if verbose:
                 print("aggregating spatial")
