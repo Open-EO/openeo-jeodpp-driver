@@ -192,7 +192,7 @@ class BackEnd:
                 if jim[node.content['arguments']['data']['from_node']] is None:
                     jim[node.id]=None
                     return[node.id]
-                reducer=node.content['arguments']['reducer']['process_graph']
+                reducer=graph[node.content['arguments']['reducer']['from_node']]
                 print(type(reducer))
                 if jim[node.content['arguments']['reducer']] is None:
                     jim[node.id]=None
@@ -206,7 +206,7 @@ class BackEnd:
                 if jim[node.content['arguments']['data']['from_node']] is None:
                     jim[node.id]=None
                     return[node.id]
-                reducer_node=graph[node.content['arguments']['reducer']]
+                reducer_node=graph[node.content['arguments']['reducer']['from_node']]
                 if verbose:
                     print("node is: {}".format(node.content))
                     print("reducer node is: {}".format(reducer_node))
