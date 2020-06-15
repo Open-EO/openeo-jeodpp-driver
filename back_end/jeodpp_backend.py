@@ -87,7 +87,7 @@ class BackEnd:
             try:
                 daterange = [datetime.strptime(d,"%Y-%m-%dT%H:%M:%S.%fZ") for d in node.content['arguments']['temporal_extent']]
             except ValueError:
-                daterange = [datetime.strptime(d+"T00:00:00.000Z","%Y-%m-%d") for d in node.content['arguments']['temporal_extent']]
+                daterange = [datetime.strptime(d+"T00:00:00.000Z","%Y-%m-%dT%H:%M:%S.%fZ") for d in node.content['arguments']['temporal_extent']]
             print("daterange: {}".format(daterange))
             # self.filter_daterange(dateString)
             #daterange = [datetime.strptime(d, '%Y-%m-%d') for d in node.content['arguments']['temporal_extent']]
@@ -127,11 +127,11 @@ class BackEnd:
             if 'index' in node.content['arguments']:
                 if verbose:
                     print("array_element with index {}".format(node.content['arguments']['index']))
-                if jim[node.content['arguments']['data']['from_node']] is None:
+                if jim[node.content['arguments']['data']['from_parameter']] is None:
                     jim[node.id]=None
                     return jim[node.id]
                 else:
-                    if isinstance(jim[node.content['arguments']['data']['from_node']],pj.Jim):
+                    if isinstance(jim[node.content['arguments']['data']['from_parameter']],pj.Jim):
                         #todo: support other type of indexing
                         # result=Cube(jim[node.content['arguments']['data']['from_node']])
                         jim[node.id]=pj.geometry.cropBand(jim[node.content['arguments']['data']['from_node']],node.content['arguments']['index'])
