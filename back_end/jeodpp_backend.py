@@ -191,11 +191,11 @@ class BackEnd:
                 if jim[node.content['arguments']['data']['from_node']] is None:
                     jim[node.id]=None
                     return[node.id]
-                if jim[node.content['arguments']['reducer']['from_node']] is None:
+                if jim[node.content['arguments']['reducer']] is None:
                     jim[node.id]=None
                     return[node.id]
                 else:
-                    jim[node.id]=jim[node.content['arguments']['reducer']['from_node']]
+                    jim[node.id]=jim[node.content['arguments']['reducer']]
                     return jim[node.id]
         elif node.content['process_id'] == 'aggregate_temporal':
             #todo: not tested yet in openeo API v1.0
@@ -203,11 +203,11 @@ class BackEnd:
                 if jim[node.content['arguments']['data']['from_node']] is None:
                     jim[node.id]=None
                     return[node.id]
-                reducer_node=graph[node.content['arguments']['reducer']['from_node']]
+                reducer_node=graph[node.content['arguments']['reducer']]
                 if verbose:
                     print("node is: {}".format(node.content))
                     print("reducer node is: {}".format(reducer_node))
-                if jim[node.content['arguments']['reducer']['from_node']] is None:
+                if jim[node.content['arguments']['reducer']] is None:
                     rule=reducer_node.content['process_id']
                     if verbose:
                         print("reducer graph is: {}".format(reducer_node.content))
