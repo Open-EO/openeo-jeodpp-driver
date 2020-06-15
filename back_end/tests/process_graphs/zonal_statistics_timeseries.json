@@ -105,7 +105,7 @@
             "reducer": {
                 "callback": {
                     "mean1": {
-                        "process_id": "median",
+                        "process_id": "centroid",
                         "arguments": {
                             "data": {"from_argument": "data"}
                         },
