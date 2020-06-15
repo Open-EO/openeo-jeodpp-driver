@@ -186,6 +186,7 @@ class BackEnd:
             if verbose:
                 print(node)
                 print("reducing {}".format(node.content['arguments']['dimension']))
+                print("reducer: {}".format(node.content['arguments']['reducer']['process_graph']))
             if 'spectral' in node.content['arguments']['dimension']:
             # if node.content['arguments']['dimension'] == 'spectral' or node.content['arguments']['dimension'] == 'spectral_bands':
                 if jim[node.content['arguments']['data']['from_node']] is None:
