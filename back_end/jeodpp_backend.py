@@ -191,6 +191,8 @@ class BackEnd:
                 if jim[node.content['arguments']['data']['from_node']] is None:
                     jim[node.id]=None
                     return[node.id]
+                reducer=node.content['arguments']['reducer']
+                print(type(reducer))
                 if jim[node.content['arguments']['reducer']] is None:
                     jim[node.id]=None
                     return[node.id]
