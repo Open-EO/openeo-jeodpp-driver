@@ -13,26 +13,26 @@ class BackEnd:
     def __init__(self, name=None):
         self.name = name
 
-    def processJim(self, jim, agraph):
+    def processCube(self, cube, agraph):
         for node in agraph.nodes:
             if verbose:
                 # print("processing node {}".format(node.id))
                 print("node: {}".format(node))
-            if jim is None:
-                print("Error: jim is None")
+            if cube is None:
+                print("Error: cube is None")
                 return None
             if node['process_id'] == 'array_element':
                 if 'index' in node['arguments']:
                     if verbose:
-                        print("jim is not None in processJim")
+                        print("cube is not None in processCube")
                         print(node['arguments']['data'])
-                    print(type(jim))
-                    if isinstance(jim,pj.Jim):
+                    print(type(cube))
+                    if isinstance(cube,pj.Jim):
                         print("crop band {}".format(node['arguments']['index']))
-                        return pj.geometry.cropBand(jim,node['arguments']['index'])
-                    elif isinstance(jim,pj.JimVect):
+                        return pj.geometry.cropBand(cube,node['arguments']['index'])
+                    elif isinstance(cube,pj.JimVect):
                         raise TypeError("Error: {} array_element not implemented for JimVect")
-                    elif isinstance(jim,Collection):
+                    elif isinstance(cube,Collection):
                         raise TypeError("Error: {} array element not implemented for Collection")
                 else:
                     raise AttributeError("Error: only index is supported for array_element")
@@ -235,7 +235,7 @@ class BackEnd:
                         return[node.id]
                     else:
                         reducer=graph.Graph(node.content['arguments']['reducer']['process_graph'])
-                        jim[node.id]=self.processJim(jim, reducer)
+                        jim[node.id]=self.processCube(datacube, reducer)
                         return jim[node.id]
                 else:
                     raise Value("Error: only spectral reduction supported for now")
