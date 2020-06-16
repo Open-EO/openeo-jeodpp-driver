@@ -16,24 +16,23 @@ class BackEnd:
     def processJim(self, jim, agraph):
         for node in agraph.nodes:
             if verbose:
-                print("processing node {}".format(node.id))
+                # print("processing node {}".format(node.id))
                 print("node: {}".format(node))
             if jim is None:
                 return None
-            print("node.content: {}".format(node.content))
-            if node.content['process_id'] == 'array_element':
-                if 'index' in node.content['arguments']:
+            if node['process_id'] == 'array_element':
+                if 'index' in node['arguments']:
                     if verbose:
-                        print(node.content['arguments']['data'])
+                        print(node['arguments']['data'])
                     #if isinstance(jim[node.content['arguments']['data']['from_parameter']],pj.Jim):
                     if isinstance(datacube,pj.Jim):
                         #todo: support other type of indexing
                         # result=Cube(jim[node.content['arguments']['data']['from_node']])
-                        return pj.geometry.cropBand(jim,node.content['arguments']['index'])
-                    elif isinstance(jim[node.content['arguments']['data']['from_node']],pj.JimVect):
-                        raise TypeError("Error: {} array_element not implemented for JimVect".format(type(jim[node.id])))
-                    elif isinstance(jim[node.content['arguments']['data']['from_node']],Collection):
-                        raise TypeError("Error: {} array element not implemented for Collection".format(type(jim[node.id])))
+                        return pj.geometry.cropBand(jim,node['arguments']['index'])
+                    elif isinstance(jim[node['arguments']['data']['from_node']],pj.JimVect):
+                        raise TypeError("Error: {} array_element not implemented for JimVect")
+                    elif isinstance(jim[node['arguments']['data']['from_node']],Collection):
+                        raise TypeError("Error: {} array element not implemented for Collection")
                 else:
                     raise AttributeError("Error: only index is supported for array_element")
             else:
