@@ -7,6 +7,8 @@ from openeo_pg_parser_python import graph
 from jeolib import Collection
 import pyjeo as pj
 
+verbose=True
+
 class BackEnd:
     def __init__(self, name=None):
         self.name = name
@@ -38,7 +40,6 @@ class BackEnd:
                 raise ValueError("Error: only array_element implemented")
 
     def processNode(self, agraph, nodeid, jim, virtual=False):
-        verbose=True
         print('agraph.nodes: {}'.format(agraph.nodes))
         #node=graph.nodes[nodeid]
         node=agraph[nodeid]
@@ -333,7 +334,6 @@ class BackEnd:
             return None
 
     def process(self, agraph, virtual=False):
-        verbose=True
         jim={}
         if verbose:
             print("initialize")
