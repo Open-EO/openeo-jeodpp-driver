@@ -1,0 +1,64 @@
+{
+    "dc": {
+      "process_id": "load_collection",
+      "description": "Loading the data; The order of the specified bands is important for the following reduce operation.",
+      "arguments": {
+        "id": "S2MSI2A",
+        "spatial_extent": {
+          "west": 11.279182434082033,
+          "east": 11.406898498535158,
+          "north": 46.522729291844286,
+          "south": 46.464349400461145
+        },
+        "temporal_extent": ["2018-06-04", "2018-06-23"],
+        "bands": ["B4", "B8"]
+      }
+    },
+    "evi": {
+      "process_id": "reduce_dimension",
+      "description": "Compute the EVI. Formula: 2.5 * (NIR - RED) / (1 + NIR + 6*RED + -7.5*BLUE)",
+      "arguments": {
+        "data": {"from_node": "dc"},
+        "dimension": "spectral",
+        "reducer": {
+          "process_graph": {
+            "nir": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {"from_parameter": "data"},
+                "index": 0
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "mintime": {
+      "process_id": "reduce_dimension",
+      "description": "Compute a minimum time composite by reducing the temporal dimension",
+      "arguments": {
+        "data": {"from_node": "evi"},
+        "dimension": "temporal",
+        "reducer": {
+          "process_graph": {
+            "min": {
+              "process_id": "min",
+              "arguments": {
+                "data": {"from_parameter": "data"}
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "save": {
+      "process_id": "save_result",
+      "arguments": {
+        "data": {"from_node": "mintime"},
+        "format": "Gtiff"
+      },
+      "result": true
+    }
+}

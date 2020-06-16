@@ -127,14 +127,26 @@ class BackEnd:
             if 'index' in node.content['arguments']:
                 if verbose:
                     print("array_element with index {}".format(node.content['arguments']['index']))
-                if jim[node.content['arguments']['data']['from_parameter']] is None:
+                    print("node.content: {}".format(node.content))
+                    print("node: {}".format(node))
+                    print("node.ancestors: {}".format(node.ancestors()))
+                    print("node.dependencies: {}".format(node.dependencies))
+                    print("node.descendants: {}".format(node.descendants()))
+                    print(node.content['arguments']['data'])
+                    print('parent : {}'.format(node.id.split('_',1)[0]))
+                for childnode in node.descendants():
+                    print("childnode: {}".format(childnode.id))
+                    datacube=jim[childnode.id]
+                #datacube=jim[node.content['arguments']['data']['from_node']]
+                if datacube is None:
                     jim[node.id]=None
                     return jim[node.id]
                 else:
-                    if isinstance(jim[node.content['arguments']['data']['from_parameter']],pj.Jim):
+                    #if isinstance(jim[node.content['arguments']['data']['from_parameter']],pj.Jim):
+                    if isinstance(datacube,pj.Jim):
                         #todo: support other type of indexing
                         # result=Cube(jim[node.content['arguments']['data']['from_node']])
-                        jim[node.id]=pj.geometry.cropBand(jim[node.content['arguments']['data']['from_node']],node.content['arguments']['index'])
+                        jim[node.id]=pj.geometry.cropBand(datacube,node.content['arguments']['index'])
                         if jim[node.id].properties.nrOfBand() > 1:
                             raise AttributeError("Error: number of bands is {}".format(jim[node.id].properties.nrOfBand()))
                         return jim[node.id]
@@ -188,18 +200,17 @@ class BackEnd:
                 print("reducing {}".format(node.content['arguments']['dimension']))
                 print("reducer: {}".format(node.content['arguments']['reducer']['process_graph']))
             if 'spectral' in node.content['arguments']['dimension']:
-            # if node.content['arguments']['dimension'] == 'spectral' or node.content['arguments']['dimension'] == 'spectral_bands':
-                if jim[node.content['arguments']['data']['from_node']] is None:
-                    jim[node.id]=None
-                    return[node.id]
-                reducer=graph[node.content['arguments']['reducer']['from_node']]
-                print(type(reducer))
-                if jim[node.content['arguments']['reducer']] is None:
-                    jim[node.id]=None
-                    return[node.id]
+                if node.content['arguments']['dimension'] == 'spectral' or node.content['arguments']['dimension'] == 'spectral_bands':
+                    if jim[node.content['arguments']['data']['from_node']] is None:
+                        jim[node.id]=None
+                        return[node.id]
+                    else:
+                        reducer=node.content['arguments']['reducer']['process_graph']
+                        datacube=jim[node.content['arguments']['data']['from_node']]
+                        self.processNode(graph, node.id, jim, virtual)
+                        return jim[node.id]
                 else:
-                    jim[node.id]=jim[node.content['arguments']['reducer']]
-                    return jim[node.id]
+                    raise Value("Error: only spectral reduction supported for now")
         elif node.content['process_id'] == 'aggregate_temporal':
             #todo: not tested yet in openeo API v1.0
             if node.content['arguments']['dimension'] == 'temporal':
