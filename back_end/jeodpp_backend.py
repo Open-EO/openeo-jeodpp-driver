@@ -18,26 +18,33 @@ class BackEnd:
             if verbose:
                 # print("processing node {}".format(node.id))
                 print("node: {}".format(node))
+                print(node['arguments']['data'])
+                print("type of cube: {}".format(type(cube)))
+            if isinstance(cube,pj.Jim):
+                print("crop band {}".format(node['arguments']['index']))
+            elif isinstance(cube,pj.JimVect):
+                raise TypeError("Error: {} array_element not implemented for JimVect")
+            elif isinstance(cube,Collection):
+                raise TypeError("Error: {} array element not implemented for Collection")
             if cube is None:
                 print("Error: cube is None")
                 return None
             if node['process_id'] == 'array_element':
                 if 'index' in node['arguments']:
-                    if verbose:
-                        print("cube is not None in processCube")
-                        print(node['arguments']['data'])
-                    print(type(cube))
-                    if isinstance(cube,pj.Jim):
-                        print("crop band {}".format(node['arguments']['index']))
-                        return pj.geometry.cropBand(cube,node['arguments']['index'])
-                    elif isinstance(cube,pj.JimVect):
-                        raise TypeError("Error: {} array_element not implemented for JimVect")
-                    elif isinstance(cube,Collection):
-                        raise TypeError("Error: {} array element not implemented for Collection")
+                    return pj.geometry.cropBand(cube,node['arguments']['index'])
                 else:
                     raise AttributeError("Error: only index is supported for array_element")
+            elif node['process_id'] in ['all', 'any', 'count', 'first', 'last', 'max', 'mean', 'median', 'min', 'product', 'sd', 'sum', 'variance']:
+                if node['process_id'] in ['max', 'mean', 'median', 'min']:
+                    return pj.geometry.reducePlane(cube,rule=rule)
+                elif node['process_id'] == 'first':
+                    return pj.geometry.cropPlane(cube,0)
+                elif node['process_id'] == 'last':
+                    return pj.geometry.cropPlane(cube,-1)
+                else:
+                    raise ValueError("Error: reduction rule not implemented yet")
             else:
-                raise ValueError("Error: only array_element implemented")
+                raise ValueError("Error: reduction rule not supported")
 
     def processNode(self, agraph, nodeid, jim, virtual=False):
         print('agraph.nodes: {}'.format(agraph.nodes))
@@ -227,18 +234,13 @@ class BackEnd:
                 print(node)
                 print("reducing {}".format(node.content['arguments']['dimension']))
                 print("reducer: {}".format(node.content['arguments']['reducer']['process_graph']))
-            if 'spectral' in node.content['arguments']['dimension']:
-                if node.content['arguments']['dimension'] == 'spectral' or node.content['arguments']['dimension'] == 'spectral_bands':
-                    datacube=jim[node.content['arguments']['data']['from_node']]
-                    if datacube is None:
-                        jim[node.id]=None
-                        return[node.id]
-                    else:
-                        reducer=graph.Graph(node.content['arguments']['reducer']['process_graph'])
-                        jim[node.id]=self.processCube(datacube, reducer)
-                        return jim[node.id]
-                else:
-                    raise Value("Error: only spectral reduction supported for now")
+            reducer=graph.Graph(node.content['arguments']['reducer']['process_graph'])
+            datacube=jim[node.content['arguments']['data']['from_node']]
+            if datacube is None:
+                jim[node.id]=None
+                return[node.id]
+            jim[node.id]=self.processCube(datacube, reducer)
+                return jim[node.id]
         elif node.content['process_id'] == 'aggregate_temporal':
             #todo: not tested yet in openeo API v1.0
             if node.content['arguments']['dimension'] == 'temporal':
