@@ -25,13 +25,13 @@ class BackEnd:
                     if verbose:
                         print(node['arguments']['data'])
                     #if isinstance(jim[node.content['arguments']['data']['from_parameter']],pj.Jim):
-                    if isinstance(datacube,pj.Jim):
+                    if isinstance(jim,pj.Jim):
                         #todo: support other type of indexing
                         # result=Cube(jim[node.content['arguments']['data']['from_node']])
                         return pj.geometry.cropBand(jim,node['arguments']['index'])
-                    elif isinstance(jim[node['arguments']['data']['from_node']],pj.JimVect):
+                    elif isinstance(jim,pj.JimVect):
                         raise TypeError("Error: {} array_element not implemented for JimVect")
-                    elif isinstance(jim[node['arguments']['data']['from_node']],Collection):
+                    elif isinstance(jim,Collection):
                         raise TypeError("Error: {} array element not implemented for Collection")
                 else:
                     raise AttributeError("Error: only index is supported for array_element")
