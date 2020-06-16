@@ -240,7 +240,7 @@ class BackEnd:
                 jim[node.id]=None
                 return[node.id]
             jim[node.id]=self.processCube(datacube, reducer)
-                return jim[node.id]
+            return jim[node.id]
         elif node.content['process_id'] == 'aggregate_temporal':
             #todo: not tested yet in openeo API v1.0
             if node.content['arguments']['dimension'] == 'temporal':
