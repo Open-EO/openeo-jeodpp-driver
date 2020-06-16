@@ -2,6 +2,7 @@ from datetime import time, timedelta, datetime
 from osgeo import gdal
 import os
 import json
+from openeo_pg_parser_python import graph
 #import graph
 from jeolib import Collection
 import pyjeo as pj
@@ -10,8 +11,8 @@ class BackEnd:
     def __init__(self, name=None):
         self.name = name
 
-    def processJim(self, jim, graph):
-        for node in graph.nodes:
+    def processJim(self, jim, agraph):
+        for node in agraph.nodes:
             if verbose:
                 print("processing node {}".format(node.id))
                 print("node: {}".format(node))
@@ -36,11 +37,11 @@ class BackEnd:
             else:
                 raise ValueError("Error: only array_element implemented")
 
-    def processNode(self, graph, nodeid, jim, virtual=False):
+    def processNode(self, agraph, nodeid, jim, virtual=False):
         verbose=True
-        print('graph.nodes: {}'.format(graph.nodes))
+        print('agraph.nodes: {}'.format(agraph.nodes))
         #node=graph.nodes[nodeid]
-        node=graph[nodeid]
+        node=agraph[nodeid]
         if node.content['process_id'] == 'save_result':
             if node.content['arguments']['data']['from_node'] not in jim:
                 print("cannot save result yet")
@@ -232,8 +233,8 @@ class BackEnd:
                         jim[node.id]=None
                         return[node.id]
                     else:
-                        reducer=node.content['arguments']['reducer']['process_graph']
-                        jim[node.id]=processJim(jim, reducer)
+                        reducer=graph.Graph(node.content['arguments']['reducer']['process_graph'])
+                        jim[node.id]=self.processJim(jim, reducer)
                         return jim[node.id]
                 else:
                     raise Value("Error: only spectral reduction supported for now")
@@ -243,7 +244,7 @@ class BackEnd:
                 if jim[node.content['arguments']['data']['from_node']] is None:
                     jim[node.id]=None
                     return[node.id]
-                reducer_node=graph[node.content['arguments']['reducer']['from_node']]
+                reducer_node=agraph[node.content['arguments']['reducer']['from_node']]
                 if verbose:
                     print("node is: {}".format(node.content))
                     print("reducer node is: {}".format(reducer_node))
@@ -274,7 +275,7 @@ class BackEnd:
                 print("aggregating spatial")
             if jim[node.content['arguments']['data']['from_node']] is None:
                 return None
-            reducer_node=graph[node.content['arguments']['reducer']['from_node']]
+            reducer_node=agraph[node.content['arguments']['reducer']['from_node']]
             if verbose:
                 print("node is: {}".format(node.content))
                 print("reducer node is: {}".format(reducer_node))
@@ -331,15 +332,15 @@ class BackEnd:
                 print("we are in callback function with {}".format(node.content['process_id']))
             return None
 
-    def process(self, graph, virtual=False):
+    def process(self, agraph, virtual=False):
         verbose=True
         jim={}
         if verbose:
             print("initialize")
 
-        print("graph.nodes: {}".format(graph.nodes))
-        #for node in graph.nodes.values():
-        for node in graph.nodes:
+        print("agraph.nodes: {}".format(agraph.nodes))
+        #for node in agraph.nodes.values():
+        for node in agraph.nodes:
             jim[node.id]=None
         finished=False
         if verbose:
@@ -348,15 +349,15 @@ class BackEnd:
             if verbose:
                 print("finished is: {}".format(finished))
             finished=True
-            #for node in graph.nodes.values():
-            for node in graph.nodes:
+            #for node in agraph.nodes.values():
+            for node in agraph.nodes:
                 print("processing node {}".format(node.id))
                 if jim[node.id] is not None:
                     if verbose:
                         print("skipping node {} that was already calculated".format(node.id))
                     continue
                 else:
-                    self.processNode(graph, node.id, jim, virtual)
+                    self.processNode(agraph, node.id, jim, virtual)
                 if jim[node.id] is not None:
                     if verbose:
                         print("calculated result for {}".format(node.id))
@@ -379,8 +380,8 @@ class BackEnd:
                     continue
 
             ntodo=0;
-            #for node in graph.nodes.values():
-            for node in graph.nodes:
+            #for node in agraph.nodes.values():
+            for node in agraph.nodes:
                 if jim[node.id] is None:
                     if not ntodo:
                         if verbose:
