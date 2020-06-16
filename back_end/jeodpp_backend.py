@@ -10,6 +10,32 @@ class BackEnd:
     def __init__(self, name=None):
         self.name = name
 
+    def ProcessJim(self, jim, graph):
+        for node in graph.nodes:
+            if verbose:
+                print("processing node {}".format(node.id))
+                print("node: {}".format(node))
+            if jim is None:
+                return None
+            print("node.content: {}".format(node.content))
+            if node.content['process_id'] == 'array_element':
+                if 'index' in node.content['arguments']:
+                    if verbose:
+                        print(node.content['arguments']['data'])
+                    #if isinstance(jim[node.content['arguments']['data']['from_parameter']],pj.Jim):
+                    if isinstance(datacube,pj.Jim):
+                        #todo: support other type of indexing
+                        # result=Cube(jim[node.content['arguments']['data']['from_node']])
+                        return pj.geometry.cropBand(jim,node.content['arguments']['index'])
+                    elif isinstance(jim[node.content['arguments']['data']['from_node']],pj.JimVect):
+                        raise TypeError("Error: {} array_element not implemented for JimVect".format(type(jim[node.id])))
+                    elif isinstance(jim[node.content['arguments']['data']['from_node']],Collection):
+                        raise TypeError("Error: {} array element not implemented for Collection".format(type(jim[node.id])))
+                else:
+                    raise AttributeError("Error: only index is supported for array_element")
+            else:
+                raise ValueError("Error: only array_element implemented")
+
     def processNode(self, graph, nodeid, jim, virtual=False):
         verbose=True
         print('graph.nodes: {}'.format(graph.nodes))
@@ -201,13 +227,13 @@ class BackEnd:
                 print("reducer: {}".format(node.content['arguments']['reducer']['process_graph']))
             if 'spectral' in node.content['arguments']['dimension']:
                 if node.content['arguments']['dimension'] == 'spectral' or node.content['arguments']['dimension'] == 'spectral_bands':
-                    if jim[node.content['arguments']['data']['from_node']] is None:
+                    datacube=jim[node.content['arguments']['data']['from_node']]
+                    if datacube is None:
                         jim[node.id]=None
                         return[node.id]
                     else:
                         reducer=node.content['arguments']['reducer']['process_graph']
-                        datacube=jim[node.content['arguments']['data']['from_node']]
-                        self.processNode(graph, node.id, jim, virtual)
+                        jim[node.id]=processJim(jim, reducer)
                         return jim[node.id]
                 else:
                     raise Value("Error: only spectral reduction supported for now")
