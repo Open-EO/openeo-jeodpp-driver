@@ -19,9 +19,8 @@ class BackEnd:
                 # print("processing node {}".format(node.id))
                 print("node: {}".format(node))
                 print(node['arguments']['data'])
-                print("type of cube: {}".format(type(cube)))
             if isinstance(cube,pj.Jim):
-                print("crop band {}".format(node['arguments']['index']))
+                print("type of cube is: {}".format(type(cube)))
             elif isinstance(cube,pj.JimVect):
                 raise TypeError("Error: {} array_element not implemented for JimVect")
             elif isinstance(cube,Collection):
@@ -31,6 +30,7 @@ class BackEnd:
                 return None
             if node['process_id'] == 'array_element':
                 if 'index' in node['arguments']:
+                    print("crop band {}".format(node['arguments']['index']))
                     return pj.geometry.cropBand(cube,node['arguments']['index'])
                 else:
                     raise AttributeError("Error: only index is supported for array_element")
