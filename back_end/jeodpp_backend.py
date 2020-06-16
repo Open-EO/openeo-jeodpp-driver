@@ -10,7 +10,7 @@ class BackEnd:
     def __init__(self, name=None):
         self.name = name
 
-    def ProcessJim(self, jim, graph):
+    def processJim(self, jim, graph):
         for node in graph.nodes:
             if verbose:
                 print("processing node {}".format(node.id))
