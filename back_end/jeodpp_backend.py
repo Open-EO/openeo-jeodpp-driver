@@ -19,15 +19,16 @@ class BackEnd:
                 # print("processing node {}".format(node.id))
                 print("node: {}".format(node))
             if jim is None:
+                print("Error: jim is None")
                 return None
             if node['process_id'] == 'array_element':
                 if 'index' in node['arguments']:
                     if verbose:
+                        print("jim is not None in processJim")
                         print(node['arguments']['data'])
-                    #if isinstance(jim[node.content['arguments']['data']['from_parameter']],pj.Jim):
+                    print(type(jim))
                     if isinstance(jim,pj.Jim):
-                        #todo: support other type of indexing
-                        # result=Cube(jim[node.content['arguments']['data']['from_node']])
+                        print("crop band {}".format(node['arguments']['index']))
                         return pj.geometry.cropBand(jim,node['arguments']['index'])
                     elif isinstance(jim,pj.JimVect):
                         raise TypeError("Error: {} array_element not implemented for JimVect")
