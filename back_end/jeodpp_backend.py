@@ -36,15 +36,15 @@ class BackEnd:
                     raise AttributeError("Error: only index is supported for array_element")
             elif node['process_id'] in ['all', 'any', 'count', 'first', 'last', 'max', 'mean', 'median', 'min', 'product', 'sd', 'sum', 'variance']:
                 if node['process_id'] in ['max', 'mean', 'median', 'min']:
-                    return pj.geometry.reducePlane(cube,rule=rule)
+                    return pj.geometry.reducePlane(cube,rule=node['process_id'])
                 elif node['process_id'] == 'first':
                     return pj.geometry.cropPlane(cube,0)
                 elif node['process_id'] == 'last':
                     return pj.geometry.cropPlane(cube,-1)
                 else:
-                    raise ValueError("Error: reduction rule not implemented yet")
+                    raise ValueError("Error: reduction rule {} not implemented yet".format(node['process_id']))
             else:
-                raise ValueError("Error: reduction rule not supported")
+                raise ValueError("Error: reduction {} not supported".format(node['process_id']))
 
     def processNode(self, agraph, nodeid, jim, virtual=False):
         print('agraph.nodes: {}'.format(agraph.nodes))
