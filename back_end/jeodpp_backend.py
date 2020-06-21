@@ -13,68 +13,68 @@ class BackEnd:
     def __init__(self, name=None):
         self.name = name
 
-    def processCube(self, cube, agraph):
-        for node in agraph.nodes:
-            if not isinstance(node,graph.Node):
-                print("convert node of type {}".format(type(node)))
-                node = graph.Node(node)
-                print("to {}".format(type(node)))
-            if verbose:
-                # print("processing node {}".format(node.id))
-                print("node: {}".format(node))
-                print(node.content['arguments']['data'])
-            if isinstance(cube,pj.Jim):
-                print("type of cube is: {}".format(type(cube)))
-            elif isinstance(cube,pj.JimVect):
-                raise TypeError("Error: {} array_element not implemented for JimVect")
-            elif isinstance(cube,Collection):
-                raise TypeError("Error: {} array element not implemented for Collection")
-            if cube is None:
-                print("Error: cube is None")
-                return None
-            if node.content['process_id'] == 'array_element':
-                if 'index' in node.content['arguments']:
-                    print("crop band {}".format(node.content['arguments']['index']))
-                    return pj.geometry.cropBand(cube,node.content['arguments']['index'])
-                else:
-                    raise AttributeError("Error: only index is supported for array_element")
-            elif node.content['process_id'] in ['all', 'any', 'count', 'first', 'last', 'max', 'mean', 'median', 'min', 'product', 'sd', 'sum', 'variance']:
-                if node.content['process_id'] in ['max', 'mean', 'median', 'min']:
-                    return pj.geometry.reducePlane(cube,rule=node.content['process_id'])
-                elif node.content['process_id'] == 'first':
-                    return pj.geometry.cropPlane(cube,0)
-                elif node.content['process_id'] == 'last':
-                    return pj.geometry.cropPlane(cube,-1)
-                else:
-                    raise ValueError("Error: reduction rule {} not implemented yet".format(node.content['process_id']))
-            elif node.content['process_id'] in ['sum', 'subtract', 'product', 'divide']:
-                for data in node.content['arguments']['data']:
-                value=jim[data['from_node']]
-                else:
-                    value=data
-                #value should be of type pj.Jim
+    # def processCube(self, cube, agraph):
+    #     for node in agraph.nodes:
+    #         if not isinstance(node,graph.Node):
+    #             print("convert node of type {}".format(type(node)))
+    #             node = graph.Node(node)
+    #             print("to {}".format(type(node)))
+    #         if verbose:
+    #             # print("processing node {}".format(node.id))
+    #             print("node: {}".format(node))
+    #             print(node.content['arguments']['data'])
+    #         if isinstance(cube,pj.Jim):
+    #             print("type of cube is: {}".format(type(cube)))
+    #         elif isinstance(cube,pj.JimVect):
+    #             raise TypeError("Error: {} array_element not implemented for JimVect")
+    #         elif isinstance(cube,Collection):
+    #             raise TypeError("Error: {} array element not implemented for Collection")
+    #         if cube is None:
+    #             print("Error: cube is None")
+    #             return None
+    #         if node.content['process_id'] == 'array_element':
+    #             if 'index' in node.content['arguments']:
+    #                 print("crop band {}".format(node.content['arguments']['index']))
+    #                 return pj.geometry.cropBand(cube,node.content['arguments']['index'])
+    #             else:
+    #                 raise AttributeError("Error: only index is supported for array_element")
+    #         elif node.content['process_id'] in ['all', 'any', 'count', 'first', 'last', 'max', 'mean', 'median', 'min', 'product', 'sd', 'sum', 'variance']:
+    #             if node.content['process_id'] in ['max', 'mean', 'median', 'min']:
+    #                 return pj.geometry.reducePlane(cube,rule=node.content['process_id'])
+    #             elif node.content['process_id'] == 'first':
+    #                 return pj.geometry.cropPlane(cube,0)
+    #             elif node.content['process_id'] == 'last':
+    #                 return pj.geometry.cropPlane(cube,-1)
+    #             else:
+    #                 raise ValueError("Error: reduction rule {} not implemented yet".format(node.content['process_id']))
+    #         elif node.content['process_id'] in ['sum', 'subtract', 'product', 'divide']:
+    #             for data in node.content['arguments']['data']:
+    #             value=jim[data['from_node']]
+    #             else:
+    #                 value=data
+    #             #value should be of type pj.Jim
 
-                if isinstance(value,pj.Jim):
-                    if jim[node.id] is None:
-                        jim[node.id]=value
-                    else:
-                        if node.content['process_id'] == 'sum':
-                            jim[node.id]+=value
-                        if node.content['process_id'] == 'subtract':
-                            jim[node.id]-=value
-                        if node.content['process_id'] == 'product':
-                            #test
-                            print(jim[node.id])
-                            print(value)
-                            jim[node.id]*=value
-                        if node.content['process_id'] == 'divide':
-                            jim[node.id]/=value
-                elif isinstance(value,pj.JimVect):
-                    raise TypeError("Error: arithmetic not implemented for JimVect")
-                elif isinstance(value,Collection):
-                    raise TypeError("Error: arithmetic not implemented for Collection")
-            else:
-                raise ValueError("Error: reduction {} not supported".format(node['process_id']))
+    #             if isinstance(value,pj.Jim):
+    #                 if jim[node.id] is None:
+    #                     jim[node.id]=value
+    #                 else:
+    #                     if node.content['process_id'] == 'sum':
+    #                         jim[node.id]+=value
+    #                     if node.content['process_id'] == 'subtract':
+    #                         jim[node.id]-=value
+    #                     if node.content['process_id'] == 'product':
+    #                         #test
+    #                         print(jim[node.id])
+    #                         print(value)
+    #                         jim[node.id]*=value
+    #                     if node.content['process_id'] == 'divide':
+    #                         jim[node.id]/=value
+    #             elif isinstance(value,pj.JimVect):
+    #                 raise TypeError("Error: arithmetic not implemented for JimVect")
+    #             elif isinstance(value,Collection):
+    #                 raise TypeError("Error: arithmetic not implemented for Collection")
+    #         else:
+    #             raise ValueError("Error: reduction {} not supported".format(node['process_id']))
 
     def processNode(self, agraph, nodeid, jim, virtual=False):
         print('agraph.nodes: {}'.format(agraph.nodes))
@@ -210,12 +210,6 @@ class BackEnd:
             else:
                 raise AttributeError("Error: only index is supported for array_element")
 
-        if node.content['process_id'] in ['max', 'mean', 'median', 'min']:
-            return pj.geometry.reducePlane(cube,rule=node.content['process_id'])
-        elif node.content['process_id'] == 'first':
-            return pj.geometry.cropPlane(cube,0)
-        elif node.content['process_id'] == 'last':
-            return pj.geometry.cropPlane(cube,-1)
         elif node.content['process_id'] in ['sum','subtract','product','divide']:
             if verbose:
                 print("arithmetic {}".format(node.content['process_id']))
@@ -259,12 +253,69 @@ class BackEnd:
                 print(node)
                 print("reducing {}".format(node.content['arguments']['dimension']))
                 print("reducer: {}".format(node.content['arguments']['reducer']['process_graph']))
-            reducer=graph.Graph(node.content['arguments']['reducer']['process_graph'])
-            datacube=jim[node.content['arguments']['data']['from_node']]
-            if datacube is None:
+            if jim[node.content['arguments']['data']['from_node']] is None:
                 jim[node.id]=None
                 return[node.id]
-            jim[node.id]=self.processCube(datacube, reducer)
+            #hiero
+            #todo: implement max,... here and remove the max process from above
+            reducer_node=agraph[node.content['arguments']['reducer']['from_node']]
+            if verbose:
+                print("node is: {}".format(node.content))
+                print("reducer node is: {}".format(reducer_node))
+            if jim[reducer_node.id] is None:
+                if node.content['arguments']['dimension'] in ['temporal', 'time', 't']:
+                    cube=jim[reducer_node.contents['arguments']['data']['from_node']]
+                    if cube is None:
+                        jim[node.id]=None
+                        return[node.id]
+                    if reducer_node.content['process_id'] in ['max', 'mean', 'median', 'min']:
+                        jim[reducer_node.id] = pj.geometry.reducePlane(cube,rule=node.content['process_id'])
+                    elif reducer_node.content['process_id'] == 'first':
+                        jim[reducer_node.id]=pj.geometry.cropPlane(cube,0)
+                    elif reducer_node.content['process_id'] == 'last':
+                        jim[reducer_node.id]=pj.geometry.cropPlane(cube,-1)
+                    else:
+                        raise ValueError("Error: temporal reduction rule not implemented")
+                elif node.content['arguments']['dimension'] in ['spectral', 'bands', 'b']:
+                    if reducer_node.content['process_id'] in ['ndvi', 'normalized_difference']:
+                        nir = jim[['arguments']['x']['from_node']]
+                        if nir is None:
+                            jim[node.id]=None
+                            return[node.id]
+                        red = jim[['arguments']['y']['from_node']]
+                        if nir is None:
+                            jim[node.id]=None
+                            return[node.id]
+                        jim[reducer_node.id] = pj.pixops.convert(nir,'GDT_Float32')
+                        nirnp=nir.np().astype(np.float)
+                        rednp=red.np().astype(np.float)
+                        ndvi=(nirnp-rednp)/(nirnp+rednp)
+                        ndvi[np.isnan(ndvi)]=0
+                        jim[reducer_node.id].np()=ndvi
+                    elif reducer_node.content['process_id'] == 'first':
+                        cube=jim[reducer_node.contents['arguments']['data']['from_node']]
+                        if cube is None:
+                            jim[node.id]=None
+                            return[node.id]
+                        elif isinstance(cube,pj.JimVect):
+                            raise TypeError("Error: reduce not implemented for JimVect")
+                        elif isinstance(cube,Collection):
+                            raise TypeError("Error: reduce not implemented for Collection")
+                        jim[reducer_node.id]=pj.geometry.cropBand(cube,0)
+                    elif reducer_node.content['process_id'] == 'last':
+                        cube=jim[reducer_node.contents['arguments']['data']['from_node']]
+                        if cube is None:
+                            jim[reducer_node.id]=None
+                        elif isinstance(cube,pj.JimVect):
+                            raise TypeError("Error: reduce not implemented for JimVect")
+                        elif isinstance(cube,Collection):
+                            raise TypeError("Error: reduce not implemented for Collection")
+                        if cube is None:
+                            jim[reducer_node.id]=None
+                        jim[reducer_node.id]=pj.geometry.cropBand(cube,-1)
+                    else:
+                        raise ValueError("Error: band reduction rule not implemented")
+            jim[node.id]=jim[reducer_node.id]
             return jim[node.id]
         elif node.content['process_id'] == 'aggregate_temporal':
             #todo: not tested yet in openeo API v1.0
@@ -276,10 +327,10 @@ class BackEnd:
                 if verbose:
                     print("node is: {}".format(node.content))
                     print("reducer node is: {}".format(reducer_node))
-                if jim[node.content['arguments']['reducer']] is None:
+                if jim[reducer_node.id] is None:
                     rule=reducer_node.content['process_id']
                     if verbose:
-                        print("reducer graph is: {}".format(reducer_node.content))
+                        print("reducer graph is: {}".format(reducer_node))
                         print("rule: {}".format(rule))
                     if isinstance(jim[node.content['arguments']['data']['from_node']],pj.Jim):
                         jim[reducer_node.id]=pj.Jim(jim[node.content['arguments']['data']['from_node']])
@@ -294,7 +345,9 @@ class BackEnd:
                     elif isinstance(jim[node.content['arguments']['data']['from_node']],Collection):
                         raise TypeError("Error: reduce not implemented for Collection")
                 else:
-                    jim[node.id]=jim[node.content['arguments']['data']['from_node']]
+                    #test
+                    jim[node.id]=jim[reducer_node.id]
+                    #jim[node.id]=jim[node.content['arguments']['data']['from_node']]
                     return jim[node.id]
             else:
                 raise TypeError("Error: reduce not implemented for dimension different than temporal")
@@ -307,7 +360,9 @@ class BackEnd:
             if verbose:
                 print("node is: {}".format(node.content))
                 print("reducer node is: {}".format(reducer_node))
-            if jim[node.content['arguments']['reducer']['from_node']] is None:
+            # if jim[node.content['arguments']['reducer']['from_node']] is None:
+            #test
+            if jim[reducer_node.id] is None:
                 rule=reducer_node.content['process_id']
                 if verbose:
                     print("reducer graph is: {}".format(reducer_node.content))
@@ -332,15 +387,15 @@ class BackEnd:
                 #todo: support multiple invect
                 outvect=os.path.join('/vsimem',node.id+'.sqlite')
 
-                if isinstance(jim[node.content['arguments']['data']['from_node']],pj.Jim):
+                if isinstance(jim[reducer_node.id],pj.Jim):
                     times=jim[node.content['arguments']['data']['from_node']].dimension['temporal']
                     planename=[t.strftime('%Y%m%d') for t in times]
                     bandname=jim[node.content['arguments']['data']['from_node']].dimension['band']
                     jim[reducer_node.id]=pj.geometry.extract(invect, jim[node.content['arguments']['data']['from_node']], outvect, rule, bandname=bandname, planename=planename, co=['OVERWRITE=TRUE'])
-                elif isinstance(jim[node.content['arguments']['data']['from_node']],Collection):
+                elif isinstance(jim[reducer_node.id],Collection):
                     print("rule is: {}".format(rule))
                     jim[reducer_node.id]=jim[node.content['arguments']['data']['from_node']].aggregate_spatial(invect, rule, outvect)
-                elif isinstance(jim[node.content['arguments']['data']['from_node']],pj.JimVect):
+                elif isinstance(jim[reducer_node.id,pj.JimVect):
                     raise TypeError("Error: aggretate_spatial not implemented for JimVect")
 
                 if jim[reducer_node.id] is not None:
@@ -354,7 +409,10 @@ class BackEnd:
                     raise ValueError("Error: could not aggregate polygon")
             else:
                 # jim[node['arguments']['data']['from_node']].dimension['temporal']=node.name
-                return jim[node.content['arguments']['data']['from_node']]
+                #test
+                jim[node.id]=jim[reducer_node.id]
+                return jim[node.id]
+                #return jim[node.content['arguments']['data']['from_node']]
         # elif node.content['process_id'] in ['min', 'max', 'mean', 'median', 'stdev', 'centroid']:#callback function
         #     if verbose:
         #         print("we are in callback function with {}".format(node.content['process_id']))
