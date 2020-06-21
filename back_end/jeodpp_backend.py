@@ -291,7 +291,7 @@ class BackEnd:
                         rednp=red.np().astype(np.float)
                         ndvi=(nirnp-rednp)/(nirnp+rednp)
                         ndvi[np.isnan(ndvi)]=0
-                        jim[reducer_node.id].np()=ndvi
+                        jim[reducer_node.id].np()[:]=ndvi
                     elif reducer_node.content['process_id'] == 'first':
                         cube=jim[reducer_node.contents['arguments']['data']['from_node']]
                         if cube is None:
