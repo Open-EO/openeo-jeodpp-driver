@@ -395,7 +395,7 @@ class BackEnd:
                 elif isinstance(jim[reducer_node.id],Collection):
                     print("rule is: {}".format(rule))
                     jim[reducer_node.id]=jim[node.content['arguments']['data']['from_node']].aggregate_spatial(invect, rule, outvect)
-                elif isinstance(jim[reducer_node.id,pj.JimVect):
+                elif isinstance(jim[reducer_node.id],pj.JimVect):
                     raise TypeError("Error: aggretate_spatial not implemented for JimVect")
 
                 if jim[reducer_node.id] is not None:
