@@ -195,7 +195,7 @@ class BackEnd:
         elif node.content['process_id'] == 'array_element':
             if 'index' in node.content['arguments']:
                 bandindex=node.content['arguments']['index']
-            elif 'label' ip node.content['arguments']:
+            elif 'label' in node.content['arguments']:
                 if verbose:
                     print("array_element with label {}".format(bandname))
                 bandname=node.content['arguments']['label']
