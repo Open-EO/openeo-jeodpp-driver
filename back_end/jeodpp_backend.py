@@ -7,6 +7,7 @@ from openeo_pg_parser import graph
 from jeolib.collection import Collection
 from jeolib.cube import Cube
 import pyjeo as pj
+import numpy as np
 
 verbose=True
 
