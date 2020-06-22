@@ -217,7 +217,41 @@ class BackEnd:
             elif isinstance(jim[node.content['arguments']['data']['from_node']],Collection):
                 raise TypeError("Error: {} array element not implemented for Collection".format(type(jim[node.id])))
             return jim[node.id]
-
+        elif node.content['process_id'] == 'apply':
+            if verbose:
+                print(node)
+                print("apply {}".format(node.content['description']))
+            if jim[node.content['arguments']['data']['from_node']] is None:
+                jim[node.id]=None
+                return[node.id]
+            process_node=agraph[node.content['arguments']['process']['from_node']]
+            if verbose:
+                print("node is: {}".format(node.content))
+                print("process node is: {}".format(process_node))
+            if jim[process_node.id] is None:
+                if process_node.content['process_id'] == 'linear_scale_range':
+                    inputMin=process_node.content['arguments'].get('inputMin',0)
+                    inputMax=process_node.content['arguments'].get('inputMax')
+                    if inputMax is None:
+                        raise ValueError("Error: inputMax not set")
+                    outputMin=process_node.content['arguments'].get('outputMin',0)
+                    outputMax=process_node.content['arguments'].get('outputMax',255)
+                    #todo: handle data types
+                    if jim[reducer_node.content['arguments']['x']['from_node']] is None:
+                        jim[node.id]=None
+                        return[node.id]
+                    jim[reducer_node.id] = Cube(jim[reducer_node.content['arguments']['x']['from_node']])
+                    jim[reducer_node.id]-=inputMin
+                    jim[reducer_node.id]/=(inputMax-inputMin)
+                    jim[reducer_node.id]*=(outputMax-outputMin)
+                    jim[reducer_node.id]+=outputMin
+                elif process_node.content['process_id'] == 'abs':
+                    if jim[reducer_node.content['arguments']['x']['from_node']] is None:
+                        jim[node.id]=None
+                        return[node.id]
+                    jim[reducer_node.id] = Cube(abs(jim[reducer_node.content['arguments']['x']['from_node']]))
+            jim[node.id]=jim[process_node.id]
+            return jim[node.id]
         elif node.content['process_id'] in ['sum','subtract','product','divide']:
             if verbose:
                 print("arithmetic {}".format(node.content['process_id']))
