@@ -269,7 +269,7 @@ class BackEnd:
                 print("reducer node is: {}".format(reducer_node))
             if jim[reducer_node.id] is None:
                 if node.content['arguments']['dimension'] in ['temporal', 'time', 't']:
-                    cube=jim[reducer_node.contents['arguments']['data']['from_node']]
+                    cube=jim[reducer_node.content['arguments']['data']['from_node']]
                     if cube is None:
                         jim[node.id]=None
                         return[node.id]
@@ -298,7 +298,7 @@ class BackEnd:
                         ndvi[np.isnan(ndvi)]=0
                         jim[reducer_node.id].np()[:]=ndvi
                     elif reducer_node.content['process_id'] == 'first':
-                        cube=jim[reducer_node.contents['arguments']['data']['from_node']]
+                        cube=jim[reducer_node.content['arguments']['data']['from_node']]
                         if cube is None:
                             jim[node.id]=None
                             return[node.id]
@@ -308,7 +308,7 @@ class BackEnd:
                             raise TypeError("Error: reduce not implemented for Collection")
                         jim[reducer_node.id]=pj.geometry.cropBand(cube,0)
                     elif reducer_node.content['process_id'] == 'last':
-                        cube=jim[reducer_node.contents['arguments']['data']['from_node']]
+                        cube=jim[reducer_node.content['arguments']['data']['from_node']]
                         if cube is None:
                             jim[reducer_node.id]=None
                         elif isinstance(cube,pj.JimVect):
