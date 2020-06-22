@@ -196,9 +196,9 @@ class BackEnd:
             if 'index' in node.content['arguments']:
                 bandindex=node.content['arguments']['index']
             elif 'label' in node.content['arguments']:
+                bandname=node.content['arguments']['label']
                 if verbose:
                     print("array_element with label {}".format(bandname))
-                bandname=node.content['arguments']['label']
                 bandindex=jim[node.content['arguments']['data']['from_node']].dimension['band'].index(bandname)
             else:
                 raise AttributeError("Error: only index or label is supported for array_element")
