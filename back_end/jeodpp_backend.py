@@ -4,8 +4,8 @@ import os
 import json
 from openeo_pg_parser import graph
 #import graph
-from jeolib import Collection
-from jeolib import Cube
+from jeolib.collection import Collection
+from jeolib.cube import Cube
 import pyjeo as pj
 
 verbose=True
@@ -259,7 +259,6 @@ class BackEnd:
             if verbose:
                 print(node)
                 print("reducing {}".format(node.content['arguments']['dimension']))
-                print("reducer: {}".format(node.content['arguments']['reducer']['process_graph']))
             if jim[node.content['arguments']['data']['from_node']] is None:
                 jim[node.id]=None
                 return[node.id]
