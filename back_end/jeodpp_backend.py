@@ -237,19 +237,19 @@ class BackEnd:
                     outputMin=process_node.content['arguments'].get('outputMin',0)
                     outputMax=process_node.content['arguments'].get('outputMax',255)
                     #todo: handle data types
-                    if jim[reducer_node.content['arguments']['x']['from_node']] is None:
+                    if jim[process_node.content['arguments']['x']['from_node']] is None:
                         jim[node.id]=None
                         return[node.id]
-                    jim[reducer_node.id] = Cube(jim[reducer_node.content['arguments']['x']['from_node']])
-                    jim[reducer_node.id]-=inputMin
-                    jim[reducer_node.id]/=(inputMax-inputMin)
-                    jim[reducer_node.id]*=(outputMax-outputMin)
-                    jim[reducer_node.id]+=outputMin
+                    jim[process_node.id] = Cube(jim[process_node.content['arguments']['x']['from_node']])
+                    jim[process_node.id]-=inputMin
+                    jim[process_node.id]/=(inputMax-inputMin)
+                    jim[process_node.id]*=(outputMax-outputMin)
+                    jim[process_node.id]+=outputMin
                 elif process_node.content['process_id'] == 'abs':
-                    if jim[reducer_node.content['arguments']['x']['from_node']] is None:
+                    if jim[process_node.content['arguments']['x']['from_node']] is None:
                         jim[node.id]=None
                         return[node.id]
-                    jim[reducer_node.id] = Cube(abs(jim[reducer_node.content['arguments']['x']['from_node']]))
+                    jim[process_node.id] = Cube(abs(jim[process_node.content['arguments']['x']['from_node']]))
             jim[node.id]=jim[process_node.id]
             return jim[node.id]
         elif node.content['process_id'] in ['sum','subtract','product','divide']:
