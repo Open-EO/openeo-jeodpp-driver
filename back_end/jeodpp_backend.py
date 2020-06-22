@@ -139,7 +139,6 @@ class BackEnd:
             features = node.content['arguments']['spatial_extent'].get('features')
             if features is not None:
                 features=json.dumps(features),
-            print(regions)
             coll.filter_bbox(west=west,
                              east=east,
                              north=north,
