@@ -29,7 +29,7 @@
     "load_collection": {
       "process_id": "load_collection",
       "arguments": {
-        "id": "COPERNICUS/S2",
+        "id": "S2MSI2A",
         "spatial_extent": {
 	  "type": "FeatureCollection",
 	  "crs": {
@@ -79,8 +79,8 @@
           ]
         },
         "temporal_extent": [
-          "2018-01-01T00:00:00Z",
-          "2018-01-31T23:59:59Z"
+          "2018-06-01T00:00:00Z",
+          "2018-07-01T00:00:00Z"
         ],
         "bands": [
           "B4",
