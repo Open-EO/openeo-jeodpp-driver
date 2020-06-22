@@ -135,10 +135,15 @@ class BackEnd:
             east = node.content['arguments']['spatial_extent'].get('east')
             north = node.content['arguments']['spatial_extent'].get('north')
             south = node.content['arguments']['spatial_extent'].get('south')
-            crs = node.content['arguments']['spatial_extent'].get('crs')
+            #crs = node.content['arguments']['spatial_extent'].get('crs')
+            crs = None
             if west is None or east is None or north is None or south is None:
                 features = node.content['arguments'].get('spatial_extent')
-                features=json.dumps(features),
+                print('features {}'.format(features))
+                features=json.dumps(features)
+                print('features {}'.format(features))
+                v1 = pj.JimVect(features)
+                print(v1.properties.getFeatureCount())
             else:
                 features = None
             coll.filter_bbox(west=west,
