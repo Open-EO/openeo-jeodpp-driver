@@ -282,11 +282,11 @@ class BackEnd:
                         raise ValueError("Error: temporal reduction rule not implemented")
                 elif node.content['arguments']['dimension'] in ['spectral', 'bands', 'b']:
                     if reducer_node.content['process_id'] in ['ndvi', 'normalized_difference']:
-                        nir = jim[['arguments']['x']['from_node']]
+                        nir = jim[reducer_node.content['arguments']['x']['from_node']]
                         if nir is None:
                             jim[node.id]=None
                             return[node.id]
-                        red = jim[['arguments']['y']['from_node']]
+                        red = jim[reducer_node.content['arguments']['y']['from_node']]
                         if nir is None:
                             jim[node.id]=None
                             return[node.id]
