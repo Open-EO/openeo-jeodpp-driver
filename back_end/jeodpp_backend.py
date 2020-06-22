@@ -1,4 +1,5 @@
 from datetime import time, timedelta, datetime
+import dateutil.parser
 import os
 import json
 from openeo_pg_parser import graph
@@ -155,11 +156,7 @@ class BackEnd:
             #filter on dates:
 
             print("temporal_extent: {}".format(node.content['arguments']['temporal_extent']))
-            # daterange = [datetime.strptime(d, '%Y-%m-%dT%H:%M:%S') for d in node.content['arguments']['temporal_extent']]
-            try:
-                daterange = [datetime.strptime(d,"%Y-%m-%dT%H:%M:%S.%fZ") for d in node.content['arguments']['temporal_extent']]
-            except ValueError:
-                daterange = [datetime.strptime(d+"T00:00:00.000Z","%Y-%m-%dT%H:%M:%S.%fZ") for d in node.content['arguments']['temporal_extent']]
+            daterange = [dateutil.parser.parse(d) for d in node.content['arguments']['temporal_extent']]
             print("daterange: {}".format(daterange))
             # self.filter_daterange(dateString)
             #daterange = [datetime.strptime(d, '%Y-%m-%d') for d in node.content['arguments']['temporal_extent']]
