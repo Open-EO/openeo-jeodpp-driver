@@ -5,6 +5,7 @@ import json
 from openeo_pg_parser import graph
 #import graph
 from jeolib import Collection
+from jeolib import Cube
 import pyjeo as pj
 
 verbose=True
