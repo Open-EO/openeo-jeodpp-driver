@@ -1,5 +1,5 @@
 from datetime import time, timedelta, datetime
-from osgeo import gdal
+#from osgeo import gdal
 import os
 import json
 from openeo_pg_parser import graph
