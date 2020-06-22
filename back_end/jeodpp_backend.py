@@ -1,5 +1,4 @@
 from datetime import time, timedelta, datetime
-#from osgeo import gdal
 import os
 import json
 from openeo_pg_parser import graph
@@ -132,19 +131,20 @@ class BackEnd:
             # if 'properties' in node.content['arguments']:
             #     if 'eo:cloud_cover' in
             #filter on bounding box (defined in lat/lon)
-            spatial_extent={}
-            spatial_extent['west']=node.content['arguments']['spatial_extent']['west']
-            spatial_extent['east']=node.content['arguments']['spatial_extent']['east']
-            spatial_extent['north']=node.content['arguments']['spatial_extent']['north']
-            spatial_extent['south']=node.content['arguments']['spatial_extent']['south']
-            if 'crs' in node.content['arguments']['spatial_extent']:
-                spatial_extent['crs']=node.content['arguments']['spatial_extent']['crs']
-            if verbose:
-                print(spatial_extent)
-            coll.filter_bbox(west=node.content['arguments']['spatial_extent']['west'],
-                             east=node.content['arguments']['spatial_extent']['east'],
-                             north=node.content['arguments']['spatial_extent']['north'],
-                             south=node.content['arguments']['spatial_extent']['south'])
+            west = node.content['arguments']['spatial_extent'].get('west')
+            east = node.content['arguments']['spatial_extent'].get('east')
+            north = node.content['arguments']['spatial_extent'].get('north')
+            south = node.content['arguments']['spatial_extent'].get('south')
+            crs = node.content['arguments']['spatial_extent'].get('crs')
+            features = node.content['arguments']['spatial_extent'].get('features')
+            if features is not None:
+                features=json.dumps(features),
+            coll.filter_bbox(west=west,
+                             east=east,
+                             north=north,
+                             south=south,
+                             regions=features,
+                             crs=crs)
             #filter on dates:
 
             print("temporal_extent: {}".format(node.content['arguments']['temporal_extent']))
@@ -256,8 +256,6 @@ class BackEnd:
             if jim[node.content['arguments']['data']['from_node']] is None:
                 jim[node.id]=None
                 return[node.id]
-            #hiero
-            #todo: implement max,... here and remove the max process from above
             reducer_node=agraph[node.content['arguments']['reducer']['from_node']]
             if verbose:
                 print("node is: {}".format(node.content))
