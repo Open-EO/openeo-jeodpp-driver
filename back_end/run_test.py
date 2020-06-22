@@ -19,5 +19,5 @@ graph = translate_process_graph("tests/process_graphs/s2_max_ndvi.json")
 
 
 print(graph.sort())
-#jeodpp.process(graph.sort())
+jeodpp.process(graph.sort())
 #jeodpp.process(graph,virtual=True)
