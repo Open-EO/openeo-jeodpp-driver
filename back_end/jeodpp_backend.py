@@ -194,25 +194,27 @@ class BackEnd:
             return jim[node.id]
         elif node.content['process_id'] == 'array_element':
             if 'index' in node.content['arguments']:
-                bandname=node.content['arguments']['index']
-                #todo: get bandindex from bandname in bands
-                bandindex=jim[node.content['arguments']['data']['from_node']].dimension['band'].index(bandname)
+                bandindex=node.content['arguments']['index']
+            elif 'label' ip node.content['arguments']:
                 if verbose:
-                    print("array_element with name {}".format(bandname))
-                    print("array_element with index {}".format(bandindex))
-                if jim[node.content['arguments']['data']['from_node']] is None:
-                    jim[node.id]=None
-                elif isinstance(jim[node.content['arguments']['data']['from_node']],pj.Jim):
-                    result=Cube(pj.geometry.cropBand(jim[node.content['arguments']['data']['from_node']],bandindex))
-                    result.dimension['band']=bandname
-                    jim[node.id]=result
-                elif isinstance(jim[node.content['arguments']['data']['from_node']],pj.JimVect):
-                    raise TypeError("Error: {} array_element not implemented for JimVect".format(type(jim[node.id])))
-                elif isinstance(jim[node.content['arguments']['data']['from_node']],Collection):
-                    raise TypeError("Error: {} array element not implemented for Collection".format(type(jim[node.id])))
-                return jim[node.id]
+                    print("array_element with label {}".format(bandname))
+                bandname=node.content['arguments']['label']
+                bandindex=jim[node.content['arguments']['data']['from_node']].dimension['band'].index(bandname)
             else:
-                raise AttributeError("Error: only index is supported for array_element")
+                raise AttributeError("Error: only index or label is supported for array_element")
+            if verbose:
+                print("array_element with index {}".format(bandindex))
+            if jim[node.content['arguments']['data']['from_node']] is None:
+                jim[node.id]=None
+            elif isinstance(jim[node.content['arguments']['data']['from_node']],pj.Jim):
+                result=Cube(pj.geometry.cropBand(jim[node.content['arguments']['data']['from_node']],bandindex))
+                result.dimension['band']=bandname
+                jim[node.id]=result
+            elif isinstance(jim[node.content['arguments']['data']['from_node']],pj.JimVect):
+                raise TypeError("Error: {} array_element not implemented for JimVect".format(type(jim[node.id])))
+            elif isinstance(jim[node.content['arguments']['data']['from_node']],Collection):
+                raise TypeError("Error: {} array element not implemented for Collection".format(type(jim[node.id])))
+            return jim[node.id]
 
         elif node.content['process_id'] in ['sum','subtract','product','divide']:
             if verbose:
