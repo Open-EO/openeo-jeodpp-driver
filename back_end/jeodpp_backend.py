@@ -196,7 +196,8 @@ class BackEnd:
             return jim[node.id]
         elif node.content['process_id'] == 'array_element':
             if 'index' in node.content['arguments']:
-                bandindex=node.content['arguments']['index']
+                bandindex=node.content['arguments']['index']-1#convert to 0 based (openEO is 1 based)
+                bandname=jim[node.content['arguments']['data']['from_node']].dimension['band'][bandindex]
             elif 'label' in node.content['arguments']:
                 bandname=node.content['arguments']['label']
                 if verbose:
@@ -313,8 +314,6 @@ class BackEnd:
                         jim[reducer_node.id]=pj.geometry.cropPlane(cube,0)
                     elif reducer_node.content['process_id'] == 'last':
                         jim[reducer_node.id]=pj.geometry.cropPlane(cube,-1)
-                    else:
-                        raise ValueError("Error: temporal reduction rule not implemented")
                 elif node.content['arguments']['dimension'] in ['spectral', 'bands', 'b']:
                     if reducer_node.content['process_id'] in ['ndvi', 'normalized_difference']:
                         nir = jim[reducer_node.content['arguments']['x']['from_node']]
@@ -352,8 +351,6 @@ class BackEnd:
                         if cube is None:
                             jim[reducer_node.id]=None
                         jim[reducer_node.id]=pj.geometry.cropBand(cube,-1)
-                    else:
-                        raise ValueError("Error: band reduction rule not implemented")
             jim[node.id]=jim[reducer_node.id]
             return jim[node.id]
         elif node.content['process_id'] == 'aggregate_temporal':
