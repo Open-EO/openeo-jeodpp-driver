@@ -196,7 +196,7 @@ class BackEnd:
             return jim[node.id]
         elif node.content['process_id'] == 'array_element':
             if 'index' in node.content['arguments']:
-                bandindex=node.content['arguments']['index']-1#convert to 0 based (openEO is 1 based)
+                bandindex=node.content['arguments']['index']
                 bandname=jim[node.content['arguments']['data']['from_node']].dimension['band'][bandindex]
             elif 'label' in node.content['arguments']:
                 bandname=node.content['arguments']['label']
