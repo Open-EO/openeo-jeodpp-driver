@@ -13,9 +13,10 @@ jeodpp=BackEnd('jeodpp')
 #graph = translate_process_graph("tests/process_graphs/min_evi_jeodpp.json")
 #graph = translate_process_graph("tests/process_graphs/zonal_statistics.json")
 #graph = translate_process_graph("tests/process_graphs/zonal_statistics_timeseries.json")
+graph = translate_process_graph("tests/process_graphs/evi_eodc_1.json")
 graph = translate_process_graph("tests/process_graphs/s2_max_ndvi.json")
 graph = translate_process_graph("tests/process_graphs/evi_eodc.json")
-graph = translate_process_graph("tests/process_graphs/evi_eodc_1.json")
+graph = translate_process_graph("tests/process_graphs/evi_eodc_test.json")
 
 
 print(graph.sort())
