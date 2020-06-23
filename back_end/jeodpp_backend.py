@@ -421,12 +421,17 @@ class BackEnd:
                 #todo: support multiple invect
                 outvect=os.path.join('/vsimem',node.id+'.sqlite')
 
-                if isinstance(jim[reducer_node.id],pj.Jim):
+                if isinstance(jim[node.content['arguments']['data']['from_node']],pj.Jim):
+                    print("we have a Jim")
                     times=jim[node.content['arguments']['data']['from_node']].dimension['temporal']
                     planename=[t.strftime('%Y%m%d') for t in times]
                     bandname=jim[node.content['arguments']['data']['from_node']].dimension['band']
+                    #test
+                    #jim[node.content['arguments']['data']['from_node']].io.write('/tmp/test.tif')
+                    #invect.io.write('/tmp/test.sqlite',co=['OVERWRITE=TRUE'])
+
                     jim[reducer_node.id]=pj.geometry.extract(invect, jim[node.content['arguments']['data']['from_node']], outvect, rule, bandname=bandname, planename=planename, co=['OVERWRITE=TRUE'])
-                elif isinstance(jim[reducer_node.id],Collection):
+                elif isinstance(jim[node.content['arguments']['data']['from_node']],Collection):
                     print("rule is: {}".format(rule))
                     jim[reducer_node.id]=jim[node.content['arguments']['data']['from_node']].aggregate_spatial(invect, rule, outvect)
                 elif isinstance(jim[reducer_node.id],pj.JimVect):
