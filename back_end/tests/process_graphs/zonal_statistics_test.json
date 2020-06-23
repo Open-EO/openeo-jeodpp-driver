@@ -31,7 +31,7 @@
                     "min": {
                         "process_id": "median",
                         "arguments": {
-                            "data": {"from_argument": "data"}
+                            "data": {"from_parameter": "data"}
                         },
                         "result": true
                     }
@@ -78,7 +78,7 @@
                     "mean1": {
                         "process_id": "median",
                         "arguments": {
-                            "data": {"from_argument": "data"}
+                            "data": {"from_parameter": "data"}
                         },
                         "result": true
                     }
