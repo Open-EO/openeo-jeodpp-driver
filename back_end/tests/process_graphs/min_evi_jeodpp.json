@@ -25,12 +25,12 @@
         "result": true
     },
     "reduce1": {
-        "process_id": "reduce",
+        "process_id": "reduce_dimension",
         "arguments": {
         "data": {
             "from_node": "loadcollection1"
         },
-        "dimension": "spectral_bands",
+        "dimension": "spectral",
         "reducer": {
             "process_graph": {
             "arrayelement1": {
@@ -193,7 +193,7 @@
         "result": false
     },
     "reduce2": {
-        "process_id": "reduce",
+        "process_id": "reduce_dimension",
         "arguments": {
         "data": {
             "from_node": "reduce1"
