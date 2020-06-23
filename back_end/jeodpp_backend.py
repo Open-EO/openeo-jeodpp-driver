@@ -271,6 +271,7 @@ class BackEnd:
                     value=data
                 #value should be of type pj.Jim
 
+                print("value is of type {}".format(type(value)))
                 if isinstance(value,pj.Jim):
                     if jim[node.id] is None:
                         jim[node.id]=value
@@ -280,16 +281,18 @@ class BackEnd:
                         if node.content['process_id'] == 'subtract':
                             jim[node.id]-=value
                         if node.content['process_id'] == 'product':
-                            #test
-                            print(jim[node.id])
-                            print(value)
                             jim[node.id]*=value
                         if node.content['process_id'] == 'divide':
+                            #test
+                            print(jim[node.id].np())
+                            print(value)
                             jim[node.id]/=value
                 elif isinstance(value,pj.JimVect):
                     raise TypeError("Error: arithmetic not implemented for JimVect")
                 elif isinstance(value,Collection):
                     raise TypeError("Error: arithmetic not implemented for Collection")
+                else:
+                    raise TypeError("Error: arithmetic not implemented for type {}".format(type(value)))
             return jim[node.id]
         elif node.content['process_id'] == 'reduce_dimension':
             if verbose:
