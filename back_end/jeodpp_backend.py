@@ -307,10 +307,11 @@ class BackEnd:
                     if jim[reducer_node.id] is None:
                         jim[node.id]=jim[reducer_node.id]
                         return[node.id]
-                    if reducer_node.content['process_id'] in ['max', 'mean', 'median', 'min']:
+                    rule=reducer_node.content['process_id']
+                    if rule in ['max', 'mean', 'median', 'min']:
                         # jim[reducer_node.id] = pj.geometry.reducePlane(cube,rule=reducer_node.content['process_id'])
                         # jim[reducer_node.id]=Cube(jim[node.content['arguments']['data']['from_node']])
-                        jim[reducer_node.id].geometry.reducePlane(rule)
+                        jim[reducer_node.id].geometry.reducePlane(rule=rule)
                     elif reducer_node.content['process_id'] == 'first':
                         jim[reducer_node.id].geometry.cropPlane(0)
                     elif reducer_node.content['process_id'] == 'last':
