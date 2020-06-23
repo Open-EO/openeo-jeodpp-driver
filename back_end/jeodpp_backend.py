@@ -367,7 +367,7 @@ class BackEnd:
                         print("reducer graph is: {}".format(reducer_node))
                         print("rule: {}".format(rule))
                     if isinstance(jim[node.content['arguments']['data']['from_node']],pj.Jim):
-                        jim[reducer_node.id]=pj.Jim(jim[node.content['arguments']['data']['from_node']])
+                        jim[reducer_node.id]=Cube(jim[node.content['arguments']['data']['from_node']])
                         jim[reducer_node.id].geometry.reducePlane(rule)
                         if jim[reducer_node.id] is not None:
                             jim[node.id]=jim[reducer_node.id]
