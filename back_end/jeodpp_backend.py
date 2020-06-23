@@ -302,16 +302,19 @@ class BackEnd:
                 print("reducer node is: {}".format(reducer_node))
             if jim[reducer_node.id] is None:
                 if node.content['arguments']['dimension'] in ['temporal', 'time', 't']:
-                    cube=jim[reducer_node.content['arguments']['data']['from_node']]
-                    if cube is None:
-                        jim[node.id]=None
+                    # cube=Cube(jim[reducer_node.content['arguments']['data']['from_node']])
+                    jim[reducer_node.id]=Cube(jim[reducer_node.content['arguments']['data']['from_node']])
+                    if jim[reducer_node.id] is None:
+                        jim[node.id]=jim[reducer_node.id]
                         return[node.id]
                     if reducer_node.content['process_id'] in ['max', 'mean', 'median', 'min']:
-                        jim[reducer_node.id] = pj.geometry.reducePlane(cube,rule=reducer_node.content['process_id'])
+                        # jim[reducer_node.id] = pj.geometry.reducePlane(cube,rule=reducer_node.content['process_id'])
+                        # jim[reducer_node.id]=Cube(jim[node.content['arguments']['data']['from_node']])
+                        jim[reducer_node.id].geometry.reducePlane(rule)
                     elif reducer_node.content['process_id'] == 'first':
-                        jim[reducer_node.id]=pj.geometry.cropPlane(cube,0)
+                        jim[reducer_node.id].geometry.cropPlane(0)
                     elif reducer_node.content['process_id'] == 'last':
-                        jim[reducer_node.id]=pj.geometry.cropPlane(cube,-1)
+                        jim[reducer_node.id].geometry.cropPlane(-1)
                 elif node.content['arguments']['dimension'] in ['spectral', 'bands', 'b']:
                     if reducer_node.content['process_id'] in ['ndvi', 'normalized_difference']:
                         nir = jim[reducer_node.content['arguments']['x']['from_node']]
@@ -329,26 +332,19 @@ class BackEnd:
                         ndvi[np.isnan(ndvi)]=0
                         jim[reducer_node.id].np()[:]=ndvi
                     elif reducer_node.content['process_id'] == 'first':
-                        cube=jim[reducer_node.content['arguments']['data']['from_node']]
-                        if cube is None:
+                        jim[reducer_node.id]=Cube(reducer_node.content['arguments']['data']['from_node'])
+                        # cube=jim[reducer_node.content['arguments']['data']['from_node']]
+                        if jim[reducer_node.id] is None:
                             jim[node.id]=None
                             return[node.id]
                         elif isinstance(cube,pj.JimVect):
                             raise TypeError("Error: reduce not implemented for JimVect")
                         elif isinstance(cube,Collection):
                             raise TypeError("Error: reduce not implemented for Collection")
-                        jim[reducer_node.id]=pj.geometry.cropBand(cube,0)
+                        jim[reducer_node.id].geometry.cropBand(0)
                     elif reducer_node.content['process_id'] == 'last':
-                        cube=jim[reducer_node.content['arguments']['data']['from_node']]
-                        if cube is None:
-                            jim[reducer_node.id]=None
-                        elif isinstance(cube,pj.JimVect):
-                            raise TypeError("Error: reduce not implemented for JimVect")
-                        elif isinstance(cube,Collection):
-                            raise TypeError("Error: reduce not implemented for Collection")
-                        if cube is None:
-                            jim[reducer_node.id]=None
-                        jim[reducer_node.id]=pj.geometry.cropBand(cube,-1)
+                        # cube=jim[reducer_node.content['arguments']['data']['from_node']]
+                        jim[reducer_node.id].geometry.cropBand(-1)
             jim[node.id]=jim[reducer_node.id]
             return jim[node.id]
         elif node.content['process_id'] == 'aggregate_temporal':
