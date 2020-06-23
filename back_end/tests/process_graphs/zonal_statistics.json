@@ -1,4 +1,6 @@
 {
+  "process_graph":
+  {
     "dc": {
         "process_id": "load_collection",
         "description": "Loading the data; The order of the specified bands is important for the following reduce operation.",
@@ -74,4 +76,5 @@
         },
         "result": true
     }
+  }
 }
