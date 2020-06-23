@@ -26,7 +26,7 @@
             "data": {"from_node": "dc"},
             "dimension": "temporal",
             "reducer": {
-                "callback": {
+                "process_graph": {
                     "min": {
                         "process_id": "median",
                         "arguments": {
