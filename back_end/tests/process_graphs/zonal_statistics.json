@@ -17,6 +17,38 @@
                 "2018-06-10T00:00:00.000Z"
             ],
             "bands": ["B8"]
+            "properties": {
+                "eo:cloud_cover": {
+                "process_graph": {
+                    "cc": {
+                    "process_id": "between",
+                    "arguments": {
+                        "x": {
+                        "from_parameter": "value"
+                        },
+                        "min": 0,
+                        "max": 50
+                    },
+                    "result": true
+                    }
+                }
+                },
+                "platform": {
+                "process_graph": {
+                    "pf": {
+                    "process_id": "eq",
+                    "arguments": {
+                        "x": {
+                        "from_parameter": "value"
+                        },
+                        "y": "Sentinel-2B",
+                        "case_sensitive": false
+                    },
+                    "result": true
+                    }
+                }
+                }
+            }
         }
     },
     "mintime": {

@@ -44,7 +44,7 @@
         "description": "aggregate polygon using mean value",
         "arguments": {
             "data": {"from_node": "mintime"},
-            "polygons": {
+            "geometries": {
                 "type": "FeatureCollection",
                 "crs": {
                     "type": "name",
