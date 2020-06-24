@@ -16,7 +16,7 @@
                 "2018-06-04T00:00:00.000Z",
                 "2018-06-10T00:00:00.000Z"
             ],
-            "bands": ["B8"]
+            "bands": ["B8"],
             "properties": {
                 "eo:cloud_cover": {
                 "process_graph": {
