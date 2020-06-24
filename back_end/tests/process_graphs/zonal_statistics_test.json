@@ -21,13 +21,13 @@
         }
     },
     "mintime": {
-        "process_id": "reduce",
+        "process_id": "reduce_dimension",
         "description": "Compute a min time composite by reducing the temporal dimension",
         "arguments": {
             "data": {"from_node": "dc"},
             "dimension": "temporal",
             "reducer": {
-                "callback": {
+                "process_graph": {
                     "min": {
                         "process_id": "median",
                         "arguments": {
@@ -40,7 +40,7 @@
         }
     },
     "aggreg1": {
-        "process_id": "aggregate_polygon",
+        "process_id": "aggregate_spatial",
         "description": "aggregate polygon using mean value",
         "arguments": {
             "data": {"from_node": "mintime"},
@@ -74,9 +74,9 @@
                 ]
             },
             "reducer": {
-                "callback": {
+                "process_graph": {
                     "mean1": {
-                        "process_id": "median",
+                        "process_id": "mean",
                         "arguments": {
                             "data": {"from_parameter": "data"}
                         },
