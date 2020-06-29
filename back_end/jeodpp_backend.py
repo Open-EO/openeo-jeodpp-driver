@@ -129,10 +129,26 @@ class BackEnd:
             coll=Collection()
             coll.filterOn('productType',node.content['arguments']['id'])
             properties={}
+
             #test
             # properties['cloudCoverPercentage']='<10'
-            # if 'properties' in node.content['arguments']:
-            #     if 'eo:cloud_cover' in
+            properties=node.content['arguments'].get('properties')
+            for property in properties:
+                property_node=agraph[node.content['arguments']['properties'][property]['from_node']]
+                if 'cloud_cover' in property:
+                    minCloud = property_node.content['arguments'].get('min',0)
+                    maxCloud = property_node.content['arguments'].get('max',100)
+                    coll.filterOn('cloudCoverPercentage','<'+str(maxCloud))
+                    coll.filterOn('cloudCoverPercentage','>'+str(minCloud))
+                if 'mgrs' in property:
+                    mgrs = property_node.content['arguments'].get('mgrs')
+                    if mgrs is not None:
+                        coll.filterOn('mgrs',str(mgrs))
+
+            if args.mgrs is not None:
+                if verbose:
+                    print("filtering MGRS = {}".format(args.mgrs))
+                coll.filterOn('mgrs',args.mgrs)
             #filter on bounding box (defined in lat/lon)
             west = node.content['arguments']['spatial_extent'].get('west')
             east = node.content['arguments']['spatial_extent'].get('east')
