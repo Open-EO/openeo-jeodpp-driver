@@ -144,6 +144,7 @@ class BackEnd:
                     mgrs = property_node.content['arguments'].get('mgrs')
                     if mgrs is not None:
                         coll.filterOn('mgrs',str(mgrs))
+                jim[property_node.id]=jim[node.id]
 
             #filter on bounding box (defined in lat/lon)
             west = node.content['arguments']['spatial_extent'].get('west')
