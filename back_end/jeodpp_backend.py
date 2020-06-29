@@ -145,10 +145,6 @@ class BackEnd:
                     if mgrs is not None:
                         coll.filterOn('mgrs',str(mgrs))
 
-            if args.mgrs is not None:
-                if verbose:
-                    print("filtering MGRS = {}".format(args.mgrs))
-                coll.filterOn('mgrs',args.mgrs)
             #filter on bounding box (defined in lat/lon)
             west = node.content['arguments']['spatial_extent'].get('west')
             east = node.content['arguments']['spatial_extent'].get('east')
