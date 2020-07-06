@@ -15,68 +15,6 @@ class BackEnd:
     def __init__(self, name=None, user=None):
         self.name = name
         self.user = user
-    # def processCube(self, cube, agraph):
-    #     for node in agraph.nodes:
-    #         if not isinstance(node,graph.Node):
-    #             print("convert node of type {}".format(type(node)))
-    #             node = graph.Node(node)
-    #             print("to {}".format(type(node)))
-    #         if verbose:
-    #             # print("processing node {}".format(node.id))
-    #             print("node: {}".format(node))
-    #             print(node.content['arguments']['data'])
-    #         if isinstance(cube,pj.Jim):
-    #             print("type of cube is: {}".format(type(cube)))
-    #         elif isinstance(cube,pj.JimVect):
-    #             raise TypeError("Error: {} array_element not implemented for JimVect")
-    #         elif isinstance(cube,Collection):
-    #             raise TypeError("Error: {} array element not implemented for Collection")
-    #         if cube is None:
-    #             print("Error: cube is None")
-    #             return None
-    #         if node.content['process_id'] == 'array_element':
-    #             if 'index' in node.content['arguments']:
-    #                 print("crop band {}".format(node.content['arguments']['index']))
-    #                 return pj.geometry.cropBand(cube,node.content['arguments']['index'])
-    #             else:
-    #                 raise AttributeError("Error: only index is supported for array_element")
-    #         elif node.content['process_id'] in ['all', 'any', 'count', 'first', 'last', 'max', 'mean', 'median', 'min', 'product', 'sd', 'sum', 'variance']:
-    #             if node.content['process_id'] in ['max', 'mean', 'median', 'min']:
-    #                 return pj.geometry.reducePlane(cube,rule=node.content['process_id'])
-    #             elif node.content['process_id'] == 'first':
-    #                 return pj.geometry.cropPlane(cube,0)
-    #             elif node.content['process_id'] == 'last':
-    #                 return pj.geometry.cropPlane(cube,-1)
-    #             else:
-    #                 raise ValueError("Error: reduction rule {} not implemented yet".format(node.content['process_id']))
-    #         elif node.content['process_id'] in ['sum', 'subtract', 'product', 'divide']:
-    #             for data in node.content['arguments']['data']:
-    #             value=jim[data['from_node']]
-    #             else:
-    #                 value=data
-    #             #value should be of type pj.Jim
-
-    #             if isinstance(value,pj.Jim):
-    #                 if jim[node.id] is None:
-    #                     jim[node.id]=value
-    #                 else:
-    #                     if node.content['process_id'] == 'sum':
-    #                         jim[node.id]+=value
-    #                     if node.content['process_id'] == 'subtract':
-    #                         jim[node.id]-=value
-    #                     if node.content['process_id'] == 'product':
-    #                         #test
-    #                         print(jim[node.id])
-    #                         print(value)
-    #                         jim[node.id]*=value
-    #                     if node.content['process_id'] == 'divide':
-    #                         jim[node.id]/=value
-    #             elif isinstance(value,pj.JimVect):
-    #                 raise TypeError("Error: arithmetic not implemented for JimVect")
-    #             elif isinstance(value,Collection):
-    #                 raise TypeError("Error: arithmetic not implemented for Collection")
-    #         else:
-    #             raise ValueError("Error: reduction {} not supported".format(node['process_id']))
 
     def processNode(self, agraph, nodeid, jim, virtual=False):
         print('agraph.nodes: {}'.format(agraph.nodes))
