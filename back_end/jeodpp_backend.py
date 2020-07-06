@@ -12,9 +12,9 @@ import numpy as np
 verbose=True
 
 class BackEnd:
-    def __init__(self, name=None):
+    def __init__(self, name=None, user=None):
         self.name = name
-
+        self.user = user
     # def processCube(self, cube, agraph):
     #     for node in agraph.nodes:
     #         if not isinstance(node,graph.Node):
@@ -90,7 +90,10 @@ class BackEnd:
             if jim[node.content['arguments']['data']['from_node']]:
                 print("saving result")
                 jim[node.id]=jim[node.content['arguments']['data']['from_node']]
-                pathname=os.path.join('/tmp',node.id)
+                if self.user is not None:
+                    pathname=os.path.join('/eos/jeodpp/home/users/',self.user,node.id)
+                else:
+                    pathname=os.path.join('/tmp',node.id)
                 if isinstance(jim[node.id],pj.Jim):
                     # Create target Directory if don't exist
                     if not os.path.exists(pathname):
