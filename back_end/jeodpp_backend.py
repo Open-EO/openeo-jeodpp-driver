@@ -382,7 +382,7 @@ class BackEnd:
                     #jim[node.content['arguments']['data']['from_node']].io.write('/tmp/test.tif')
                     #invect.io.write('/tmp/test.sqlite',co=['OVERWRITE=TRUE'])
 
-                    jim[reducer_node.id]=pj.geometry.extract(invect, jim[node.content['arguments']['data']['from_node']], outvect, rule, bandname=bandname, planename=planename, co=['OVERWRITE=TRUE'])
+                    jim[reducer_node.id]=pj.geometry.extract(invect, jim[node.content['arguments']['data']['from_node']], outvect, rule, bandname=bandname, planename=planename, co=['OVERWRITE=TRUE'], srcnodata=0)
                 elif isinstance(jim[node.content['arguments']['data']['from_node']],Collection):
                     print("rule is: {}".format(rule))
                     jim[reducer_node.id]=jim[node.content['arguments']['data']['from_node']].aggregate_spatial(invect, rule, outvect)

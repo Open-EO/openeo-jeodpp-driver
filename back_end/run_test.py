@@ -19,8 +19,9 @@ graph = translate_process_graph("tests/process_graphs/zonal_statistics_timeserie
 graph = translate_process_graph("tests/process_graphs/zonal_statistics_test.json")
 graph = translate_process_graph("tests/process_graphs/zonal_statistics.json")
 graph = translate_process_graph("tests/process_graphs/zonal_statistics_timeseries.json")
+graph = translate_process_graph("tests/process_graphs/zonal_statistics_timeseries_geometry.json")
 
 #print(graph)
 print(graph.sort())
-#jeodpp.process(graph)
-jeodpp.process(graph.sort(),virtual=True)
+jeodpp.process(graph)
+#jeodpp.process(graph.sort(),virtual=True)
