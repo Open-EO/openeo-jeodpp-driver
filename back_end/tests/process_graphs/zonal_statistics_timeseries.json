@@ -16,7 +16,39 @@
                 "2018-06-04T00:00:00.000Z",
                 "2018-06-23T00:00:00.000Z"
             ],
-            "bands": ["B4","B8"]
+            "bands": ["B4","B8"],
+            "properties": {
+                "eo:cloud_cover": {
+                "process_graph": {
+                    "cc": {
+                    "process_id": "between",
+                    "arguments": {
+                        "x": {
+                        "from_parameter": "value"
+                        },
+                        "min": 0,
+                        "max": 10
+                    },
+                    "result": true
+                    }
+                }
+                },
+                "platform": {
+                "process_graph": {
+                    "pf": {
+                    "process_id": "eq",
+                    "arguments": {
+                        "x": {
+                        "from_parameter": "value"
+                        },
+                        "y": "Sentinel-2B",
+                        "case_sensitive": false
+                    },
+                    "result": true
+                    }
+                }
+                }
+            }
         }
     },
     "aggreg1": {

@@ -91,7 +91,8 @@ class BackEnd:
                 print("saving result")
                 jim[node.id]=jim[node.content['arguments']['data']['from_node']]
                 if self.user is not None:
-                    pathname=os.path.join('/eos/jeodpp/home/users/',self.user,node.id)
+                    #pathname=os.path.join('/eos/jeodpp/home/users/',self.user,node.id)
+                    pathname=os.path.join('/home',self.user,node.id)
                 else:
                     pathname=os.path.join('/tmp',node.id)
                 if isinstance(jim[node.id],pj.Jim):
