@@ -95,7 +95,8 @@ class BackEnd:
             south = node.content['arguments']['spatial_extent'].get('south')
             #crs = node.content['arguments']['spatial_extent'].get('crs')
             crs = None
-            if west is None or east is None or north is None or south is None:
+            geometries = node.content['arguments'].get('spatial_extent').get('geometries')
+            if geometries is not None:
                 features = node.content['arguments'].get('spatial_extent')
                 print('features {}'.format(features))
                 features=json.dumps(features)
@@ -104,6 +105,10 @@ class BackEnd:
                 print(v1.properties.getFeatureCount())
             else:
                 features = None
+            mgrs = node.content['arguments'].get('spatial_extent').get('mgrs')
+            if mgrs is not None:
+                coll.filterOn('mgrs',str(mgrs))
+
             coll.filter_bbox(west=west,
                              east=east,
                              north=north,
