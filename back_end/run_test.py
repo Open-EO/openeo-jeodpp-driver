@@ -1,5 +1,5 @@
-import sys
-sys.path.append('../../Open-EO-openeo-pg-parser-python/src')
+#import sys
+#sys.path.append('../../Open-EO-openeo-pg-parser-python/src')
 
 
 from openeo_pg_parser.translate import translate_process_graph
