@@ -108,13 +108,13 @@ class BackEnd:
             mgrs = node.content['arguments'].get('spatial_extent').get('mgrs')
             if mgrs is not None:
                 coll.filterOn('mgrs',str(mgrs))
-
-            coll.filter_bbox(west=west,
-                             east=east,
-                             north=north,
-                             south=south,
-                             regions=features,
-                             crs=crs)
+            else:
+                coll.filter_bbox(west=west,
+                                 east=east,
+                                 north=north,
+                                 south=south,
+                                 regions=features,
+                                 crs=crs)
             #filter on dates:
 
             print("temporal_extent: {}".format(node.content['arguments']['temporal_extent']))
