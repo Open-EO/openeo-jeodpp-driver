@@ -20,6 +20,7 @@ graph = translate_process_graph("tests/process_graphs/zonal_statistics_test.json
 graph = translate_process_graph("tests/process_graphs/zonal_statistics.json")
 graph = translate_process_graph("tests/process_graphs/zonal_statistics_timeseries.json")
 graph = translate_process_graph("tests/process_graphs/zonal_statistics_timeseries_geometry.json")
+graph = translate_process_graph("tests/process_graphs/zonal_statistics_timeseries_mgrs.json")
 
 #print(graph)
 print(graph.sort())
