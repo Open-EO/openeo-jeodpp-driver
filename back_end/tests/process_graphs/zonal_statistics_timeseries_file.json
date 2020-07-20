@@ -55,7 +55,7 @@
                 "data": {"from_node": "dc"},
                 "geometries": {
                     "type": "file",
-                    "path": "/eos/jeodpp/data/base/Landuse/COUNTRIES/NL/Agriculture/Parcels/VER2017/Data/FileGDB/BRP_gewaspercelen_2017.lyr"
+                    "path": "/eos/jeodpp/data/base/Landuse/COUNTRIES/NL/Agriculture/Parcels/VER2017/Data/FileGDB/BRP_gewaspercelen_2017.gdb"
                 },
                 "reducer": {
                     "process_graph": {
