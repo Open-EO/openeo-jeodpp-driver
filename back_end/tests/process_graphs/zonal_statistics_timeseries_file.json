@@ -1,0 +1,82 @@
+{
+    "process_graph":
+    {
+        "dc": {
+            "process_id": "load_collection",
+            "description": "Loading the data; The order of the specified bands is important for the following reduce operation.",
+            "arguments": {
+                "id": "S2MSI2A",
+                "spatial_extent": {
+                    "mgrs": "33TXN"
+                },
+                "temporal_extent": [
+                    "2018-06-04T00:00:00.000Z",
+                    "2018-06-23T00:00:00.000Z"
+                ],
+                "bands": ["B4","B8"],
+                "properties": {
+                    "eo:cloud_cover": {
+                        "process_graph": {
+                            "cc": {
+                                "process_id": "between",
+                                "arguments": {
+                                    "x": {
+                                        "from_parameter": "value"
+                                    },
+                                    "min": 0,
+                                    "max": 10
+                                },
+                                "result": true
+                            }
+                        }
+                    },
+                    "platform": {
+                        "process_graph": {
+                            "pf": {
+                                "process_id": "eq",
+                                "arguments": {
+                                    "x": {
+                                        "from_parameter": "value"
+                                    },
+                                    "y": "Sentinel-2B",
+                                    "case_sensitive": false
+                                },
+                                "result": true
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "aggreg1": {
+            "process_id": "aggregate_spatial",
+            "description": "aggregate spatial using mean value",
+            "arguments": {
+                "data": {"from_node": "dc"},
+                "geometries": {
+                    "type": "file",
+                    "path": "/eos/jeodpp/data/base/Landuse/COUNTRIES/NL/Agriculture/Parcels/VER2017/Data/FileGDB/BRP_gewaspercelen_2017.lyr"
+                },
+                "reducer": {
+                    "process_graph": {
+                        "min": {
+                            "process_id": "mean",
+                            "arguments": {
+                                "data": {"from_parameter": "data"}
+                            },
+                            "result": true
+                        }
+                    }
+                }
+            }
+        },
+        "save": {
+            "process_id": "save_result",
+            "arguments": {
+                "data": {"from_node": "aggreg1"},
+                "format": "JSON"
+            },
+            "result": true
+        }
+    }
+}

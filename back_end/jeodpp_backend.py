@@ -359,14 +359,23 @@ class BackEnd:
                     print("reducer graph is: {}".format(reducer_node.content))
                     print("rule: {}".format(rule))
                 if 'geometries' in node.content['arguments']:
-                    geojson=node.content['arguments']['geometries']
-                    print(json.dumps(geojson))
-                    print(geojson)
-                    invect=pj.JimVect(json.dumps(geojson),verbose=1)
-                    print(invect.np().shape)
-                    print(invect.np())
-                    # ds=gdal.OpenEx(geojson)
-                    # lyr = ds.GetLayer()
+                    geometries = node.content['arguments']['geometries']
+                    geometryType = geometries['type']
+                    if geometryType == 'FeatureCollection':
+                        print(json.dumps(geometries))
+                        print(geometries)
+                        invect=pj.JimVect(json.dumps(geometries),verbose=1)
+                        print(invect.np().shape)
+                        print(invect.np())
+                        # ds=gdal.OpenEx(geojson)
+                        # lyr = ds.GetLayer()
+                    elif geometryType == 'file':
+                        invect=pj.JimVect(geometries['path'])
+                        print(invect.np().shape)
+                        print(invect.np())
+                elif 'file' in node.content['arguments']:
+                    raise ValueError("Error: not implemented yet")
+                    #todo: handle vector files...
                 else:
                     raise ValueError("Error: only polygons supported in geojson format")
                 # for points in node.content['arguments']['polygons']['coordinates']:
