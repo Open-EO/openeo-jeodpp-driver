@@ -7,11 +7,11 @@
             "arguments": {
                 "id": "S2MSI2A",
                 "spatial_extent": {
-                    "mgrs": "33TXN"
+                    "mgrs": "31UES"
                 },
                 "temporal_extent": [
-                    "2018-06-04T00:00:00.000Z",
-                    "2018-06-23T00:00:00.000Z"
+                    "2018-07-15T00:00:00.000Z",
+                    "2018-07-23T00:00:00.000Z"
                 ],
                 "bands": ["B4","B8"],
                 "properties": {
@@ -55,7 +55,7 @@
                 "data": {"from_node": "dc"},
                 "geometries": {
                     "type": "file",
-                    "path": "/eos/jeodpp/data/base/Landuse/COUNTRIES/NL/Agriculture/Parcels/VER2017/Data/FileGDB/BRP_gewaspercelen_2017.gdb"
+                    "path": "/eos/jeodpp/data/base/Landuse/COUNTRIES/NL/Agriculture/Parcels/VER2017/Data/FileGDB/BRP_Gewaspercelen_2017.gdb"
                 },
                 "reducer": {
                     "process_graph": {
