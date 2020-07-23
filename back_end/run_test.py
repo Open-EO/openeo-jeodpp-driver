@@ -1,13 +1,30 @@
 #import sys
 #sys.path.append('../../Open-EO-openeo-pg-parser-python/src')
 
-
 from openeo_pg_parser.translate import translate_process_graph
 from openeo_pg_parser.validate import validate_process_graph
 
 from openeo_pg_parser import graph
 
 from jeodpp_backend import BackEnd
+
+def memory_usage():
+    """Memory usage of the current process in kilobytes."""
+    status = None
+    result = {'peak': 0, 'rss': 0}
+    try:
+        # This will only work on systems with a /proc file system
+        # (like Linux).
+        status = open('/proc/self/status')
+        for line in status:
+            parts = line.split()
+            key = parts[0][2:-1].lower()
+            if key in result:
+                result[key] = int(parts[1])
+    finally:
+        if status is not None:
+            status.close()
+    return result['peak']/1024.0/1024.0
 
 jeodpp=BackEnd('jeodpp',user='kempepi')
 graph = translate_process_graph("tests/process_graphs/evi_eodc_1.json")
@@ -26,4 +43,6 @@ graph = translate_process_graph("tests/process_graphs/zonal_statistics_timeserie
 #print(graph)
 print(graph.sort())
 #jeodpp.process(graph)
+print("memory before process (in GB): {}".format(memory_usage()))
 jeodpp.process(graph.sort(),virtual=True)
+print("memory after process (in GB): {}".format(memory_usage()))
