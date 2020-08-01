@@ -42,7 +42,7 @@ graph = translate_process_graph("tests/process_graphs/zonal_statistics_timeserie
 
 #print(graph)
 print(graph.sort())
-#jeodpp.process(graph)
 print("memory before process (in GB): {}".format(memory_usage()))
+#jeodpp.process(graph.sort())
 jeodpp.process(graph.sort(),virtual=True)
 print("memory after process (in GB): {}".format(memory_usage()))
