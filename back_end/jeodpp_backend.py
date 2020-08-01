@@ -46,7 +46,7 @@ class BackEnd:
                         if jim[node.id].properties.nrOfBand() > 1:
                             for iplane, theDate in enumerate(jim[node.id].dimension['temporal']):
                                 print("cropPlane {}".format(iplane))
-                                jimplane=pj.geometry.cropPlane(jim[node.id],iplane)
+                                jimplane=Cube(pj.geometry.cropPlane(jim[node.id],iplane))
                                 jimplane.properties.setNoDataVals(0)
                                 jimplane.io.write(os.path.join(pathname,theDate.strftime('%Y%m%d')+'.tif'),co=['COMPRESS=LZW','TILED=YES'])
                             return jim[node.id]
@@ -286,7 +286,7 @@ class BackEnd:
                         if nir is None:
                             jim[node.id]=None
                             return[node.id]
-                        jim[reducer_node.id] = pj.pixops.convert(nir,'GDT_Float32')
+                        jim[reducer_node.id] = Cube(pj.pixops.convert(nir,'GDT_Float32'))
                         nirnp=nir.np().astype(np.float)
                         rednp=red.np().astype(np.float)
                         ndvi=(nirnp-rednp)/(nirnp+rednp)
