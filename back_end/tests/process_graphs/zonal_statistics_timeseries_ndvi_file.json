@@ -29,21 +29,6 @@
                                 "result": true
                             }
                         }
-                    },
-                    "platform": {
-                        "process_graph": {
-                            "pf": {
-                                "process_id": "eq",
-                                "arguments": {
-                                    "x": {
-                                        "from_parameter": "value"
-                                    },
-                                    "y": "Sentinel-2B",
-                                    "case_sensitive": false
-                                },
-                                "result": true
-                            }
-                        }
                     }
                 }
             }
