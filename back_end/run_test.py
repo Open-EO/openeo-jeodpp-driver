@@ -39,10 +39,11 @@ graph = translate_process_graph("tests/process_graphs/zonal_statistics_timeserie
 graph = translate_process_graph("tests/process_graphs/zonal_statistics_timeseries_geometry.json")
 graph = translate_process_graph("tests/process_graphs/zonal_statistics_timeseries_mgrs.json")
 graph = translate_process_graph("tests/process_graphs/zonal_statistics_timeseries_file.json")
+graph = translate_process_graph("tests/process_graphs/zonal_statistics_timeseries_ndvi_file.json")
 
 #print(graph)
 print(graph.sort())
 print("memory before process (in GB): {}".format(memory_usage()))
-#jeodpp.process(graph.sort())
-jeodpp.process(graph.sort(),virtual=True)
+jeodpp.process(graph.sort())
+#jeodpp.process(graph.sort(),virtual=True)
 print("memory after process (in GB): {}".format(memory_usage()))
