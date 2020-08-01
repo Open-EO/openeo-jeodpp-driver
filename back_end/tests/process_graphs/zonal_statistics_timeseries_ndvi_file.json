@@ -89,7 +89,7 @@
                 "reducer": {
                     "process_graph": {
                         "min": {
-                            "process_id": "mean",
+                            "process_id": ["mean","stdev"],
                             "arguments": {
                                 "data": {"from_parameter": "data"}
                             },
