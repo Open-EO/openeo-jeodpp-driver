@@ -122,14 +122,15 @@
             "description": "Scene classification mask"
         },
         "maskedNdvi": {
-            "process_id": "product",
+            "process_id": "mask",
             "arguments": {
-                "x": {
+                "data": {
                     "from_node": "ndvi"
                 },
-                "y": {
+                "mask": {
                     "from_node": "cloudMask"
-                }
+                },
+                "replacement": 0
             },
             "result": true
         },

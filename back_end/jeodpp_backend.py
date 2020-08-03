@@ -286,6 +286,36 @@ class BackEnd:
                     else:
                         raise TypeError("Error: arithmetic {} not implemented".format(node.content['process_id']))
             return jim[node.id]
+        elif node.content['process_id'] == "mask":
+            if verbose:
+                print(node)
+                print("eq {}".format(node.content.get('description')))
+
+            jim[node.id]=None
+            data = node.content['arguments'].get('data')
+            mask = node.content['arguments'].get('mask')
+            replacement = node.content['arguments'].get('replacement')
+            if isinstance(mask,dict):
+                if verbose:
+                    print("type of data is {}".format(type(jim[mask['from_node']])))
+                    if jim[mask['from_node']] is None:
+                        jim[node.id]=None
+                        return jim[node.id]
+                    else:
+                        mask=jim[mask['from_node']]
+            if isinstance(data,dict):
+                if verbose:
+                    print("type of data is {}".format(type(jim[data['from_node']])))
+                    if jim[data['from_node']] is None:
+                        jim[node.id]=None
+                        return jim[node.id]
+                    else:
+                        jim[node.id]=jim[data['from_node']]
+            if replacement is not None:
+                jim[node.id][mask]=replacement
+            else:
+                jim[node.id][mask]=0
+            return jim[node.id]
         # elif node.content['process_id'] in ['sum','subtract','product','divide']:
         #     if verbose:
         #         print("arithmetic {}".format(node.content['process_id']))
