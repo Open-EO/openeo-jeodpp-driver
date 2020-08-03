@@ -269,7 +269,7 @@ class BackEnd:
                         jim[node.id]=(jim[node.id]<value)
                     elif node.content['process_id'] == 'lte':
                         jim[node.id]=(jim[node.id]<=value)
-                    if node.content['process_id'] == 'sum':
+                    elif node.content['process_id'] == 'sum':
                         jim[node.id]+=value
                     elif node.content['process_id'] == 'subtract':
                         jim[node.id]-=value
