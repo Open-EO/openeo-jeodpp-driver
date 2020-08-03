@@ -33,7 +33,7 @@
                             }
                         }
                     },
-                    "mgrs": "31UFT"
+                    "eo:mgrs": "31UFT"
                 }
             }
         },
@@ -111,7 +111,7 @@
                         }
                     }
                 }
-            }
+            },
             "description": "Scene classification mask"
         },
         "maskedNdvi": {

@@ -76,16 +76,17 @@ class BackEnd:
             # properties['cloudCoverPercentage']='<10'
             properties=node.content['arguments'].get('properties')
             for property in properties:
-                property_node=agraph[node.content['arguments']['properties'][property]['from_node']]
+                # property_node=agraph[node.content['arguments']['properties'][property]['from_node']]
+                property_node=node.content['arguments']['properties'][property]
                 if 'cloud_cover' in property:
                     minCloud = property_node.content['arguments'].get('min',0)
                     maxCloud = property_node.content['arguments'].get('max',100)
                     coll.filterOn('cloudCoverPercentage','<'+str(maxCloud))
                     coll.filterOn('cloudCoverPercentage','>'+str(minCloud))
                 if 'mgrs' in property:
-                    mgrs = property_node.content['arguments'].get('eo:mgrs')
+                    mgrs = property_node.content.get('eo:mgrs')
                     if mgrs is None:
-                        mgrs = property_node.content['arguments'].get('mgrs')
+                        mgrs = property_node.content.get('mgrs')
                     if mgrs is not None:
                         coll.filterOn('mgrs',str(mgrs))
                 if 'platform' in property:
@@ -95,6 +96,7 @@ class BackEnd:
                             coll.filterOn('platform','='+str(platform))
                         elif property_node.content['process_id'] == 'neq':
                             coll.filterOn('platform','<>'+str(platform))
+                #not needed?
                 jim[property_node.id]=True
 
             #filter on bounding box (defined in lat/lon)
