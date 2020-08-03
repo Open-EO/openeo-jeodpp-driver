@@ -240,7 +240,8 @@ class BackEnd:
         elif node.content['process_id'] in ['eq', 'neq', 'gt', 'gte', 'lt', 'lte']:
             if verbose:
                 print(node)
-                print("eq {}".format(node.content['description']))
+                print("eq {}".format(node.content.get('description')))
+
             jim[node.id]=None
             for argument in node.content['arguments']:
                 if isinstance(argument,dict):
