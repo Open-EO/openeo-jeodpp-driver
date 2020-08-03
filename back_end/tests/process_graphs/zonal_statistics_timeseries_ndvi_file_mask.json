@@ -6,15 +6,9 @@
             "description": "Loading the data; The order of the specified bands is important for the following reduce operation.",
             "arguments": {
                 "id": "S2MSI2A",
-                "spatial_extent": {
-                    "west": 4.89500,
-                    "east": 4.89950,
-                    "north": 51.59500,
-                    "south": 51.59200
-                },
                 "temporal_extent": [
-                    "2018-07-01T00:00:00.000Z",
-                    "2018-08-01T00:00:00.000Z"
+                    "2019-01-01T00:00:00.000Z",
+                    "2020-01-01T00:00:00.000Z"
                 ],
                 "bands": ["B4","B8","SCL"],
                 "properties": {

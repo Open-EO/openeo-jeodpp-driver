@@ -75,6 +75,8 @@ class BackEnd:
             #test
             # properties['cloudCoverPercentage']='<10'
             properties=node.content['arguments'].get('properties')
+
+            spatiallyfiltered = False
             for property in properties:
                 if node.content['arguments']['properties'][property].get('from_node') is not None:
                     property_node=agraph[node.content['arguments']['properties'][property]['from_node']]
@@ -94,6 +96,7 @@ class BackEnd:
                             coll.filterOn('mgrs','<>'+str(mgrs))
                         else:
                             raise AttributeError("Error: process_id {} not supported for property {}".format(property_node.content['process_id'],property))
+                    spatiallyFiltered=True
                 if 'platform' in property:
                     platform = property_node.content['arguments'].get('y')
                     if platform is not None:
@@ -107,35 +110,32 @@ class BackEnd:
                     jim[property_node.id]=True
 
             #filter on bounding box (defined in lat/lon)
-            west = node.content['arguments']['spatial_extent'].get('west')
-            east = node.content['arguments']['spatial_extent'].get('east')
-            north = node.content['arguments']['spatial_extent'].get('north')
-            south = node.content['arguments']['spatial_extent'].get('south')
-            #crs = node.content['arguments']['spatial_extent'].get('crs')
-            crs = None
-            geometries = node.content['arguments'].get('spatial_extent').get('geometries')
-            if geometries is not None:
-                features = node.content['arguments'].get('spatial_extent')
-                print('features {}'.format(features))
-                features=json.dumps(features)
-                print('features {}'.format(features))
-                v1 = pj.JimVect(features)
-                print(v1.properties.getFeatureCount())
-            else:
-                features = None
-            mgrs = node.content['arguments'].get('spatial_extent').get('mgrs')
-            spatiallyfiltered = False
-            if mgrs is not None:
-                coll.filterOn('mgrs',str(mgrs))
-                spatiallyFiltered = True
-            if west and east and north and south:
-                coll.filter_bbox(west=west,
-                                 east=east,
-                                 north=north,
-                                 south=south,
-                                 regions=features,
-                                 crs=crs)
-                spatiallyFiltered = True
+            spatial_extent = node.content['arguments'].get('spatial_extent')
+            if spatial_extent is not None:
+              west = spatial_extent.get('west')
+              east = spatial_extent.get('east')
+              north = spatial_extent.get('north')
+              south = nodeial_extent.get('south')
+              #crs = spatial_extent'get('crs')
+              crs = None
+              geometries = node.content['arguments'].get('spatial_extent').get('geometries')
+              if geometries is not None:
+                  features = node.content['arguments'].get('spatial_extent')
+                  print('features {}'.format(features))
+                  features=json.dumps(features)
+                  print('features {}'.format(features))
+                  v1 = pj.JimVect(features)
+                  print(v1.properties.getFeatureCount())
+              else:
+                  features = None
+              if west and east and north and south:
+                  coll.filter_bbox(west=west,
+                                   east=east,
+                                   north=north,
+                                   south=south,
+                                   regions=features,
+                                   crs=crs)
+                  spatiallyFiltered = True
             if not spatiallyFiltered:
                 raise AttributeError("Error: {} bounding box or mgrs must be defined to filter collection".format(type(jim[node.id])))
 
@@ -243,10 +243,10 @@ class BackEnd:
                 print("eq {}".format(node.content.get('description')))
 
             jim[node.id]=None
-            for argument in node.content['arguments']:
+            for argument in node.content['arguments'].values():
                 if isinstance(argument,dict):
                     if verbose:
-                        print("type of jim is {}".format(type(jim[data['from_node']])))
+                        print("type of jim is {}".format(type(jim[argument['from_node']])))
                     if jim[argument['from_node']] is None:
                         jim[node.id]=None
                         return jim[node.id]
@@ -254,6 +254,9 @@ class BackEnd:
                         value=jim[argument['from_node']]
                 else:
                     value=argument
+                #test
+                print("argument is {}".format(type(argument),argument))
+                print("value is of type {}, {}".format(type(value),value))
                 if jim[node.id] is None:
                     jim[node.id]=value
                 else:
