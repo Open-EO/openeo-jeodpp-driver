@@ -351,7 +351,8 @@ class BackEnd:
                         ndvi=(nirnp-rednp)/(nirnp+rednp)
                         ndvi[np.isnan(ndvi)]=0
                         jim[reducer_node.id].np()[:]=ndvi
-                        jim.dimension['band']=['nd']
+                        jim[reducer_node.id].dimension['band']=['nd']
+                        jim[reducer_node.id].dimension['time']=nir.dimension['time']
                     elif reducer_node.content['process_id'] == 'first':
                         jim[reducer_node.id]=Cube(reducer_node.content['arguments']['data']['from_node'])
                         # cube=jim[reducer_node.content['arguments']['data']['from_node']]
