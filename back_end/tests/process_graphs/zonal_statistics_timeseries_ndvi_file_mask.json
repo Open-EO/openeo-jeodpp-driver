@@ -7,7 +7,10 @@
             "arguments": {
                 "id": "S2MSI2A",
                 "spatial_extent": {
-                    "mgrs": "31UFT"
+                    "west": 4.89500,
+                    "east": 4.89950,
+                    "north": 51.59500,
+                    "south": 51.59200
                 },
                 "temporal_extent": [
                     "2018-01-01T00:00:00.000Z",
@@ -29,7 +32,8 @@
                                 "result": true
                             }
                         }
-                    }
+                    },
+                    "mgrs": "31UFT"
                 }
             }
         },

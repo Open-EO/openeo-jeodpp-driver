@@ -83,7 +83,9 @@ class BackEnd:
                     coll.filterOn('cloudCoverPercentage','<'+str(maxCloud))
                     coll.filterOn('cloudCoverPercentage','>'+str(minCloud))
                 if 'mgrs' in property:
-                    mgrs = property_node.content['arguments'].get('mgrs')
+                    mgrs = property_node.content['arguments'].get('eo:mgrs')
+                    if mgrs is None:
+                        mgrs = property_node.content['arguments'].get('mgrs')
                     if mgrs is not None:
                         coll.filterOn('mgrs',str(mgrs))
                 if 'platform' in property:
