@@ -259,15 +259,15 @@ class BackEnd:
                 else:
                     if node.content['process_id'] == 'eq':
                         jim[node.id]=(jim[node.id]==value)
-                    if node.content['process_id'] == 'neq':
+                    elif node.content['process_id'] == 'neq':
                         jim[node.id]=(jim[node.id]!=value)
-                    if node.content['process_id'] == 'gt':
+                    elif node.content['process_id'] == 'gt':
                         jim[node.id]=(jim[node.id]>value)
-                    if node.content['process_id'] == 'gte':
+                    elif node.content['process_id'] == 'gte':
                         jim[node.id]=(jim[node.id]>=value)
-                    if node.content['process_id'] == 'lt':
+                    elif node.content['process_id'] == 'lt':
                         jim[node.id]=(jim[node.id]<value)
-                    if node.content['process_id'] == 'lte':
+                    elif node.content['process_id'] == 'lte':
                         jim[node.id]=(jim[node.id]<=value)
                     else:
                         raise TypeError("Error: arithmetic {} not implemented".format(node.content['process_id']))
