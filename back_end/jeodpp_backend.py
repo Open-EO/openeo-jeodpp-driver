@@ -522,6 +522,9 @@ class BackEnd:
                     elif isinstance(jim[node.id],Collection):
                         if verbose:
                             print("Node is collection not loaded in memory")
+                    elif isinstance(jim[node.id],bool):
+                        if verbose:
+                            print("Node is intermediate result")
                     else:
                         raise TypeError("Error: result should either be Jim or JimVect")
                 else:
