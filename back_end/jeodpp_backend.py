@@ -237,7 +237,7 @@ class BackEnd:
                     jim[process_node.id] = Cube(abs(jim[process_node.content['arguments']['x']['from_node']]))
             jim[node.id]=jim[process_node.id]
             return jim[node.id]
-        elif node.content['process_id'] in ['eq', 'neq', 'gt', 'gte', 'lt', 'lte']:
+        elif node.content['process_id'] in ['eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'sum', 'subtract', 'product', 'divide']:
             if verbose:
                 print(node)
                 print("eq {}".format(node.content.get('description')))
@@ -269,31 +269,6 @@ class BackEnd:
                         jim[node.id]=(jim[node.id]<value)
                     elif node.content['process_id'] == 'lte':
                         jim[node.id]=(jim[node.id]<=value)
-                    else:
-                        raise TypeError("Error: arithmetic {} not implemented".format(node.content['process_id']))
-            return jim[node.id]
-        elif node.content['process_id'] in ['sum','subtract','product','divide']:
-            if verbose:
-                print("arithmetic {}".format(node.content['process_id']))
-            jim[node.id]=None
-            for data in node.content['arguments']['data']:
-                print("data is: {}".format(data))
-                if isinstance(data,dict):
-                    if verbose:
-                        print("type of jim is {}".format(type(jim[data['from_node']])))
-                    if jim[data['from_node']] is None:
-                        jim[node.id]=None
-                        return jim[node.id]
-                    else:
-                        value=jim[data['from_node']]
-                else:
-                    value=data
-                #value should be of type pj.Jim
-
-                print("value is of type {}".format(type(value)))
-                if jim[node.id] is None:
-                    jim[node.id]=value
-                else:
                     if node.content['process_id'] == 'sum':
                         jim[node.id]+=value
                     elif node.content['process_id'] == 'subtract':
@@ -308,6 +283,42 @@ class BackEnd:
                     else:
                         raise TypeError("Error: arithmetic {} not implemented".format(node.content['process_id']))
             return jim[node.id]
+        # elif node.content['process_id'] in ['sum','subtract','product','divide']:
+        #     if verbose:
+        #         print("arithmetic {}".format(node.content['process_id']))
+        #     jim[node.id]=None
+        #     for data in node.content['arguments']['data']:
+        #         print("data is: {}".format(data))
+        #         if isinstance(data,dict):
+        #             if verbose:
+        #                 print("type of jim is {}".format(type(jim[data['from_node']])))
+        #             if jim[data['from_node']] is None:
+        #                 jim[node.id]=None
+        #                 return jim[node.id]
+        #             else:
+        #                 value=jim[data['from_node']]
+        #         else:
+        #             value=data
+        #         #value should be of type pj.Jim
+
+        #         print("value is of type {}".format(type(value)))
+        #         if jim[node.id] is None:
+        #             jim[node.id]=value
+        #         else:
+        #             if node.content['process_id'] == 'sum':
+        #                 jim[node.id]+=value
+        #             elif node.content['process_id'] == 'subtract':
+        #                 jim[node.id]-=value
+        #             elif node.content['process_id'] == 'product':
+        #                 jim[node.id]*=value
+        #             elif node.content['process_id'] == 'divide':
+        #                 #test
+        #                 print(jim[node.id].np())
+        #                 print(value)
+        #                 jim[node.id]/=value
+        #             else:
+        #                 raise TypeError("Error: arithmetic {} not implemented".format(node.content['process_id']))
+        #     return jim[node.id]
         elif node.content['process_id'] == 'reduce_dimension':
             if verbose:
                 print(node)
