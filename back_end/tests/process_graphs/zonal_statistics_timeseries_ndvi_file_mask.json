@@ -107,7 +107,7 @@
                             }
                         },
                         "eq1": {
-                            "process_id": "eq",
+                            "process_id": "neq",
                             "arguments": {
                                 "x": {
                                     "from_node": "scl"
