@@ -33,6 +33,19 @@
                             }
                         }
                     },
+                    "eo:mgrs":{
+                        "process_graph":{
+                            "mgrs":{
+                                "process_id":"eq",
+                                "arguments":{
+                                    "x":{
+                                        "from_parameter":"value"
+                                    },
+                                    "y":"31UFT",
+                                },
+                            }
+                        }
+                    }
                     "eo:mgrs": "31UFT"
                 }
             }

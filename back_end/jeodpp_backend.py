@@ -76,19 +76,24 @@ class BackEnd:
             # properties['cloudCoverPercentage']='<10'
             properties=node.content['arguments'].get('properties')
             for property in properties:
-                # property_node=agraph[node.content['arguments']['properties'][property]['from_node']]
-                property_node=node.content['arguments']['properties'][property]
+                if node.content['arguments']['properties'][property].get('from_node') is not None:
+                    property_node=agraph[node.content['arguments']['properties'][property]['from_node']]
+                else:
+                    property_node=None
                 if 'cloud_cover' in property:
                     minCloud = property_node.content['arguments'].get('min',0)
                     maxCloud = property_node.content['arguments'].get('max',100)
                     coll.filterOn('cloudCoverPercentage','<'+str(maxCloud))
                     coll.filterOn('cloudCoverPercentage','>'+str(minCloud))
                 if 'mgrs' in property:
-                    mgrs = property_node.content.get('eo:mgrs')
-                    if mgrs is None:
-                        mgrs = property_node.content.get('mgrs')
+                    mgrs = property_node.content['arguments'].get('y')
                     if mgrs is not None:
-                        coll.filterOn('mgrs',str(mgrs))
+                        if property_node.content['process_id'] == 'eq':
+                            coll.filterOn('mgrs','='+str(mgrs))
+                        elif property_node.content['process_id'] == 'neq':
+                            coll.filterOn('mgrs','<>'+str(mgrs))
+                        else:
+                            raise AttributeError("Error: process_id {} not supported for property {}".format(property_node.content['process_id'],property))
                 if 'platform' in property:
                     platform = property_node.content['arguments'].get('y')
                     if platform is not None:
@@ -96,8 +101,10 @@ class BackEnd:
                             coll.filterOn('platform','='+str(platform))
                         elif property_node.content['process_id'] == 'neq':
                             coll.filterOn('platform','<>'+str(platform))
-                #not needed?
-                jim[property_node.id]=True
+                        else:
+                            raise AttributeError("Error: process_id {} not supported for property {}".format(property_node.content['process_id'],property))
+                if property_node is not None:
+                    jim[property_node.id]=True
 
             #filter on bounding box (defined in lat/lon)
             west = node.content['arguments']['spatial_extent'].get('west')
