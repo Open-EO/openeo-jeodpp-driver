@@ -89,7 +89,7 @@ class BackEnd:
                     mgrs = property_node.content['arguments'].get('y')
                     if mgrs is not None:
                         if property_node.content['process_id'] == 'eq':
-                            coll.filterOn('mgrs','='+str(mgrs))
+                            coll.filterOn('mgrs',str(mgrs))
                         elif property_node.content['process_id'] == 'neq':
                             coll.filterOn('mgrs','<>'+str(mgrs))
                         else:
