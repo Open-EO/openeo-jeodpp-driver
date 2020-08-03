@@ -86,6 +86,13 @@ class BackEnd:
                     mgrs = property_node.content['arguments'].get('mgrs')
                     if mgrs is not None:
                         coll.filterOn('mgrs',str(mgrs))
+                if 'platform' in property:
+                    platform = property_node.content['arguments'].get('y')
+                    if platform is not None:
+                        if property_node.content['process_id'] == 'eq':
+                            coll.filterOn('platform','='+str(platform))
+                        elif property_node.content['process_id'] == 'neq':
+                            coll.filterOn('platform','<>'+str(platform))
                 jim[property_node.id]=True
 
             #filter on bounding box (defined in lat/lon)
@@ -106,15 +113,21 @@ class BackEnd:
             else:
                 features = None
             mgrs = node.content['arguments'].get('spatial_extent').get('mgrs')
+            spatiallyfiltered = False
             if mgrs is not None:
                 coll.filterOn('mgrs',str(mgrs))
-            else:
+                spatiallyFiltered = True
+            if west and east and north and south:
                 coll.filter_bbox(west=west,
                                  east=east,
                                  north=north,
                                  south=south,
                                  regions=features,
                                  crs=crs)
+                spatiallyFiltered = True
+            if not spatiallyFiltered:
+                raise AttributeError("Error: {} bounding box or mgrs must be defined to filter collection".format(type(jim[node.id])))
+
             #filter on dates:
 
             print("temporal_extent: {}".format(node.content['arguments']['temporal_extent']))
@@ -213,6 +226,40 @@ class BackEnd:
                     jim[process_node.id] = Cube(abs(jim[process_node.content['arguments']['x']['from_node']]))
             jim[node.id]=jim[process_node.id]
             return jim[node.id]
+        elif node.content['process_id'] in ['eq', 'neq', 'gt', 'gte', 'lt', 'lte']:
+            if verbose:
+                print(node)
+                print("eq {}".format(node.content['description']))
+            jim[node.id]=None
+            for argument in node.content['arguments']:
+                if isinstance(argument,dict):
+                    if verbose:
+                        print("type of jim is {}".format(type(jim[data['from_node']])))
+                    if jim[argument['from_node']] is None:
+                        jim[node.id]=None
+                        return jim[node.id]
+                    else:
+                        value=jim[argument['from_node']]
+                else:
+                    value=argument
+                if jim[node.id] is None:
+                    jim[node.id]=value
+                else:
+                    if node.content['process_id'] == 'eq':
+                        jim[node.id]=(jim[node.id]==value)
+                    if node.content['process_id'] == 'neq':
+                        jim[node.id]=(jim[node.id]!=value)
+                    if node.content['process_id'] == 'gt':
+                        jim[node.id]=(jim[node.id]>value)
+                    if node.content['process_id'] == 'gte':
+                        jim[node.id]=(jim[node.id]>=value)
+                    if node.content['process_id'] == 'lt':
+                        jim[node.id]=(jim[node.id]<value)
+                    if node.content['process_id'] == 'lte':
+                        jim[node.id]=(jim[node.id]<=value)
+                    else:
+                        raise TypeError("Error: arithmetic {} not implemented".format(node.content['process_id']))
+            return jim[node.id]
         elif node.content['process_id'] in ['sum','subtract','product','divide']:
             if verbose:
                 print("arithmetic {}".format(node.content['process_id']))
@@ -292,6 +339,7 @@ class BackEnd:
                         ndvi=(nirnp-rednp)/(nirnp+rednp)
                         ndvi[np.isnan(ndvi)]=0
                         jim[reducer_node.id].np()[:]=ndvi
+                        jim.dimension['band']=['nd']
                     elif reducer_node.content['process_id'] == 'first':
                         jim[reducer_node.id]=Cube(reducer_node.content['arguments']['data']['from_node'])
                         # cube=jim[reducer_node.content['arguments']['data']['from_node']]
