@@ -483,6 +483,11 @@ class BackEnd:
                     #todo: handle vector files...
                 else:
                     raise ValueError("Error: only polygons supported in geojson format")
+                if 'context' in node.content['arguments']:
+                    buffer = node.content['arguments']['context'].get('buffer')
+                    srcnodata = node.content['arguments']['context'].get('srcnodata')
+                if srcnodata is None:
+                    srcnodata = 0
                 # for points in node.content['arguments']['polygons']['coordinates']:
                 #     wktstring=node.content['arguments']['polygons']['type']
                 #     wktstring+=' (('
@@ -501,7 +506,10 @@ class BackEnd:
                     #jim[node.content['arguments']['data']['from_node']].io.write('/tmp/test.tif')
                     #invect.io.write('/tmp/test.sqlite',co=['OVERWRITE=TRUE'])
 
-                    jim[reducer_node.id]=pj.geometry.extract(invect, jim[node.content['arguments']['data']['from_node']], outvect, rule, bandname=bandname, planename=planename, co=['OVERWRITE=TRUE'], srcnodata=0)
+                    if buffer is not None:
+                        jim[reducer_node.id]=pj.geometry.extract(invect, jim[node.content['arguments']['data']['from_node']], outvect, rule, bandname=bandname, planename=planename, co=['OVERWRITE=TRUE'], srcnodata=srcnodata, buffer=buffer)
+                    else:
+                        jim[reducer_node.id]=pj.geometry.extract(invect, jim[node.content['arguments']['data']['from_node']], outvect, rule, bandname=bandname, planename=planename, co=['OVERWRITE=TRUE'], srcnodata=srcnodata)
                 elif isinstance(jim[node.content['arguments']['data']['from_node']],Collection):
                     print("rule is: {}".format(rule))
                     jim[reducer_node.id]=jim[node.content['arguments']['data']['from_node']].aggregate_spatial(invect, rule, outvect)
