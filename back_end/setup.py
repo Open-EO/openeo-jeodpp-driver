@@ -12,7 +12,7 @@ from setuptools import find_packages
 
 
 setup(
-    name='openeo-jeodpp_backend',
+    name='jeodpp_backend',
     version='0.1.0',
     author_email='pieter.kempeneers@ec.europa.eu',
     url='https://jeodpp.jrc.ec.europa.eu/apps/gitlab/jeodpp/openeo/-/tree/master/back_end',
