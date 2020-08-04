@@ -143,9 +143,12 @@
                     "type": "file",
                     "path": "/eos/jeodpp/data/base/Landuse/COUNTRIES/NL/Agriculture/Parcels/VER2017/Data/FileGDB/BRP_Gewaspercelen_2017.gdb"
                 },
+                "context": {
+                    "buffer": -10
+                },
                 "reducer": {
                     "process_graph": {
-                        "min": {
+                        "mean": {
                             "process_id": "mean",
                             "arguments": {
                                 "data": {"from_parameter": "data"}
