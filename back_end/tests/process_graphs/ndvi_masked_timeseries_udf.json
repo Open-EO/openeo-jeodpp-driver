@@ -1,0 +1,138 @@
+{
+    "process_graph":
+    {
+        "dc": {
+            "process_id": "load_collection",
+            "description": "Loading the data; The order of the specified bands is important for the following reduce operation.",
+            "arguments": {
+                "id": "S2MSI2A",
+                "temporal_extent": [
+                    "2019-01-01T00:00:00.000Z",
+                    "2020-01-01T00:00:00.000Z"
+                ],
+                "bands": ["B4","B8","SCL"],
+                "properties": {
+                    "eo:cloud_cover": {
+                        "process_graph": {
+                            "cc": {
+                                "process_id": "between",
+                                "arguments": {
+                                    "x": {
+                                        "from_parameter": "value"
+                                    },
+                                    "min": 0,
+                                    "max": 10
+                                },
+                                "result": true
+                            }
+                        }
+                    },
+                    "eo:mgrs": {
+                        "process_graph": {
+                            "mgrs": {
+                                "process_id": "eq",
+                                "arguments": {
+                                    "x": {
+                                        "from_parameter":"value"
+                                    },
+                                    "y": "31UFT"
+                                },
+                            	"result": true
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "ndvi": {
+            "process_id": "reduce_dimension",
+            "arguments": {
+                "data": {
+                    "from_node": "dc"
+                },
+                "reducer": {
+                    "process_graph": {
+                        "red": {
+                            "process_id": "array_element",
+                            "arguments": {
+                                "data": {
+                                    "from_parameter": "data"
+                                },
+                                "label": "B4"
+                            }
+                        },
+                        "nir": {
+                            "process_id": "array_element",
+                            "arguments": {
+                                "data": {
+                                    "from_parameter": "data"
+                                },
+                                "label": "B8"
+                            }
+                        },
+                        "ndvi": {
+                            "process_id": "normalized_difference",
+                            "arguments": {
+                                "x": {
+                                    "from_node": "nir"
+                                },
+                                "y": {
+                                    "from_node": "red"
+                                }
+                            },
+                            "result": true
+                        }
+                    }
+                },
+                "dimension": "bands"
+            },
+        "description": "Compute the NDVI: (NIR - RED) / (NIR + RED)"
+        },
+        "cloudmask": {
+            "process_id": "reduce_dimension",
+            "arguments": {
+                "data": {
+                    "from_node": "dc"
+                },
+                "dimension": "bands",
+                "reducer": {
+                    "process_graph": {
+                        "runudf1": {
+                            "process_id": "run_udf",
+                            "arguments": {
+                                "data": {
+                                    "from_parameter": "data"
+                                },
+                                "runtime": "Python",
+                                "version": "latest",
+                                "udf": "def myfunction(tile):\n    tile.geometry.cropBand(tile.dimension['band'].index('SCL))\n    return tile==4"
+                            },
+                            "result": true
+                        }
+                    }
+                }
+            }
+        },
+        "maskedNdvi": {
+            "process_id": "mask",
+            "arguments": {
+                "data": {
+                    "from_node": "ndvi"
+                },
+                "mask": {
+                    "from_node": "cloudMask"
+                },
+                "replacement": 0
+            },
+            "result": true
+        },
+        "save": {
+            "process_id": "save_result",
+            "arguments": {
+                "data": {"from_node": "maskedNdvi"},
+                "format": "GeoTiff"
+            },
+            "result": true
+        }
+    }
+}
