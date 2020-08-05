@@ -3,6 +3,7 @@ import dateutil.parser
 import os
 import json
 from openeo_pg_parser import graph
+import gc
 #import graph
 from jeolib.collection import Collection
 from jeolib.cube import Cube
@@ -580,6 +581,16 @@ class BackEnd:
                             print("Node is intermediate result")
                     else:
                         raise TypeError("Error: result should either be Jim or JimVect")
+                    collectGarbage = True
+                    for descendant in node.descendants().nodes:
+                        if jim[descendant.id] is None:
+                            collectGarbage = False
+                            print("cannot collect garbage for node {} yet, found descendant {}".format(node.id, descendant.id))
+                            break
+                    if collectGarbage and not isinstance(jim[node.id],bool):
+                        print("collecting garbage for node {}".format(node.id))
+                        jim[node.id] = True
+                        gc.collect()
                 else:
                     if verbose:
                         print("could not calculate result for node {}".format(node.id))
@@ -595,22 +606,8 @@ class BackEnd:
                     if verbose:
                         print(node.id)
                     ntodo+=1
-                else:
-                    collectGarbage = True
-                    for descendant in node.descendants().nodes:
-                        if jim[descendant.id] is None:
-                            collectGarbage = False
-                            print("cannot collect garbage for node {} yet, found descendant {}".format(node.id, descendant.id))
-                            break
-                    if collectGarbage:
-                        print("collecting garbage for node {}".format(node.id))
-                        jim[node.id] = True
 
-                    print("descendents: {}".format(node.descendants()))
             if ntodo:
                 finished=False
             elif verbose:
                 print("All nodes processed")
-
-        #todo: garbage collect jim (delete all Jim instances for without references from_node
-
