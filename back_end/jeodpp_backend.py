@@ -597,8 +597,8 @@ class BackEnd:
                     ntodo+=1
                 else:
                     collectGarbage = True
-                    for descendant_id in node.descendants().id:
-                        if jim[descendant_id] is None:
+                    for descendant in node.descendants().nodes:
+                        if jim[descendant.id] is None:
                             collectGarbage = False
                             print("cannot collect garbage for node {} yet, found descendant {}".format(node.id, descendant.id))
                             break
