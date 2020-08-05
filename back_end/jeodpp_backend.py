@@ -581,16 +581,17 @@ class BackEnd:
                             print("Node is intermediate result")
                     else:
                         raise TypeError("Error: result should either be Jim or JimVect")
-                    collectGarbage = True
-                    for descendant in node.descendants().nodes:
-                        if jim[descendant.id] is None:
-                            collectGarbage = False
-                            print("cannot collect garbage for node {} yet, found descendant {}".format(node.id, descendant.id))
-                            break
-                    if collectGarbage and not isinstance(jim[node.id],bool):
-                        print("collecting garbage for node {}".format(node.id))
-                        jim[node.id] = True
-                        gc.collect()
+                    for ancestor in node.ancestors().nodes:
+                        collectGarbage = True
+                        for descendant in ancestor.descendants().nodes:
+                            if jim[descendant.id] is None:
+                                collectGarbage = False
+                                print("cannot collect garbage for ancestor node {} yet, found descendant {}".format(ancestor.id, descendant.id))
+                                break
+                        if collectGarbage and not isinstance(jim[ancestor.id],bool):
+                            print("collecting garbage for node {}".format(ancestor.id))
+                            jim[ancestor.id] = True
+                            gc.collect()
                 else:
                     if verbose:
                         print("could not calculate result for node {}".format(node.id))
