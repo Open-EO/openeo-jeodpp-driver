@@ -88,7 +88,7 @@
             },
         "description": "Compute the NDVI: (NIR - RED) / (NIR + RED)"
         },
-        "cloudmask": {
+        "cloudMask": {
             "process_id": "reduce_dimension",
             "arguments": {
                 "data": {

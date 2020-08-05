@@ -145,7 +145,7 @@
                 },
                 "context": {
                     "buffer": -10,
-                    "srcnodata": 0,
+                    "srcnodata": 0
                 },
                 "reducer": {
                     "process_graph": {
