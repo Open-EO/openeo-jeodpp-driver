@@ -143,16 +143,16 @@ class BackEnd:
                 east = bbox[2]
                 south = bbox[3]
 
-              if west and east and north and south:
-                  coll.filter_bbox(west=west,
-                                   east=east,
-                                   north=north,
-                                   south=south,
-                                   regions=features,
-                                   tileindex=tileindex,
-                                   tilestotal=tilestotal,
-                                   crs=crs)
-                  spatiallyFiltered = True
+            if west and east and north and south:
+                coll.filter_bbox(west=west,
+                                 east=east,
+                                 north=north,
+                                 south=south,
+                                 regions=features,
+                                 tileindex=tileindex,
+                                 tilestotal=tilestotal,
+                                 crs=crs)
+                spatiallyFiltered = True
             if not spatiallyFiltered:
                 raise AttributeError("Error: {} bounding box or mgrs must be defined to filter collection".format(type(jim[node.id])))
 
