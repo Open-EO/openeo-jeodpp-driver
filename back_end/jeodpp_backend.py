@@ -604,7 +604,7 @@ class BackEnd:
                             break
                     if collectGarbage:
                         print("collecting garbage for node {}".format(node.id))
-                        jiim[node.id] = True
+                        jim[node.id] = True
 
                     print("descendents: {}".format(node.descendants()))
             if ntodo:
