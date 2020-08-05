@@ -17,7 +17,7 @@ class BackEnd:
         self.name = name
         self.user = user
 
-    def processNode(self, agraph, nodeid, jim, virtual=False):
+    def processNode(self, agraph, nodeid, jim, tileindex=None, tiletotal=None, virtual=False):
         print('agraph.nodes: {}'.format(agraph.nodes))
         #node=graph.nodes[nodeid]
         node=agraph[nodeid]
@@ -78,6 +78,7 @@ class BackEnd:
             properties=node.content['arguments'].get('properties')
 
             spatiallyfiltered = False
+            mgrs = None
             for property in properties:
                 if node.content['arguments']['properties'][property].get('from_node') is not None:
                     property_node=agraph[node.content['arguments']['properties'][property]['from_node']]
@@ -129,12 +130,27 @@ class BackEnd:
                   print(v1.properties.getFeatureCount())
               else:
                   features = None
+
+            if mgrs is not None and tileindex is not None and tiletotal is not None:
+                attribute="Name="+'\''+args.mgrs+'\''
+                print("attribute: {}".format(attribute))
+                fn='/eos/jeodpp/data/base/GeographicalGridSystems/GLOBAL/MGRS/S2/LATEST/Data/Shapefile/S2grid2D.shp'
+                v1=pj.JimVect(pj.JimVect(fn,attributeFilter=attribute),output='/vsimem/v1',co=['OVERWRITE=YES'])
+                v1.io.write()
+                bbox = v1.properties.getBBox()
+                west = bbox[0]
+                north = bbox[1]
+                east = bbox[2]
+                south = bbox[3]
+
               if west and east and north and south:
                   coll.filter_bbox(west=west,
                                    east=east,
                                    north=north,
                                    south=south,
                                    regions=features,
+                                   tileindex=tileindex,
+                                   tilestotal=tilestotal,
                                    crs=crs)
                   spatiallyFiltered = True
             if not spatiallyFiltered:
@@ -537,7 +553,7 @@ class BackEnd:
         #         print("we are in callback function with {}".format(node.content['process_id']))
         #     return None
 
-    def process(self, agraph, virtual=False):
+    def process(self, agraph, tileindex=None, tiletotal=None, virtual=False):
         jim={}
         if verbose:
             print("initialize")

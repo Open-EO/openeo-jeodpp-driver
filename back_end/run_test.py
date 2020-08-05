@@ -47,6 +47,7 @@ graph = translate_process_graph("tests/process_graphs/ndvi_masked_timeseries.jso
 #print(graph)
 print(graph.sort())
 print("memory before process (in GB): {}".format(memory_usage()))
-jeodpp.process(graph.sort())
+jeodpp.process(graph.sort(), tileindex=36, tilestotal=64)
+#jeodpp.process(graph.sort())
 #jeodpp.process(graph.sort(),virtual=True)
 print("memory after process (in GB): {}".format(memory_usage()))
