@@ -150,7 +150,7 @@ class BackEnd:
                                  south=south,
                                  regions=features,
                                  tileindex=tileindex,
-                                 tilestotal=tilestotal,
+                                 tiletotal=tiletotal,
                                  crs=crs)
                 spatiallyFiltered = True
             if not spatiallyFiltered:
