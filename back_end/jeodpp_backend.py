@@ -595,6 +595,18 @@ class BackEnd:
                     if verbose:
                         print(node.id)
                     ntodo+=1
+                else:
+                    collectGarbage = True
+                    for descendant_id in node.descendants().id:
+                        if jim[descendant_id] is None:
+                            collectGarbage = False
+                            print("cannot collect garbage for node {} yet, found descendant {}".format(node.id, descendant.id))
+                            break
+                    if collectGarbage:
+                        print("collecting garbage for node {}".format(node.id))
+                        jiim[node.id] = True
+
+                    print("descendents: {}".format(node.descendants()))
             if ntodo:
                 finished=False
             elif verbose:
