@@ -112,6 +112,10 @@ class BackEnd:
                     jim[property_node.id]=True
 
             #filter on bounding box (defined in lat/lon)
+            west = None
+            east = None
+            north = None
+            south = None
             spatial_extent = node.content['arguments'].get('spatial_extent')
             if spatial_extent is not None:
               west = spatial_extent.get('west')
@@ -143,7 +147,7 @@ class BackEnd:
                 east = bbox[2]
                 south = bbox[3]
 
-            if west and east and north and south:
+            if west is not None and east is not None and north is not None and south is not None:
                 coll.filter_bbox(west=west,
                                  east=east,
                                  north=north,
