@@ -4,11 +4,12 @@ import os
 import json
 from openeo_pg_parser import graph
 import gc
+import inspect
+import numpy as np
 #import graph
 from jeolib.collection import Collection
 from jeolib.cube import Cube
 import pyjeo as pj
-import numpy as np
 
 verbose=True
 
