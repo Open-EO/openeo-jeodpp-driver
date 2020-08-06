@@ -34,6 +34,8 @@ class BackEnd:
                     pathname=os.path.join('/home',self.user,node.id)
                 else:
                     pathname=os.path.join('/tmp',node.id)
+                if tileindex is not None and tiletotal is not None:
+                    pathname += str(tileindex)+'_'+str(tiletotal)
                 if isinstance(jim[node.id],pj.Jim):
                     # Create target Directory if don't exist
                     if not os.path.exists(pathname):
@@ -468,6 +470,50 @@ class BackEnd:
                     return jim[node.id]
             else:
                 raise TypeError("Error: reduce not implemented for dimension different than temporal")
+        if node.content['process_id'] == 'run_udf':
+            if node.content['arguments']['data']['from_node'] not in jim:
+                print("cannot run udf yet")
+                jim[node.id]=None
+                return jim[node.id]
+            if jim[node.content['arguments']['data']['from_node']] is None:
+                print("cannot run udf yet")
+                jim[node.id]=None
+                return jim[node.id]
+            else:
+                print("running udf")
+
+                #find function name
+                udfDefinition = node.content['arguments']['udf']
+                udf_name = udfDefinition[udfDefinition.index('def ')+4:udfDefinition.index('(')].strip()
+                print("udf_name is {}".format(udf_name))
+                exec(udfDefinition)
+                sig = inspect.signature(eval(udf_name))
+                if len(sig.parameters) != 1:
+                    raise TypeError("Error: udf definition must have single parameter")
+                for key in sig.parameters:
+                    imgname = key
+                params = sig.parameters.keys()
+                if 'import' in udfDefinition:
+                    raise TypeError("Error: No import allowed in server-side execution functions")
+
+                if 'os.path' in udfDefinition or 'os.system' in udfDefinition or 'os.popen' in udfDefinition:
+                    raise TypeError("No os module functions allowed in server-side execution functions!")
+
+                if 'sys' in udfDefinition:
+                    raise TypeError("No sys module functions allowed in server-side execution functions!")
+
+                if 'subprocess' in udfDefinition:
+                    raise TypeError("No subprocess call allowed in server-side execution functions!")
+
+                if 'eval' in udfDefinition:
+                    raise TypeError("No eval call allowed in server-side execution functions!")
+
+                if 'exec' in udfDefinition or 'execfile' in udfDefinition:
+                    raise TypeError("No exec call allowed in server-side execution functions!")
+
+                jim[node.id]=eval(udf_name)(jim[node.content['arguments']['data']['from_node']])
+                if not isinstance(jim[node.id],pj.Jim):
+                    raise TypeError("Error: udf returns {}, must be of type Jim".format(type(jim[node.id])))
         elif node.content['process_id'] == 'aggregate_spatial':
             if verbose:
                 print("aggregating spatial")
