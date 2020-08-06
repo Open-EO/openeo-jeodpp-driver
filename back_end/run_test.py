@@ -41,8 +41,8 @@ graph = translate_process_graph("tests/process_graphs/zonal_statistics_timeserie
 graph = translate_process_graph("tests/process_graphs/zonal_statistics_timeseries_file.json")
 graph = translate_process_graph("tests/process_graphs/zonal_statistics_timeseries_ndvi_file.json")
 graph = translate_process_graph("tests/process_graphs/zonal_statistics_timeseries_ndvi_file_mask.json")
-#graph = translate_process_graph("tests/process_graphs/ndvi_masked_timeseries.json")
-#graph = translate_process_graph("tests/process_graphs/ndvi_masked_timeseries_udf.json")
+graph = translate_process_graph("tests/process_graphs/ndvi_masked_timeseries.json")
+graph = translate_process_graph("tests/process_graphs/ndvi_masked_timeseries_udf.json")
 
 #print(graph)
 print(graph.sort())

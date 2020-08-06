@@ -7,8 +7,8 @@
             "arguments": {
                 "id": "S2MSI2A",
                 "temporal_extent": [
-                    "2019-01-01T00:00:00.000Z",
-                    "2020-01-01T00:00:00.000Z"
+                    "2019-06-01T00:00:00.000Z",
+                    "2019-07-01T00:00:00.000Z"
                 ],
                 "bands": ["B4","B8","SCL"],
                 "properties": {
@@ -105,7 +105,7 @@
                                 },
                                 "runtime": "Python",
                                 "version": "latest",
-                                "udf": "def myfunction(tile):\n    tile.geometry.cropBand(tile.dimension['band'].index('SCL))\n    return tile==4"
+                                "udf": "def myfunction(tile):\n    return pj.geometry.cropBand(tile,tile.dimension['band'].index('SCL'))!=4"
                             },
                             "result": true
                         }

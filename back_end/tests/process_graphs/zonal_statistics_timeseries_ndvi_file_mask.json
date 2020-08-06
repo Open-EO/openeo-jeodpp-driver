@@ -7,8 +7,8 @@
             "arguments": {
                 "id": "S2MSI2A",
                 "temporal_extent": [
-                    "2019-01-01T00:00:00.000Z",
-                    "2020-01-01T00:00:00.000Z"
+                    "2018-01-01T00:00:00.000Z",
+                    "2019-01-01T00:00:00.000Z"
                 ],
                 "bands": ["B4","B8","SCL"],
                 "properties": {
@@ -21,7 +21,7 @@
                                         "from_parameter": "value"
                                     },
                                     "min": 0,
-                                    "max": 80
+                                    "max": 10
                                 },
                                 "result": true
                             }
