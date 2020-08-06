@@ -119,6 +119,7 @@ class BackEnd:
             north = None
             south = None
             spatial_extent = node.content['arguments'].get('spatial_extent')
+            crs = None
 
             features = None
             if spatial_extent is not None:
@@ -127,7 +128,6 @@ class BackEnd:
               north = spatial_extent.get('north')
               south = nodeial_extent.get('south')
               #crs = spatial_extent'get('crs')
-              crs = None
               geometries = node.content['arguments'].get('spatial_extent').get('geometries')
               if geometries is not None:
                   features = node.content['arguments'].get('spatial_extent')
@@ -155,9 +155,9 @@ class BackEnd:
                                  north=north,
                                  south=south,
                                  regions=features,
+                                 crs=crs,
                                  tileindex=tileindex,
-                                 tiletotal=tiletotal,
-                                 crs=crs)
+                                 tiletotal=tiletotal)
                 spatiallyFiltered = True
             if not spatiallyFiltered:
                 raise AttributeError("Error: {} bounding box or mgrs must be defined to filter collection".format(type(jim[node.id])))
