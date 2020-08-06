@@ -627,7 +627,7 @@ class BackEnd:
                         print("skipping node {} that was already calculated".format(node.id))
                     continue
                 else:
-                    self.processNode(agraph, node.id, jim, virtual)
+                    self.processNode(agraph, node.id, jim, tileindex, tiletotal, virtual)
                 if jim[node.id] is not None:
                     if verbose:
                         print("calculated result for {}".format(node.id))
