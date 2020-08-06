@@ -119,6 +119,8 @@ class BackEnd:
             north = None
             south = None
             spatial_extent = node.content['arguments'].get('spatial_extent')
+
+            features = None
             if spatial_extent is not None:
               west = spatial_extent.get('west')
               east = spatial_extent.get('east')
@@ -134,8 +136,6 @@ class BackEnd:
                   print('features {}'.format(features))
                   v1 = pj.JimVect(features)
                   print(v1.properties.getFeatureCount())
-              else:
-                  features = None
 
             if mgrs is not None and tileindex is not None and tiletotal is not None:
                 attribute="Name="+'\''+str(mgrs)+'\''
