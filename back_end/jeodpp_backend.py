@@ -36,7 +36,7 @@ class BackEnd:
                 else:
                     pathname=os.path.join('/tmp',node.id)
                 if tileindex is not None and tiletotal is not None:
-                    pathname += str(tileindex)+'_'+str(tiletotal)
+                    pathname += '_'+str(tileindex)+'_'+str(tiletotal)
                 if isinstance(jim[node.id],pj.Jim):
                     # Create target Directory if don't exist
                     if not os.path.exists(pathname):
