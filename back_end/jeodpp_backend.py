@@ -138,7 +138,7 @@ class BackEnd:
                   features = None
 
             if mgrs is not None and tileindex is not None and tiletotal is not None:
-                attribute="Name="+'\''+args.mgrs+'\''
+                attribute="Name="+'\''+str(mgrs)+'\''
                 print("attribute: {}".format(attribute))
                 fn='/eos/jeodpp/data/base/GeographicalGridSystems/GLOBAL/MGRS/S2/LATEST/Data/Shapefile/S2grid2D.shp'
                 v1=pj.JimVect(pj.JimVect(fn,attributeFilter=attribute),output='/vsimem/v1',co=['OVERWRITE=YES'])
