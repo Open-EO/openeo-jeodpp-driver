@@ -140,7 +140,7 @@
                 "data": {"from_node": "maskedNdvi"},
                 "runtime": "Python",
                 "version": "latest",
-                "udf": "def savgolay(jim):\n  jim.ngbops.smoothNoData1d(0,interp='linear')\n  nplane=jim.properties.nrOfPlane()\n  nl=min(7,(nplane-1)/2)\n  nr=min(7,(nplane-1)/2)\n  savgol=pj.ngbops.savgolay(jim, nl=nl, nr=nr, m=2, pad='replicate')\n  print(jim.properties.getDataType())\n  print(savgol.properties.getDataType())\n  for loop in range(0,4):\n    savgol.pixops.convert(otype=jim.properties.getDataType())\n    print('iteration {}'.format(loop))\n    savgol[savgol<jim]=jim\n    nl=min(4,(nplane-1)/2)\n    nr=min(4,(nplane-1)/2)\n    m=min(6,nl+nr-1)\n    print('nl: {}'.format(nl))\n    print('nr: {}'.format(nr))\n    print('m: {}'.format(m))\n    savgol=pj.ngbops.savgolay(savgol, nl=nl, nr=nr, m=m, pad='replicate')\n  return savgol"
+                "udf": "def savgolay(jim):\n  jim.ngbops.smoothNoData1d(0,interp='linear')\n  nplane=jim.properties.nrOfPlane()\n  nl=min(7,(nplane-1)/2)\n  nr=min(7,(nplane-1)/2)\n  savgol=Cube(pj.ngbops.savgolay(jim, nl=nl, nr=nr, m=2, pad='replicate'))\n  print(jim.properties.getDataType())\n  print(savgol.properties.getDataType())\n  for loop in range(0,4):\n    savgol.pixops.convert(otype=jim.properties.getDataType())\n    print('iteration {}'.format(loop))\n    savgol[savgol<jim]=jim\n    nl=min(4,(nplane-1)/2)\n    nr=min(4,(nplane-1)/2)\n    m=min(6,nl+nr-1)\n    print('nl: {}'.format(nl))\n    print('nr: {}'.format(nr))\n    print('m: {}'.format(m))\n    savgol=Cube(pj.ngbops.savgolay(savgol, nl=nl, nr=nr, m=m, pad='replicate'))\n  savgol.dimension=jim.dimension\n  return Cube(savgol)"
             },
             "result": true
         },
