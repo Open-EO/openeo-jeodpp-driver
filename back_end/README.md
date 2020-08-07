@@ -211,7 +211,7 @@ Python3:
 from openeo_pg_parser_python.translate_process_graph import translate_graph
 from openeo_pg_parser_python.validate_process_graph import validate_graph
 from openeo_pg_parser import graph
-from openeo_jeodpp_backend import BackEnd
+from openeo-jeodpp-backend import BackEnd
 
 jeodpp=BackEnd('jeodpp',user='kempepi')
 graph = translate_process_graph("tests/process_graphs/zonal_statistics_timeseries_ndvi_udf.json")
