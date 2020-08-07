@@ -12,7 +12,6 @@ setuptools.setup(
     description='https://jeodpp.jrc.ec.europa.eu/'
 	'apps/gitlab/jeodpp/openeo/-/blob/master/back_end/README.md',
     license='Apache',
-    packages=setuptools.find_packages(),
-    include_package_data=False,
+    py_modules = ['openeo_jeodpp_backend'],
     install_requires=['pyjeo', 'jeolib', 'openeo_pg_parser']
 )
