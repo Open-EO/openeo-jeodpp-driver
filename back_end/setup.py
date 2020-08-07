@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name='openeo-jeodpp-backend',
+    name='openeo_jeodpp_backend',
     version='0.1.0',
     author_email='pieter.kempeneers@ec.europa.eu',
     url='https://jeodpp.jrc.ec.europa.eu/apps/gitlab/jeodpp/openeo/-/tree/master/back_end',
@@ -14,5 +14,5 @@ setuptools.setup(
     license='Apache',
     packages=setuptools.find_packages(),
     include_package_data=False,
-    install_requires=['pyjeo', 'jeolib', 'openeo-pg-parser']
+    install_requires=['pyjeo', 'jeolib', 'openeo_pg_parser']
 )
