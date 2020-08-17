@@ -14,9 +14,10 @@ import pyjeo as pj
 verbose=True
 
 class BackEnd:
-    def __init__(self, name=None, user=None):
+    def __init__(self, name=None, user=None, path=None):
         self.name = name
         self.user = user
+        self.path = path
 
     def processNode(self, agraph, nodeid, jim, tileindex=None, tiletotal=None, virtual=False):
         print('agraph.nodes: {}'.format(agraph.nodes))
@@ -30,7 +31,9 @@ class BackEnd:
             if jim[node.content['arguments']['data']['from_node']]:
                 print("saving result")
                 jim[node.id]=jim[node.content['arguments']['data']['from_node']]
-                if self.user is not None:
+                if self.path is not None:
+                    pathname=self.path
+                elif self.user is not None:
                     #pathname=os.path.join('/eos/jeodpp/home/users/',self.user,node.id)
                     pathname=os.path.join('/home',self.user,node.id)
                 else:
@@ -59,7 +62,7 @@ class BackEnd:
                     jim[node.id].io.write(pathname+'.tif',co=['COMPRESS=LZW','TILED=YES'])
                     return jim[node.id]
                 elif isinstance(jim[node.id],pj.JimVect):
-                    print("saved result: {}".format(jim[node.id].np()))
+                    # print("saved result: {}".format(jim[node.id].np()))
                     jim[node.id].io.write(pathname+'.sqlite')
                 elif isinstance(jim[node.id],Collection):
                     raise TypeError("Error: {} virtual cube not implemented yet".format(type(jim[node.id])))
@@ -512,9 +515,22 @@ class BackEnd:
                 if 'exec' in udfDefinition or 'execfile' in udfDefinition:
                     raise TypeError("No exec call allowed in server-side execution functions!")
 
-                jim[node.id]=eval(udf_name)(jim[node.content['arguments']['data']['from_node']])
-                if not isinstance(jim[node.id],pj.Jim):
-                    raise TypeError("Error: udf returns {}, must be of type Jim".format(type(jim[node.id])))
+                if 'array' in imgname:
+                    jim[node.id]=eval(udf_name)(jim[node.content['arguments']['data']['from_node']].np())
+                elif 'jim' in imgname:
+                    jim[node.id]=eval(udf_name)(jim[node.content['arguments']['data']['from_node']])
+                else:
+                    raise TypeError("Error: name of first parameter should either be jim (for pyjeo Jim) or array (for Numpy array)".format(type(jim[node.id])))
+                if not isinstance(jim[node.id],Cube) or not isinstance(jim[node.id],JimVect):
+                    if isinstance(jim[node.id],pj.Jim):
+                        jim[node.id]=Cube(jim[node.id])
+                        jim[node.id].dimension=jim[node.content['arguments']['data']['from_node']].dimension
+                    elif isinstance(jim[node.id],np.ndarray):
+                        aCube = Cube(jim[node.content['arguments']['data']['from_node']])
+                        aCube.np()[:]=jim[node.id]
+                        jim[node.id]=aCube
+                    else:
+                        raise TypeError("Error: udf returns {}, must be of type Jim/Cube, numpy.ndarray, or JimVect".format(type(jim[node.id])))
         elif node.content['process_id'] == 'aggregate_spatial':
             if verbose:
                 print("aggregating spatial")
@@ -538,14 +554,14 @@ class BackEnd:
                         print(json.dumps(geometries))
                         print(geometries)
                         invect=pj.JimVect(json.dumps(geometries),verbose=1)
-                        print(invect.np().shape)
-                        print(invect.np())
+                        # print(invect.np().shape)
+                        # print(invect.np())
                         # ds=gdal.OpenEx(geojson)
                         # lyr = ds.GetLayer()
                     elif geometryType == 'file':
                         invect=pj.JimVect(geometries['path'])
-                        print(invect.np().shape)
-                        print(invect.np())
+                        # print(invect.np().shape)
+                        # print(invect.np())
                 elif 'file' in node.content['arguments']:
                     raise ValueError("Error: not implemented yet")
                     #todo: handle vector files...
@@ -588,7 +604,7 @@ class BackEnd:
                     jim[node.id]=jim[reducer_node.id]
                     print("output vector has {} features".format(jim[node.id].properties.getFeatureCount()))
                     print("output vector has fields: {}".format(jim[node.id].properties.getFieldNames()))
-                    print('extracted vector: {}'.format(jim[node.id].np()))
+                    # print('extracted vector: {}'.format(jim[node.id].np()))
                     jim[node.id].io.write()
                     return jim[node.id]
                 else:
