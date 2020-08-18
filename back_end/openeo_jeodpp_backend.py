@@ -32,7 +32,7 @@ class BackEnd:
                 print("saving result")
                 jim[node.id]=jim[node.content['arguments']['data']['from_node']]
                 if self.path is not None:
-                    pathname=self.path
+                    pathname=os.path.join(self.path,node.id)
                 elif self.user is not None:
                     #pathname=os.path.join('/eos/jeodpp/home/users/',self.user,node.id)
                     pathname=os.path.join('/home',self.user,node.id)
