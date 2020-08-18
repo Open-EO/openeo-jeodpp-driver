@@ -41,12 +41,6 @@ class BackEnd:
                 if tileindex is not None and tiletotal is not None:
                     pathname += '_'+str(tileindex)+'_'+str(tiletotal)
                 if isinstance(jim[node.id],pj.Jim):
-                    # Create target Directory if don't exist
-                    if not os.path.exists(pathname):
-                        os.mkdir(pathname)
-                        print("Directory {} created".format(pathname))
-                    else:
-                        print("Directory {} already exists".format(pathname))
                     #to save as multi-spectral GeoTIFF, 1 file per acquisition time
                     print("jim has {} planes".format(jim[node.id].properties.nrOfPlane()))
                     if jim[node.id].properties.nrOfPlane() > 1:
