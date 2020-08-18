@@ -515,7 +515,7 @@ class BackEnd:
                     jim[node.id]=eval(udf_name)(jim[node.content['arguments']['data']['from_node']])
                 else:
                     raise TypeError("Error: name of first parameter should either be jim (for pyjeo Jim) or array (for Numpy array)".format(type(jim[node.id])))
-                if not isinstance(jim[node.id],Cube) or not isinstance(jim[node.id],JimVect):
+                if not isinstance(jim[node.id],Cube) or not isinstance(jim[node.id],pj.JimVect):
                     if isinstance(jim[node.id],pj.Jim):
                         jim[node.id]=Cube(jim[node.id])
                         jim[node.id].dimension=jim[node.content['arguments']['data']['from_node']].dimension
