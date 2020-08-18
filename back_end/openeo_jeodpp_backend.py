@@ -14,10 +14,11 @@ import pyjeo as pj
 verbose=True
 
 class BackEnd:
-    def __init__(self, name=None, user=None, path=None):
+    def __init__(self, name=None, user=None, path=None, gc=True):
         self.name = name
         self.user = user
         self.path = path
+        self.gc = gc
 
     def processNode(self, agraph, nodeid, jim, tileindex=None, tiletotal=None, virtual=False):
         print('agraph.nodes: {}'.format(agraph.nodes))
@@ -659,7 +660,7 @@ class BackEnd:
                     else:
                         raise TypeError("Error: result should either be Jim or JimVect")
                     for ancestor in node.ancestors().nodes:
-                        collectGarbage = True
+                        collectGarbage = self.gc
                         for descendant in ancestor.descendants().nodes:
                             if jim[descendant.id] is None:
                                 collectGarbage = False
