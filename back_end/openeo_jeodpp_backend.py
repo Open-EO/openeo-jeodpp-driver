@@ -584,11 +584,12 @@ class BackEnd:
                     print("we have a Jim")
                     times=jim[node.content['arguments']['data']['from_node']].dimension['temporal']
                     planename=[t.strftime('%Y%m%d') for t in times]
-                    bandname=jim[node.content['arguments']['data']['from_node']].dimension['band']
-                    #test
-                    #jim[node.content['arguments']['data']['from_node']].io.write('/tmp/test.tif')
-                    #invect.io.write('/tmp/test.sqlite',co=['OVERWRITE=TRUE'])
+                    if not planename:
+                        planename=['t'+str(t) for t in range(0,jim[node.content['arguments']['data']['from_node']].properties.nrOfPlane())]
 
+                    bandname=jim[node.content['arguments']['data']['from_node']].dimension['band']
+                    if not bandname:
+                        bandname=['b'+str(b) for b in range(0,jim[node.content['arguments']['data']['from_node']].properties.nrOfBand())]
                     if buffer is not None:
                         jim[reducer_node.id]=pj.geometry.extract(invect, jim[node.content['arguments']['data']['from_node']], outvect, rule, bandname=bandname, planename=planename, co=['OVERWRITE=TRUE'], srcnodata=srcnodata, buffer=buffer)
                     else:
