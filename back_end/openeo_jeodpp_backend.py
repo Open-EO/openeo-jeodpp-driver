@@ -44,6 +44,7 @@ class BackEnd:
                 if isinstance(jim[node.id],pj.Jim):
                     #to save as multi-spectral GeoTIFF, 1 file per acquisition time
                     print("jim has {} planes".format(jim[node.id].properties.nrOfPlane()))
+                    plane2band=False
                     if jim[node.id].properties.nrOfPlane() > 1:
                         if jim[node.id].properties.nrOfBand() > 1:
                             for iplane, theDate in enumerate(jim[node.id].dimension['temporal']):
@@ -53,8 +54,11 @@ class BackEnd:
                                 jimplane.io.write(os.path.join(pathname,theDate.strftime('%Y%m%d')+'.tif'),co=['COMPRESS=LZW','TILED=YES'])
                             return jim[node.id]
                         else:
+                            plane2band=True
                             jim[node.id].geometry.plane2band()
                     jim[node.id].io.write(pathname+'.tif',co=['COMPRESS=LZW','TILED=YES'])
+                    if plane2band:
+                        jim[node.id].geometry.band2plane()
                     return jim[node.id]
                 elif isinstance(jim[node.id],pj.JimVect):
                     # print("saved result: {}".format(jim[node.id].np()))
