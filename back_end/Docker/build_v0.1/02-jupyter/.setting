@@ -3,9 +3,12 @@ export target_docker_image_name='jeodpp_base_gdal_py3_deb10_jeolibs_openeo'
 
 export python_version='3.7'
 
-export mialib_hash='?sha=918f6e0'
-export jiplib_hash='?sha=master'
-export pyjeo_hash='?sha=master'
+#export mialib_hash='?sha=918f6e0'
+export mialib_hash=''
+#export jiplib_hash='?sha=master'
+export jiplib_hash=''
+#export pyjeo_hash='?sha=master'
+export pyjeo_hash=''
 export jeolibraries_hash=''
 export openeo_hash=''
 export inter_hash='?sha=6573cdfbc0b1f8a715766df7703a8076884a8e78'
@@ -17,7 +20,7 @@ export inter_deploy_mode='prod'
 #withsquash="--squash"
 withsquash=""
 
-export docker_build="DOCKER_BUILDKIT=1 docker build $withsquash \
+export docker_build="DOCKER_BUILDKIT=1 sudo docker build $withsquash \
   --progress="${PROGRESS_MODE}" \
   ${CACHE_MODE} \
   --build-arg GITLAB_TOKEN=${GITLAB_TOKEN} \

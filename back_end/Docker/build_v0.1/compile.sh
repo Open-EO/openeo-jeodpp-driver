@@ -66,9 +66,9 @@ for nb in $ALL_FOLDERS; do
   . .setting
   IMG="$target_docker_image_name:v${VERSION}"
   echo "IMAGE present in list: $(list_include_item $BUILD_PROCESS $nb) "
-  if [ ! -z $(docker images -q ${IMG}) ] && [ $FORCEREBUILD == false ] && [ -z $(list_include_item $BUILD_PROCESS $nb) ] ; then
+  if [ ! -z $(sudo docker images -q ${IMG}) ] && [ $FORCEREBUILD == false ] && [ -z $(list_include_item $BUILD_PROCESS $nb) ] ; then
     echo
-    echo "If IMAGE is present on host this is its ID: $(docker images -q ${IMG})"
+    echo "If IMAGE is present on host this is its ID: $(sudo docker images -q ${IMG})"
     echo "Don't build  $IMG"
     echo
   else
@@ -99,7 +99,7 @@ echo "Minuti totali di esecuzione del Build: $TOTMINS"
 
 #IMAGE=${JEOREG}${REP}${IMG}:${VERSION}_${bldn}
 
-eval "docker tag $IMG ${JEOREG}${REP}${IMG}"
+eval "sudo docker tag $IMG ${JEOREG}${REP}${IMG}"
 
 echo $((${bldn}+1)) > build#
 
@@ -107,5 +107,5 @@ echo "Working on these images:"
 for each in "${BUILD_IMAGES[@]}"; do echo "$each"; done
 echo
 echo "Final image tag: ${JEOREG}${REP}${IMG}"
-echo "docker push ${JEOREG}${REP}${IMG}"
+echo "sudo docker push ${JEOREG}${REP}${IMG}"
 
