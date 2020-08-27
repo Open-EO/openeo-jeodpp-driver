@@ -1,5 +1,5 @@
 #!/bin/bash
-export target_docker_image_name='jeodpp_base_gdal_py3_deb10_jeolibs_openeo'
+export target_docker_image_name='jeoreg.cidsn.jrc.it:5000/jeodpp-k8s/jeodpp_base_gdal_py3_deb10_jeolibs_openeo'
 
 export python_version='3.7'
 

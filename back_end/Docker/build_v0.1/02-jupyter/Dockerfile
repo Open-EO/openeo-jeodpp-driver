@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1.1.7-experimental
 ARG BASE_CONTAINER 
 FROM $BASE_CONTAINER as jeodpp_base
 
@@ -68,8 +69,8 @@ RUN set -xeu; \
         libboost-filesystem-dev \
         python3-setuptools \
         curl \
-        libtool \
-      && rm -rf /var/lib/apt/lists/*
+        libtool; \
+    rm -rf /var/lib/apt/lists/* ;
 
 
 ENV PYTHON_VERSION="3.7"
@@ -118,47 +119,47 @@ ARG GITLAB_TOKEN
 RUN curl --header "PRIVATE-TOKEN:$GITLAB_TOKEN" \
          --output $INSTALL_HOME/mia.tar.gz \
          https://jeodpp.jrc.ec.europa.eu/apps/gitlab/api/v4/projects/jeodpp%2FJIPlib%2Fmia/repository/archive.tar.gz${MIALIB_HASH} \
-         --verbose
+         --verbose ;
 
 
 # - mia
-RUN set -xe \
-    && PYVER=$(python3 --version|sed 's/Python \(3.[0-9]\).[0-9]/\1/') \
-    && cd $INSTALL_HOME \
-    && tar xzvf mia.tar.gz \
-    && cd $INSTALL_HOME/mia-* \
-    && sed -i "s/PYVER = 3.6/PYVER = ${PYVER}/" Makefile \
-    && sed -i "s/PYVER=3.6/PYVER=${PYVER}/" core/c/Makefile \
-    && sed -i "s/PYVER = 3.6/PYVER = ${PYVER}/" core/c/Makefile \
-    && sed -i "s/PYVER .*= 3.6/PYVER = ${PYVER}/" swig/python/Makefile \
-    && make build \
-    && make install \
-    && ldconfig \
-    && cd $INSTALL_HOME \
-    && rm mia.tar.gz \
-    && rm -rf $INSTALL_HOME/mia-*
+RUN set -xeu; \
+    PYVER=$(python3 --version|sed 's/Python \(3.[0-9]\).[0-9]/\1/');\
+    cd $INSTALL_HOME;\
+    tar xzvf mia.tar.gz ; \
+    cd $INSTALL_HOME/mia-* ; \
+    sed -i "s/PYVER = 3.6/PYVER = ${PYVER}/" Makefile ; \
+    sed -i "s/PYVER=3.6/PYVER=${PYVER}/" core/c/Makefile ; \
+    sed -i "s/PYVER = 3.6/PYVER = ${PYVER}/" core/c/Makefile ; \ 
+    sed -i "s/PYVER .*= 3.6/PYVER = ${PYVER}/" swig/python/Makefile ; \
+    make build ; \
+    make install ; \
+    ldconfig ; \
+    cd $INSTALL_HOME ; \
+    rm mia.tar.gz;  \
+    rm -rf $INSTALL_HOME/mia-* ;
 
-RUN echo "UPDATE JIPLIB"
+RUN echo "UPDATE JIPLI B" ;
 
 RUN curl --header "PRIVATE-TOKEN:$GITLAB_TOKEN" \
          --output $INSTALL_HOME/jiplib.tar.gz \
          https://jeodpp.jrc.ec.europa.eu/apps/gitlab/api/v4/projects/jeodpp%2FJIPlib%2Fjiplib/repository/archive.tar.gz${JIPLIB_HASH} \
-         --verbose
+         --verbose ;
 
 # - jiplib
-RUN set -xe \
-    && cd $INSTALL_HOME \
-    && tar xzvf jiplib.tar.gz \
-    && cd $INSTALL_HOME/jiplib-* \
-    && mkdir build \
-    && cd build \
-    && cmake .. \
-    && sleep 5 \
-    && make -j 30 \
-    && make install \
-    && ldconfig \
-    && cd $INSTALL_HOME \
-    && rm jiplib.tar.gz
+RUN set -xeu ; \
+    cd $INSTALL_HOME ; \
+    tar xzvf jiplib.tar.gz ; \
+    cd $INSTALL_HOME/jiplib-* ; \
+    mkdir build ; \
+    cd build ; \
+    cmake .. ; \
+    sleep 5 ; \
+    make -j 30 ; \
+    make install ; \
+    ldconfig ; \
+    cd $INSTALL_HOME ; \
+    rm jiplib.tar.gz ;
 
 RUN echo "download pyjeo"
 
@@ -205,7 +206,7 @@ RUN echo "UPDATE openeo backend v4"
 RUN curl --header "PRIVATE-TOKEN:$GITLAB_TOKEN" \
          --output $INSTALL_HOME/openeo-jeodpp-backend.tar.gz \
          https://jeodpp.jrc.ec.europa.eu/apps/gitlab/api/v4/projects/jeodpp%2FopenEO/repository/archive.tar.gz${OPENEO_HASH} \
-         --verbose
+         --verbose ;
 
 RUN cd $INSTALL_HOME \
     && tar xzvf openeo-jeodpp-backend.tar.gz \
@@ -258,8 +259,10 @@ RUN set -xeu; \
         -e 's;SERVERINCLUDE    = ;SERVERINCLUDE    = -I/usr/local/include/gdal -I/usr/include/python3.7m ;' \
         -i makefile; \
     # only use the 2/3 of available CPUs
-    nice make -j $((2 * $(nproc) / 3)) client; \
+    nice make -j $((2 * $(nproc) / 3)) client;
 
+
+RUN ls -l /usr/local/lib/ /usr/local/lib/python3.7/dist-packages
 
 FROM jeodpp_base
 
@@ -281,10 +284,11 @@ COPY --from=builder    /usr/local/share/*   /usr/local/share/
 COPY --from=builder    /usr/local/include/* /usr/local/include/
 
 
-COPY --from=builder    /usr/local/lib/libmialib*    /usr/local/lib/
-COPY --from=builder    /usr/local/lib/libjiplib*    /usr/local/lib/
-COPY --from=builder    ${DIST_PACKAGES}/jiplib/*    ${DIST_PACKAGES}/jiplib/
-COPY --from=builder    ${DIST_PACKAGES}/pyjeo/*     ${DIST_PACKAGES}/pyjeo/
+#COPY --from=builder    /usr/local/lib/libmialib*    /usr/local/lib/
+#COPY --from=builder    /usr/local/lib/libjiplib*    /usr/local/lib/
+COPY --from=builder    ${DIST_PACKAGES}/*           ${DIST_PACKAGES}/
+#COPY --from=builder    ${DIST_PACKAGES}/jiplib/*    ${DIST_PACKAGES}/jiplib/
+#COPY --from=builder    ${DIST_PACKAGES}/pyjeo*/*     ${DIST_PACKAGES}/pyjeo/
 COPY --from=builder    ${INSTALL_HOME}/interapro/client3deb10/inter.py                      ${DIST_PACKAGES}/jeodpp/
 COPY --from=builder    ${INSTALL_HOME}/interapro/client3deb10/lib/_inter.so                 ${DIST_PACKAGES}/jeodpp/
 COPY --from=builder    ${INSTALL_HOME}/interapro/service_files/${INTER_DEPLOY_MODE}/imap/   ${DIST_PACKAGES}/jeodpp/
@@ -378,8 +382,6 @@ ENV PATH /usr/local/texlive/2020/bin/x86_64-linux/:$PATH
 USER $NB_UID
 
 WORKDIR $HOME
-
-COPY notebooks /home/$NB_USER/work/notebooks
 
 EXPOSE 80
 # Configure container startup

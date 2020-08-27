@@ -44,14 +44,12 @@ VERSION=$(pwd | grep -Po '[^v\_]([0-9.]+)$')
 #IMAGE=${JEOREG}${REP}${IMAGENAME}:${VERSION}
 
 base_image='debian:buster'
-#base_image='jeoreg.cidsn.jrc.it:5000/jeodpp-k8s/jupyterlab:latest'
 
 ## Building folders to be considered
 NB1='01-base'
 NB2='02-jupyter'
 ALL_FOLDERS="$NB1 $NB2"
 
-#BUILD_PROCESS="$NB1 $NB2 $NB3 $NB4 $NB5 $NB7"
 #BUILD_PROCESS="$NB2 $NB4 $NB5"
 BUILD_PROCESS="$NB2"
 
