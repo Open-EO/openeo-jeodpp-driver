@@ -1,0 +1,32 @@
+#!/bin/bash
+export target_docker_image_name='jeodpp_base_gdal_py3_deb10_jeolibs_openeo'
+
+export python_version='3.7'
+
+export mialib_hash='?sha=918f6e0'
+export jiplib_hash='?sha=master'
+export pyjeo_hash='?sha=master'
+export jeolibraries_hash=''
+export openeo_hash=''
+export inter_hash='?sha=6573cdfbc0b1f8a715766df7703a8076884a8e78'
+
+export inter_deploy_mode='prod'
+
+#  $pass_gitlab_token_as_secret_to_build_command \
+
+#withsquash="--squash"
+withsquash=""
+
+export docker_build="DOCKER_BUILDKIT=1 docker build $withsquash \
+  --progress="${PROGRESS_MODE}" \
+  ${CACHE_MODE} \
+  --build-arg GITLAB_TOKEN=${GITLAB_TOKEN} \
+  --build-arg PYTHON_VERSION=${python_version} \
+  --build-arg MIALIB_HASH=${mialib_hash} \
+  --build-arg JIPLIB_HASH=${jiplib_hash} \
+  --build-arg PYJEO_HASH=${pyjeo_hash} \
+  --build-arg JEOLIBRARIES_HASH=${jeolibraries_hash} \
+  --build-arg OPENEO_HASH=${openeo_hash} \
+  --build-arg INTER_HASH=${inter_hash} \
+  --build-arg INTER_DEPLOY_MODE=${inter_deploy_mode} "
+

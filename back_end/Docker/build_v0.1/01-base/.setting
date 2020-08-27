@@ -1,0 +1,8 @@
+#!/bin/bash
+
+export target_docker_image_name='jeodpp_base_gdal_py3_deb10'
+
+#withsquash="--squash"
+withsquash=""
+
+export docker_build="docker build $withsquash "
