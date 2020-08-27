@@ -129,7 +129,7 @@ class BackEnd:
               west = spatial_extent.get('west')
               east = spatial_extent.get('east')
               north = spatial_extent.get('north')
-              south = nodeial_extent.get('south')
+              south = spatial_extent.get('south')
               #crs = spatial_extent'get('crs')
               geometries = node.content['arguments'].get('spatial_extent').get('geometries')
               if geometries is not None:
