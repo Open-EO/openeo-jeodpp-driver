@@ -373,6 +373,9 @@ RUN set -xeu; \
 
 ENV PATH /usr/local/texlive/2020/bin/x86_64-linux/:$PATH
 
+
+RUN pip3 install gunicorn
+
 ## Add Tini
 #ENV TINI_VERSION v0.18.0
 #ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini

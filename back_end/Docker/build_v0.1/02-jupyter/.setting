@@ -15,6 +15,8 @@ export inter_hash='?sha=6573cdfbc0b1f8a715766df7703a8076884a8e78'
 
 export inter_deploy_mode='prod'
 
+export FORCEREBUILD=true
+
 #  $pass_gitlab_token_as_secret_to_build_command \
 
 #withsquash="--squash"
