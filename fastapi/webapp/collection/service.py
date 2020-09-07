@@ -4,8 +4,8 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-
-_COLLECTION_OPEN_EO_SAMPLE_DICT = json.loads("""
+_COLLECTION_OPEN_EO_SAMPLE_DICT = json.loads(
+    """
 {
   "collections": [
     {
@@ -77,7 +77,8 @@ _COLLECTION_OPEN_EO_SAMPLE_DICT = json.loads("""
     }
   ]
 }
-""")
+"""
+)
 
 
 def get_collection_all():
@@ -85,6 +86,9 @@ def get_collection_all():
 
 
 def get_collection_by_id(collection_name: str):
-    collection = [ collection for collection in _COLLECTION_OPEN_EO_SAMPLE_DICT.get("collections") if collection.get("name") == collection_name]
+    collection = [
+        collection
+        for collection in _COLLECTION_OPEN_EO_SAMPLE_DICT.get("collections")
+        if collection.get("name") == collection_name
+    ]
     return collection
-

@@ -18,13 +18,22 @@ router = APIRouter()
 def view_collection_all():
     collections = service.get_collection_all()
     if not collections:
-        raise HTTPException(status_code=404, detail=f"No collections have been created")
+        raise HTTPException(
+            status_code=404,
+            detail=f"Requests will ask the back-end for available collections and will return an array of available collections with very basic information such as their unique identifiers.",
+        )
     return collections
 
 
-@router.get("/{collection_name}", summary="The request will ask the back-end for further details about a collection specified by the identifier collection_name")
+@router.get(
+    "/{collection_name}",
+    summary="The request will ask the back-end for further details about a collection specified by the identifier collection_name",
+)
 def view_collection_detail(collection_name: str):
     collection = service.get_collection_by_id(collection_name)
     if not collection:
-        raise HTTPException(status_code=404, detail=f"No collections with id {collection_name} have been created")
+        raise HTTPException(
+            status_code=404,
+            detail=f"No collections with id {collection_name} have been created",
+        )
     return collection

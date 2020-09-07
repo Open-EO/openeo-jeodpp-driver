@@ -23,7 +23,9 @@ class Settings(BaseSettings):
 
     @property
     def db_uri(self):
-        uri = "postgresql://{db_rpi_user}:{db_rpi_pass}@{db_host}:{db_port}/{postgres_db}"
+        uri = (
+            "postgresql://{db_rpi_user}:{db_rpi_pass}@{db_host}:{db_port}/{postgres_db}"
+        )
         uri = uri.format(**self.__dict__)
         return uri
 
