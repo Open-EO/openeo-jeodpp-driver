@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .settings import get_settings
 from . import collection
 from . import process
+from . import job
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +33,7 @@ def get_app() -> FastAPI:
     # routes
     app.include_router(collection.router, prefix="/collections", tags=["collections"])
     app.include_router(process.router, prefix="/processes", tags=["processes"])
+    app.include_router(job.router, prefix="/jobs", tags=["jobs"])
     return app
 
 
