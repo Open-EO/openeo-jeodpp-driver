@@ -1,6 +1,6 @@
 import json
 import logging
-
+import uuid
 logger = logging.getLogger(__name__)
 
 
@@ -101,46 +101,31 @@ _OUTPUT_FORMATS_OPEN_EO_SAMPLE_DICT = json.loads(
 )
 
 
-_OUTPUT_JOBS_OPEN_EO_SAMPLE_DICT = json.loads(
-"""
-{
-  "jobs": [
-    {
-      "job_id": "a3cca2b2aa1e3b5b",
-      "title": "NDVI based on Sentinel 2",
-      "description": "Deriving minimum NDVI measurements over pixel time series of Sentinel 2 imagery.",
-      "status": "running",
-      "submitted": "2017-01-01T09:32:12Z",
-      "updated": "2017-01-01T09:36:18Z",
-      "plan": "free",
-      "costs": 12.98,
-      "budget": 100
-    }
-  ],
-  "links": [
-    {
-      "rel": "related",
-      "href": "http://www.openeo.org",
-      "type": "text/html",
-      "title": "openEO"
-    }
-  ]
-}
-"""
-)
+
+
+_JOBS_DATA = {"jobs": []}
+
 
 def get_output_formats_all():
     return _OUTPUT_FORMATS_OPEN_EO_SAMPLE_DICT
 
 
 def get_jobs_all():
-    return _OUTPUT_JOBS_OPEN_EO_SAMPLE_DICT
+    return _JOBS_DATA
+
+def get_job_by_id(job_id):
+    matching_job = None
+    for job in _JOBS_DATA.get("jobs"):
+        for k,v in job.items():
+            if k == "job_id" and v == str(job_id):
+                matching_job = job
+            else:
+                continue
+    return matching_job
 
 
-def get_job_by_id(job_id: str):
-    job = [
-        job
-        for job in _OUTPUT_JOBS_OPEN_EO_SAMPLE_DICT.get("jobs")
-        if job.get("job_id") == job_id
-    ]
-    return job
+def create_job(job_payload_data):
+    insert_job_record = job_payload_data.dict()
+    insert_job_record["job_id"] = str(uuid.uuid4())
+    _JOBS_DATA.get("jobs").append(insert_job_record)
+    return _JOBS_DATA

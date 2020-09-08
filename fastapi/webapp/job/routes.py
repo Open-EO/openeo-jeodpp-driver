@@ -1,5 +1,6 @@
 import json
 import logging
+from uuid import UUID
 
 
 from fastapi import APIRouter
@@ -9,6 +10,7 @@ from fastapi import status
 
 
 from . import service
+from .. import models
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -21,7 +23,9 @@ router = APIRouter()
 def view_output_formats_all():
     output_formats = service.get_output_formats_all()
     if not output_formats:
-        raise HTTPException(status_code=404, detail=f"No output_formats have been created")
+        raise HTTPException(
+            status_code=404, detail=f"No output_formats have been created"
+        )
     return output_formats
 
 
@@ -39,15 +43,24 @@ def view_jobs_all():
     return jobs
 
 
+@router.post(
+    "/",
+    summary="Creates a new batch processing task (job) from one or more (chained) processes at the back-end.",
+    status_code=status.HTTP_201_CREATED,
+)
+def create_new_batch_processing_job(job_payload_data: models.JobTaskCreate):
+    batch_job = service.create_job(job_payload_data)
+    return batch_job
+
+
 @router.get(
     "/{job_id}",
     summary="Returns detailed information about a submitted batch job",
 )
-def view_job_by_id(job_id):
+def view_job_by_id(job_id: UUID):
     job = service.get_job_by_id(job_id)
     if not job:
         raise HTTPException(
-            status_code=404,
-            detail=f"No job with id {job_id} have been created"
+            status_code=404, detail=f"No job with id {job_id} have been created"
         )
     return job
