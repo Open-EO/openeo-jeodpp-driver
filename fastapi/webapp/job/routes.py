@@ -64,3 +64,13 @@ def view_job_by_id(job_id: UUID):
             status_code=404, detail=f"No job with id {job_id} have been created"
         )
     return job
+
+
+@router.patch(
+    "/{job_id}",
+    summary="Modifies an existing job at the back-end but maintains the identifier. Changes can be grouped in a single request. Jobs can only be modified when the job is not queued or running.",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def patch_processing_job(job_id: UUID, job_payload_data: models.JobTaskCreate):
+    updated_job = service.update_job(job_id, job_payload_data)
+    return updated_job

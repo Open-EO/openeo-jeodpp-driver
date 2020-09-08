@@ -1,6 +1,7 @@
 import json
 import logging
 import uuid
+
 logger = logging.getLogger(__name__)
 
 
@@ -101,8 +102,6 @@ _OUTPUT_FORMATS_OPEN_EO_SAMPLE_DICT = json.loads(
 )
 
 
-
-
 _JOBS_DATA = {"jobs": []}
 
 
@@ -113,10 +112,11 @@ def get_output_formats_all():
 def get_jobs_all():
     return _JOBS_DATA
 
+
 def get_job_by_id(job_id):
     matching_job = None
     for job in _JOBS_DATA.get("jobs"):
-        for k,v in job.items():
+        for k, v in job.items():
             if k == "job_id" and v == str(job_id):
                 matching_job = job
             else:
@@ -129,3 +129,15 @@ def create_job(job_payload_data):
     insert_job_record["job_id"] = str(uuid.uuid4())
     _JOBS_DATA.get("jobs").append(insert_job_record)
     return _JOBS_DATA
+
+
+def update_job(job_id, job_payload_data):
+    for job in _JOBS_DATA.get("jobs"):
+        for k, v in job.items():
+            if k == "job_id" and v == str(job_id):
+                updated_job_record = job_payload_data.dict()
+                updated_job_record["job_id"] = str(job_id)
+                job.update(updated_job_record)
+            else:
+                continue
+    return job_id
