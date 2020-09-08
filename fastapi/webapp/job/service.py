@@ -141,3 +141,13 @@ def update_job(job_id, job_payload_data):
             else:
                 continue
     return job_id
+
+
+def delete_job(job_id):
+    for job in _JOBS_DATA.get("jobs"):
+        for k, v in job.items():
+            if k == "job_id" and v == str(job_id):
+                _JOBS_DATA.get("jobs").remove(job)
+            else:
+                continue
+    return job_id
