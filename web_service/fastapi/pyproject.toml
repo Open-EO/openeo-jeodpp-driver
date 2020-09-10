@@ -2,7 +2,7 @@
 name = "openeo-fastapi-service"
 version = "0.1.0"
 description = ""
-authors = ["Tomas Kliment <tomas@klimeto.com>"]
+authors = ["Tomas Kliment <tomas@klimeto.com>", 'Pieter Kempeneers <pieter.kempeneers@ec.europ.eu>']
 
 [tool.poetry.dependencies]
 python = "^3.7"

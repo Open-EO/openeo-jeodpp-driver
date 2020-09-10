@@ -80,3 +80,17 @@ def patch_processing_job(job_id: UUID, job_payload_data: models.JobTaskCreate):
 def delete_processing_job(job_id: UUID):
     deleted_job = service.delete_job(job_id)
     return deleted_job
+
+
+@router.post(
+    "/{job_id}/results",
+    summary="Adds a batch job to the processing queue to compute the results.",
+    status_code=status.HTTP_202_ACCEPTED,
+)
+def start_job_by_id(job_id: UUID):
+    job = service.start_job(job_id)
+    if not job:
+        raise HTTPException(
+            status_code=404, detail=f"job with id {job_id} have not been started"
+        )
+    return job
