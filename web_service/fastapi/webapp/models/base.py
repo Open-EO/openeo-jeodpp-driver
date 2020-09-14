@@ -1,10 +1,12 @@
 import datetime
-
+from typing import Optional
 
 import sqlalchemy as sa
 
 
 from pydantic import BaseModel
+from pydantic import HttpUrl
+
 from sqlalchemy.sql import func
 from sqlalchemy_mixins import ReprMixin
 from sqlalchemy.sql import expression
@@ -48,3 +50,10 @@ class PydanticBase(BaseModel):
     class Config:
         orm_mode = True
         validate_assignment = True
+
+
+class StacLinks(BaseModel):
+    rel: str
+    href: HttpUrl
+    type: Optional[str]
+    title: Optional[str]
