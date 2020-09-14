@@ -1,0 +1,96 @@
+---
+
+version: '3.7'
+services:
+
+  nginx:
+    image: "${NGINX_IMAGE_NAME}"
+    restart: "unless-stopped"
+    ports:
+      - published: "${NGINX_HTTP_PORT}"
+        target: 80
+      - published: "${NGINX_HTTPS_PORT}"
+        target: 443
+
+  db:
+    image: "${DB_IMAGE_NAME}"
+    restart: "unless-stopped"
+    healthcheck:
+      test: ["CMD", "/entrypoint_inject.sh", "/healthcheck.sh"]
+      interval: "10s"
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD="scram-sha-256"
+    secrets:
+      - "POSTGRES_DB"
+      - "POSTGRES_PASSWORD"
+      - "POSTGRES_USER"
+      - "DB_HOST"
+      - "DB_PORT"
+      - "DB_PROJECT_USER"
+      - "DB_PROJECT_PASS"
+      - "PROJECT_NAME"
+    ports:
+      - published: "${DB_HTTP_PORT}"
+        target: 5432
+    volumes:
+      - type: "volume"
+        source: "pg-data"
+        target: "/var/lib/postgresql/data"
+
+  #frontend:
+    #image: "${FRONTEND_IMAGE_NAME}"
+    #ports:
+      #- published: "${FRONTEND_PORT}"
+       # target: 80
+
+  fastapi:
+    image: "${FASTAPI_IMAGE_NAME}"
+    restart: "unless-stopped"
+    depends_on:
+      - db
+      - nginx
+    user: root  # we use gosu to switch to the normal user in the entrypoint
+    entrypoint: "/usr/local/bin/entrypoint_inject.sh"
+    command: uvicorn --host 0.0.0.0 --port 8000 --log-level "${LOG_LEVEL}" webapp:app
+    environment:
+      - RUNTIME_UID_GID
+      # gunicorn
+      - LOG_LEVEL
+      # application
+      - PROJECT_NAME
+      - FASTAPI_CORS_ORIGINS
+    ports:
+      - published: "${FASTAPI_PORT}"
+        target: 8000
+
+    secrets:
+      - "POSTGRES_DB"
+      - "POSTGRES_PASSWORD"
+      - "POSTGRES_USER"
+      - "DB_HOST"
+      - "DB_PORT"
+      - "DB_PROJECT_USER"
+      - "DB_PROJECT_PASS"
+      - "PROJECT_NAME"
+
+volumes:
+  pg-data:
+
+secrets:
+  POSTGRES_DB:
+    file: "./secrets/POSTGRES_DB"
+  POSTGRES_USER:
+    file: "./secrets/POSTGRES_USER"
+  POSTGRES_PASSWORD:
+    file: "./secrets/POSTGRES_PASSWORD"
+
+  DB_HOST:
+    file: "./secrets/DB_HOST"
+  DB_PORT:
+    file: "./secrets/DB_PORT"
+  DB_PROJECT_USER:
+    file: "./secrets/DB_PROJECT_USER"
+  DB_PROJECT_PASS:
+    file: "./secrets/DB_PROJECT_PASS"
+  PROJECT_NAME:
+    file: "./secrets/PROJECT_NAME"

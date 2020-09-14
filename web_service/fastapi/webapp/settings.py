@@ -11,20 +11,20 @@ class Settings(BaseSettings):
     """ Parses variables from environment on instantiation """
 
     deploy_env: str
-    backend_cors_origins: str
+    fastapi_cors_origins: str
 
     db_host: str
     db_port: int
     postgres_db: str
-    db_rpi_user: str
-    db_rpi_pass: str
+    db_project_user: str
+    db_project_pass: str
 
     testing: bool = False
 
     @property
     def db_uri(self):
         uri = (
-            "postgresql://{db_rpi_user}:{db_rpi_pass}@{db_host}:{db_port}/{postgres_db}"
+            "postgresql://{db_project_user}:{db_project_pass}@{db_host}:{db_port}/{postgres_db}"
         )
         uri = uri.format(**self.__dict__)
         return uri
@@ -40,7 +40,7 @@ class Settings(BaseSettings):
 
     @property
     def db_uri_test(self) -> str:
-        uri = "postgresql://{db_rpi_user}:{db_rpi_pass}@{db_host}:{db_port}/{postgres_db}_test"
+        uri = "postgresql://{db_project_user}:{db_project_pass}@{db_host}:{db_port}/{postgres_db}_test"
         uri = uri.format(**self.__dict__)
         return uri
 

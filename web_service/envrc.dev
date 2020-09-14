@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+
+set -xe
+
+########################
+# Docker + docker-compose configuration options
+# with the exception of `COMPOSE_FILE` which should be different on `dev` you
+# shouldn't need to change them
+########################
+export DOCKER_BUILDKIT=1
+export COMPOSE_DOCKER_CLI_BUILD=1
+export COMPOSE_PATH_SEPARATOR=:
+export COMPOSE_FILE=docker-compose.yml:docker-compose.dev.yml:docker-compose.build.yml
+
+########################
+# Common options
+# you should only have to set these variables once (when you start a new project)
+########################
+project_name='openeo'
+registry_repository='jeoreg.cidsn.jrc.it:5000/klimeto/openeo'
+
+########################
+#  Make sure that these variables are different on each deploy environment (dev/staging/prod)
+########################
+deploy_environment='dev'
+base_port=46100
+developer_name='klimeto'
+#angular_environment='compose'
+
+########################
+# The docker-compose project name affects the name of containers, networks, volumes etc.
+# Since we want to be able to deploy multiple environements in the same host
+# it is important to add the `deploy_environemnt` to the compose project name.
+########################
+date_tag=$(date -u +"%Y%m%d")
+
+export COMPOSE_PROJECT_NAME="${project_name}"_"${deploy_environment}_${developer_name}"
+export NGINX_IMAGE_NAME="${registry_repository}/nginx:${deploy_environment}-${developer_name}"
+export DB_IMAGE_NAME="${registry_repository}/db:${deploy_environment}-${developer_name}"
+#export FRONTEND_IMAGE_NAME="${registry_repository}/frontend:${deploy_environment}-${developer_name}"
+export FASTAPI_IMAGE_NAME="${registry_repository}/fastapi:${deploy_environment}-${developer_name}"
+
+########################
+# These are used on docker build
+# The container uses the `USER_ID:GROUP_ID` of the user that executes `docker build`
+# This way, on the `dev` deploy environment we can mount the source code from the
+# host without running into permissions problems
+########################
+export DEPLOY_ENV="${deploy_environment}"
+export USER_NAME='amigo'
+export USER_ID=$(id -u)
+export GROUP_ID=$(id -g)
+#export ANGULAR_ENV="${angular_environment}"
+
+########################
+# These are used by docker run
+# Ports should be different on each deploy environment in order to make it possible
+# to deploy dev/staging/prod on the same docker daemon.
+########################
+let 'DB_HTTP_PORT=base_port+1'
+let 'NGINX_HTTP_PORT=base_port+2'
+let 'NGINX_HTTPS_PORT=base_port+3'
+#let 'FRONTEND_PORT=base_port+4'
+let 'FASTAPI_PORT=base_port+4'
+
+export DB_HTTP_PORT
+export NGINX_HTTP_PORT
+export NGINX_HTTPS_PORT
+#export FRONTEND_PORT
+export FASTAPI_PORT
+export COMPOSE_COMMAND="/usr/local/bin/start_reload.sh"
+export RUNTIME_UID_GID="${USER_ID}:${GROUP_ID}"
+
+########################
+# These affect the runtime!
+########################
+
+# gunicorn config
+export LOG_LEVEL='trace'
+
+# project specific config
+export PROJECT_NAME="${project_name}_${deploy_environment}"
+export FASTAPI_CORS_ORIGINS="
+#http://localhost:${FRONTEND_PORT}
+http://localhost:4200
+https://klimeto.com
+"
+
+set +xe

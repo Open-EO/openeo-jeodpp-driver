@@ -1,0 +1,11 @@
+---
+
+version: '3.7'
+services:
+
+  fastapi:
+    command: uvicorn --reload --host 0.0.0.0 --access-log --port 8000 --log-level "${LOG_LEVEL}" webapp:app
+    volumes:
+      - type: "bind"
+        source: "./fastapi/"
+        target: "/home/${USER_NAME}/app/"
