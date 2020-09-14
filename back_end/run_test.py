@@ -6,7 +6,7 @@ from openeo_pg_parser.validate import validate_process_graph
 
 from openeo_pg_parser import graph
 
-from jeodpp_backend import BackEnd
+from openeo_jeodpp_backend import BackEnd
 
 def memory_usage():
     """Memory usage of the current process in kilobytes."""
