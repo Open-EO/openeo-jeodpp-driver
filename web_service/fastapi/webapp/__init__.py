@@ -29,7 +29,7 @@ def get_app() -> FastAPI:
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.fastapi_cors_origins.splitlines(),
-        #allow_origins=["*"],
+        # allow_origins=["*"],
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
@@ -42,6 +42,7 @@ def get_app() -> FastAPI:
 
 
 app = get_app()
+
 
 @app.get("/healthcheck")
 async def healthckeck():

@@ -76,7 +76,11 @@ def patch_processing_job(job_id: UUID, job_payload_data: models.JobTaskCreate):
     return updated_job
 
 
-@router.delete("/{job_id}", summary="Deletes all data related to this job. Computations are stopped and computed results are deleted. This job won't generate additional costs for processing.", status_code=status.HTTP_204_NO_CONTENT,)
+@router.delete(
+    "/{job_id}",
+    summary="Deletes all data related to this job. Computations are stopped and computed results are deleted. This job won't generate additional costs for processing.",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
 def delete_processing_job(job_id: UUID):
     deleted_job = service.delete_job(job_id)
     return deleted_job

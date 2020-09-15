@@ -51,4 +51,6 @@ def get_class_by_tablename(table_fullname: str) -> Any:
     for c in Base._decl_class_registry.values():
         if hasattr(c, "__table__") and c.__table__.fullname == mapped_name:
             return c
-    raise Exception(f"Incorrect tablename '{mapped_name}'. Check the name of your model.")
+    raise Exception(
+        f"Incorrect tablename '{mapped_name}'. Check the name of your model."
+    )

@@ -19,7 +19,6 @@ class OutputFormat(PydanticBase):
     parameters: OutputFormatParameters
 
 
-
 class JobTaskCreate(PydanticBase):
     title: str = "NDVI based on Sentinel 2"
     description: str
@@ -27,5 +26,3 @@ class JobTaskCreate(PydanticBase):
     output: OutputFormat
     plan: str = "free"
     budget: int = 100
-
-

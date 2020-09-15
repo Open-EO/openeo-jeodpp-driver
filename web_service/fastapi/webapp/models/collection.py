@@ -7,7 +7,10 @@ from typing import List, Optional
 import sqlalchemy as sa
 
 from geoalchemy2 import Geometry
+from geoalchemy2.shape import to_shape
 from sqlalchemy.dialects.postgresql import JSONB
+from pydantic import validator
+import shapely.wkt
 
 
 from .base import Base
@@ -19,13 +22,13 @@ from .base import StacLinks
 logger = logging.getLogger(__name__)
 
 
-__all__ = ["Collection", "ViewCollectionAll", "CollectionBase"]
+__all__ = ["Collection", "ViewCollectionAll", "CollectionBase", "CollectionViewJeodpp"]
 
 
 ## Database model
 class CollectionType(Base, TimeStampMixin):
     __tablename__ = "collection_type"
-    collection_type_oid = sa.Column(
+    oid = sa.Column(
         sa.Integer, sa.Sequence("collection_type_oid_seq"), primary_key=True
     )
     collection_type_name = sa.Column(sa.String, nullable=False, unique=True)
@@ -46,9 +49,7 @@ class CollectionType(Base, TimeStampMixin):
 
 class Collection(Base, TimeStampMixin):
     __tablename__ = "collection"
-    collection_oid = sa.Column(
-        sa.Integer, sa.Sequence("collection_oid_seq"), primary_key=True
-    )
+    oid = sa.Column(sa.Integer, sa.Sequence("collection_oid_seq"), primary_key=True)
     collection_id = sa.Column(sa.String, nullable=False, unique=True)
     collection_footprint = sa.Column(
         Geometry("MULTIPOLYGON", srid=4326, spatial_index=False), nullable=False
@@ -60,11 +61,11 @@ class Collection(Base, TimeStampMixin):
 
     __table_args__ = (
         sa.PrimaryKeyConstraint(
-            "collection_oid",
+            "oid",
         ),
         sa.ForeignKeyConstraint(
             ["collection_type_ref"],
-            ["collection_type.collection_type_oid"],
+            ["collection_type.oid"],
         ),
         sa.Index(
             "idx_collection_identifier", "collection_id", postgresql_using="btree"
@@ -82,10 +83,15 @@ class Collection(Base, TimeStampMixin):
 
 
 class ProviderRole(str, Enum):
-    producer = 'producer'
-    licensor = 'licensor'
-    processor = 'processor'
-    host = 'host'
+    producer = "producer"
+    licensor = "licensor"
+    processor = "processor"
+    host = "host"
+
+
+class DimenstionType(str, Enum):
+    spatial = "spatial"
+    temporal = "temporal"
 
 
 class StacProviders(PydanticBase):
@@ -102,11 +108,15 @@ class BoundingBox(PydanticBase):
 
 
 class CollectionTemporalExtent(PydanticBase):
-    interval: List[str] #One or more time intervals that describe the temporal extent of the dataset. The value null is supported and indicates an open time interval.
+    interval: List[
+        str
+    ]  # One or more time intervals that describe the temporal extent of the dataset. The value null is supported and indicates an open time interval.
 
 
 class CollectionSpatialExtent(PydanticBase):
-    bbox: List[float] #One or more bounding boxes that describe the spatial extent of the dataset. If multiple areas are provided, the union of the bounding boxes describes the spatial extent.
+    bbox: List[
+        float
+    ]  # One or more bounding boxes that describe the spatial extent of the dataset. If multiple areas are provided, the union of the bounding boxes describes the spatial extent.
 
 
 class CollectionExtent(PydanticBase):
@@ -129,15 +139,47 @@ class StacCollectionMetadata(PydanticBase):
     links: List[StacLinks]
 
 
+class CubeSpatialDimension(PydanticBase):
+    type: DimenstionType
+
+
+class CubeTemporalDimension(PydanticBase):
+    type: str = "temporal"
+    extent: List[str]
+
+
+class CubeBands(PydanticBase):
+    type: str = "bands"
+    values: List[str]
+
+
+class CollectionCubeDimension(PydanticBase):
+    x: CubeSpatialDimension
+    y: CubeSpatialDimension
+    t: CubeTemporalDimension
+    bands: CubeBands
+
+
+class StacCollectionMetadataDetail(StacCollectionMetadata):
+    cube_dimensions: CollectionCubeDimension
+
+
 class CollectionBase(PydanticBase):
     collection_id: str
     collection_metadata: StacCollectionMetadata
-    footprint: str
-    jeolab: bool = False
+    collection_footprint: str
+    collection_jeolab: bool = False
+
+
+class CollectionViewJeodpp(CollectionBase):
+    # The footprint we retrieve from the database is a WKBElement instance
+    # So we need to convert it to WKT
+    @validator("collection_footprint", pre=True)
+    def _footprint_to_wkt(cls, v):
+        wkt = to_shape(v).wkt
+        return wkt
 
 
 class ViewCollectionAll(PydanticBase):
     collections: List[CollectionBase]
     links: List[StacLinks]
-
-

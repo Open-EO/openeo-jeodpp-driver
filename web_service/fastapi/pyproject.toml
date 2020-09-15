@@ -15,6 +15,7 @@ geoalchemy2 = "^0.8.4"
 sqlalchemy_utils = "^0.36.8"
 psycopg2-binary = "^2.8.6"
 sqlalchemy_mixins = "^1.2.1"
+shapely = "^1.7.1"
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"
