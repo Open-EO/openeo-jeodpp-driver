@@ -25,18 +25,19 @@ router = APIRouter()
     summary="Retrieve list of all collections",
 )
 def view_collection_all(db_session: Session = Depends(get_db)):
-    collections = service.get_collection_all(db_session=db_session)
-    if not collections:
+    collection_records = service.get_collection_all(db_session=db_session)
+    if not collection_records:
         raise HTTPException(
             status_code=404,
             detail=f"Requests will ask the back-end for available collections and will return an array of available collections with very basic information such as their unique identifiers.",
         )
-    return collections
+    response_data = {'collections': collection_records}
+    return response_data
 
 
 @router.get(
     "/{collection_id}",
-    response_model=models.CollectionBase,
+    response_model=models.CollectionViewJeodpp,
     summary="The request will ask the back-end for further details about a collection specified by the identifier collection_name",
 )
 def view_collection_detail(collection_id: str, db_session: Session = Depends(get_db)):
