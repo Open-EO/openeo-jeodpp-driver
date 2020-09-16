@@ -182,4 +182,4 @@ class CollectionViewJeodpp(CollectionBase):
 
 class ViewCollectionAll(PydanticBase):
     collections: List[CollectionViewJeodpp]
-    #links: List[StacLinks]
+    # links: List[StacLinks]

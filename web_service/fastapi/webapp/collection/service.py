@@ -44,6 +44,19 @@ def create(*, db_session: Session, collection_record_in: CollectionBase) -> Coll
     return collection_record
 
 
+def update(
+    *, db_session: Session, collection_id: str, collection_record_update: CollectionBase
+) -> Collection:
+    """Update existing Collection. """
+    db_session.query(Collection).filter(
+        Collection.collection_id == collection_id
+    ).update(collection_record_update.dict())
+    db_session.commit()
+    query = get_query(db_session=db_session, collection_id=collection_id)
+    updated_collection_record = query.one_or_none()
+    return updated_collection_record
+
+
 def delete(*, db_session: Session, collection_id: str) -> str:
     deleted_collection_id = (
         db_session.query(Collection)

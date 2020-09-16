@@ -31,7 +31,7 @@ def view_collection_all(db_session: Session = Depends(get_db)):
             status_code=404,
             detail=f"Requests will ask the back-end for available collections and will return an array of available collections with very basic information such as their unique identifiers.",
         )
-    response_data = {'collections': collection_records}
+    response_data = {"collections": collection_records}
     return response_data
 
 
@@ -72,6 +72,28 @@ def create_collection_record(
             msg = "Creation of Collection failed. Please check the logs."
         raise HTTPException(status_code=422, detail=msg)
     return collection_record
+
+
+@router.put(
+    "/",
+    response_model=models.CollectionViewJeodpp,
+    summary="Update existing collection record",
+)
+def update_collection_record(
+    collection_id: str,
+    collection_record_update: models.CollectionBase,
+    db_session: Session = Depends(get_db),
+):
+    try:
+        updated_collection_record = service.update(
+            db_session=db_session,
+            collection_id=collection_id,
+            collection_record_update=collection_record_update,
+        )
+    except sqlalchemy.exc.IntegrityError as exc:
+        raise HTTPException(status_code=422, detail=exc)
+    else:
+        return updated_collection_record
 
 
 @router.delete("/", summary="Remove collection", status_code=status.HTTP_204_NO_CONTENT)

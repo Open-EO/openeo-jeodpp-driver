@@ -42,19 +42,19 @@ target_metadata = webapp.models.metadata
 # With `include_object` we tell it to ignore this table
 # https://github.com/miguelgrinberg/Flask-Migrate/issues/18
 IGNORED_TABLES = {
-    'spatial_ref_sys',
+    "spatial_ref_sys",
 }
 IGNORED_SCHEMAS = {
-    'tiger',
-    'tiger_data',
-    'topology',
+    "tiger",
+    "tiger_data",
+    "topology",
 }
 
 
 def include_object(object, name, type_, reflected, compare_to):
-    if type_ == "table" and name in IGNORED_TABLES :
+    if type_ == "table" and name in IGNORED_TABLES:
         return False
-    if type_ == "table" and object.schema in IGNORED_SCHEMAS :
+    if type_ == "table" and object.schema in IGNORED_SCHEMAS:
         return False
     else:
         return True
@@ -94,8 +94,9 @@ def run_migrations_online():
     """
     connectable = engine_from_config(
         config.get_section(config.config_ini_section),
-        prefix='sqlalchemy.',
-        poolclass=pool.NullPool)
+        prefix="sqlalchemy.",
+        poolclass=pool.NullPool,
+    )
 
     with connectable.connect() as connection:
         context.configure(
@@ -107,6 +108,7 @@ def run_migrations_online():
 
         with context.begin_transaction():
             context.run_migrations()
+
 
 if context.is_offline_mode():
     run_migrations_offline()
