@@ -473,6 +473,93 @@ class BackEnd:
                     return jim[node.id]
             else:
                 raise TypeError("Error: reduce not implemented for dimension different than temporal")
+        elif node.content['process_id'] == 'merge_cubes':
+            if verbose:
+                print(node)
+                print("merging {}".format(node.content['arguments']['dimension']))
+            cube1 = jim[node.content['arguments']['cube1'].get('from_node')]
+            cube2 = jim[node.content['arguments']['cube2'].get('from_node')]
+            if verbose:
+                print("cube1 is: {}".format(cube1))
+                print("cube2 is: {}".format(cube2))
+            if cube1 is None or cube2 is None:
+                jim[node.id]=None
+                return jim[node.id]
+            overlap_resolver = node.content['arguments'].get('overlap_resolver')
+            if overlap_resolver is not None:
+                overlap_resolver_node=agraph[overlap_resolver]
+                x = jim[overlap_resolver_node.content['arguments']['x']['from_node']]
+                y = jim[overlap_resolver_node.content['arguments']['y']['from_node']]
+                if x is None or y is None:
+                    jim[node.id]=None
+                    return jim[node.id]
+            else:
+                if cube1.properties.nrOfCol() == cube2.properties.nrOfCol():
+                    if cube1.properties.nrOfRown() == cube2.properties.nrOfRown():
+                        if cube1.properties.nrOfPlane() == cube2.properties.nrOfPlane():
+                            if cube1.properties.nrOfBand() == cube2.properties.nrOfBand():
+                                #todo
+                                raise ValueError('merge_cubes Not implemented yet')
+                            else:
+                                raise ValueError('Error: number of bands do not match')
+                        else:
+                            raise ValueError('Error: number of planes do not match')
+                    else:
+                        raise ValueError('Error: number of rows do not match')
+                else:
+                    raise ValueError('Error: number of columns do not match')
+            jim[node.id]=None
+            return jim[node.id]
+            if jim[reducer_node.id] is None:
+                if node.content['arguments']['dimension'] in ['temporal', 'time', 't']:
+                    # cube=Cube(jim[reducer_node.content['arguments']['data']['from_node']])
+                    jim[reducer_node.id]=Cube(jim[reducer_node.content['arguments']['data']['from_node']])
+                    if jim[reducer_node.id] is None:
+                        jim[node.id]=jim[reducer_node.id]
+                        return jim[node.id]
+                    rule=reducer_node.content['process_id']
+                    if rule in ['max', 'mean', 'median', 'min']:
+                        # jim[reducer_node.id] = pj.geometry.reducePlane(cube,rule=reducer_node.content['process_id'])
+                        # jim[reducer_node.id]=Cube(jim[node.content['arguments']['data']['from_node']])
+                        jim[reducer_node.id].geometry.reducePlane(rule=rule)
+                    elif reducer_node.content['process_id'] == 'first':
+                        jim[reducer_node.id].geometry.cropPlane(0)
+                    elif reducer_node.content['process_id'] == 'last':
+                        jim[reducer_node.id].geometry.cropPlane(-1)
+                elif node.content['arguments']['dimension'] in ['spectral', 'bands', 'b']:
+                    if reducer_node.content['process_id'] in ['ndvi', 'normalized_difference']:
+                        nir = jim[reducer_node.content['arguments']['x']['from_node']]
+                        if nir is None:
+                            jim[node.id]=None
+                            return jim[node.id]
+                        red = jim[reducer_node.content['arguments']['y']['from_node']]
+                        if nir is None:
+                            jim[node.id]=None
+                            return jim[node.id]
+                        jim[reducer_node.id] = Cube(pj.pixops.convert(nir,'GDT_Float32'))
+                        nirnp=nir.np().astype(np.float)
+                        rednp=red.np().astype(np.float)
+                        ndvi=(nirnp-rednp)/(nirnp+rednp)
+                        ndvi[np.isnan(ndvi)]=0
+                        jim[reducer_node.id].np()[:]=ndvi
+                        jim[reducer_node.id].dimension['band']=['nd']
+                        jim[reducer_node.id].dimension['temporal']=nir.dimension['temporal']
+                    elif reducer_node.content['process_id'] == 'first':
+                        jim[reducer_node.id]=Cube(reducer_node.content['arguments']['data']['from_node'])
+                        # cube=jim[reducer_node.content['arguments']['data']['from_node']]
+                        if jim[reducer_node.id] is None:
+                            jim[node.id]=None
+                            return jim[node.id]
+                        elif isinstance(cube,pj.JimVect):
+                            raise TypeError("Error: reduce not implemented for JimVect")
+                        elif isinstance(cube,Collection):
+                            raise TypeError("Error: reduce not implemented for Collection")
+                        jim[reducer_node.id].geometry.cropBand(0)
+                    elif reducer_node.content['process_id'] == 'last':
+                        # cube=jim[reducer_node.content['arguments']['data']['from_node']]
+                        jim[reducer_node.id].geometry.cropBand(-1)
+            jim[node.id]=jim[reducer_node.id]
+            return jim[node.id]
         if node.content['process_id'] == 'run_udf':
             if node.content['arguments']['data']['from_node'] not in jim:
                 print("cannot run udf yet")
