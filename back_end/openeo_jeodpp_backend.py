@@ -529,7 +529,11 @@ class BackEnd:
                         if cube1.getDimension('temporal') == cube1.getDimension('temporal'):
                             if cube1.properties.nrOfPlane() != cube2.properties.nrOfPlane():
                                 raise ValueError('Error: mismatch in temporal dimension ')
-                            bandOverlap = not set(cube1.getDimension('band')).isdisjoint(cube2.getDimension('band'))
+                            bandname1=cube1.getDimension('band')
+                            bandname2=cube2.getDimension('band')
+                            temporalOverlap = not set(bandname1).isdisjoint(bandname2)
+                            bandname = [band for band in bandname1 + bandname2 if band not in list(set(bandname1) & set(bandname2))]
+                            bandOverlap = not set(bandname1).isdisjoint(bandname2)
                             if bandOverlap:
                                 if overlap_resolver is None:
                                     raise ValueError('Error: no overlap resolver defined in merge_cube')
@@ -537,13 +541,14 @@ class BackEnd:
                                     #todo: reduce
                                     raise ValueError('Error: band overlap not yet supported in merge_cube')
                             else:
-                                jim[node.id]=pj.geometry.stackBand(cube1,cube2)
+                                jim[node.id]=Cube(pj.geometry.stackBand(cube1,cube2))
+                                jim[node.id].setDimension('band', bandnames)
                         elif cube1.getDimension('band') == cube1.getDimension('band'):
                             if cube1.properties.nrOfBand() != cube2.properties.nrOfBand():
                                 raise ValueError('Error: mismatch in band dimension ')
                             dimension1=cube1.getDimension('temporal')
                             dimension2=cube2.getDimension('temporal')
-                            temporalOverlap = not set(dmension1).isdisjoint(dimension2)
+                            temporalOverlap = not set(dimension1).isdisjoint(dimension2)
                             dimension = [dim for dim in dimension1 + dimension2 if dim not in list(set(dimension1) & set(dimension2))]
                             if temporalOverlap:
                                 if overlap_resolver is None:
@@ -552,7 +557,7 @@ class BackEnd:
                                     #todo: reduce
                                     raise ValueError('Error: temporal overlap not yet supported in merge_cube')
                             else:
-                                jim[node.id]=pj.geometry.stackPlane(cube1,cube2)
+                                jim[node.id]=Cube(pj.geometry.stackPlane(cube1,cube2))
                                 jim[node.id].setDimension('temporal', dimension)
                     else:
                         raise ValueError('Error: merge_cube not supported if number of rows do not match')
