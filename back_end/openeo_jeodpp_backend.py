@@ -208,7 +208,8 @@ class BackEnd:
         elif node.content['process_id'] == 'filter_bands':
             bandindexes=[]
             if 'bands' in node.content['arguments']:
-                for bandname in node.content['arguments'].get('bands'):
+                bandnames = node.content['arguments'].get('bands')
+                for bandname in bandnames:
                     bandindex=jim[node.content['arguments']['data']['from_node']].dimension['band'].index(bandname)
                     if verbose:
                         print("array_element with label {}".format(bandname))
@@ -218,7 +219,7 @@ class BackEnd:
                 jim[node.id]=None
             elif isinstance(jim[node.content['arguments']['data']['from_node']],pj.Jim):
                 jim[node.id]=Cube(pj.geometry.cropBand(jim[node.content['arguments']['data']['from_node']],bandindexes))
-                jim[node.id].dimension['band']=bandname
+                jim[node.id].dimension['band']=bandnames
                 return jim[node.id]
             elif isinstance(jim[node.content['arguments']['data']['from_node']],pj.JimVect):
                 raise TypeError("Error: {} array_element not implemented for JimVect".format(type(jim[node.id])))
@@ -243,7 +244,7 @@ class BackEnd:
                 jim[node.id]=None
             elif isinstance(jim[node.content['arguments']['data']['from_node']],pj.Jim):
                 result=Cube(pj.geometry.cropBand(jim[node.content['arguments']['data']['from_node']],bandindex))
-                result.dimension['band']=bandname
+                result.dimension['band']=[bandname]
                 jim[node.id]=result
             elif isinstance(jim[node.content['arguments']['data']['from_node']],pj.JimVect):
                 raise TypeError("Error: {} array_element not implemented for JimVect".format(type(jim[node.id])))
