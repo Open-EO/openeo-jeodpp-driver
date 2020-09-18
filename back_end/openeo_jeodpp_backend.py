@@ -204,6 +204,27 @@ class BackEnd:
             if verbose:
                 print("return Jim {}".format(jim[node.id]))
             return jim[node.id]
+        elif node.content['process_id'] == 'filter_bands':
+            bandindexes=[]
+            if 'bands' in node.content['arguments']:
+                for bandname in node.content['arguments'].get('bands'):
+                    bandindex=jim[node.content['arguments']['data']['from_node']].dimension['band'].index(bandname)
+                    if verbose:
+                        print("array_element with label {}".format(bandname))
+                        print("array_element with index {}".format(bandindex))
+                    bandindexes.append(bandindex)
+            if jim[node.content['arguments']['data']['from_node']] is None:
+                jim[node.id]=None
+            elif isinstance(jim[node.content['arguments']['data']['from_node']],pj.Jim):
+                jim[node.id]=Cube(pj.geometry.cropBand(jim[node.content['arguments']['data']['from_node']],bandindexes))
+                jim[node.id].dimension['band']=bandname
+                return jim[node.id]
+            elif isinstance(jim[node.content['arguments']['data']['from_node']],pj.JimVect):
+                raise TypeError("Error: {} array_element not implemented for JimVect".format(type(jim[node.id])))
+            elif isinstance(jim[node.content['arguments']['data']['from_node']],Collection):
+                raise TypeError("Error: {} array element not implemented for Collection".format(type(jim[node.id])))
+            else:
+                raise AttributeError("Error: only bands is supported for filter_bands")
         elif node.content['process_id'] == 'array_element':
             if 'index' in node.content['arguments']:
                 bandindex=node.content['arguments']['index']
@@ -261,6 +282,8 @@ class BackEnd:
                         jim[node.id]=None
                         return[node.id]
                     jim[process_node.id] = Cube(abs(jim[process_node.content['arguments']['x']['from_node']]))
+                else:
+                    raise TypeError("Error: {} not implemented for process apply".format(process_node.content['process_id']))
             jim[node.id]=jim[process_node.id]
             return jim[node.id]
         elif node.content['process_id'] in ['eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'sum', 'subtract', 'product', 'divide']:
@@ -561,7 +584,22 @@ class BackEnd:
                         jim[reducer_node.id].geometry.cropBand(-1)
             jim[node.id]=jim[reducer_node.id]
             return jim[node.id]
-        if node.content['process_id'] == 'run_udf':
+        elif node.content['process_id'] == 'resample_cube_spatial':
+            target=jim[node.content['arguments']['target']['from_node']]
+            if target is None:
+                jim[node.id]=None
+                return jim[node.id]
+            elif not isinstance(target,pj.Jim):
+                raise TypeError("Error: target must be of Jim type, not {}".format( type(target)))
+            jim[node.id]=jim[node.content['arguments']['data']['from_node']]
+            if jim[node.id] is None:
+                return jim[node.id]
+            if not isinstance(jim[node.id],pj.Jim):
+                raise TypeError("Error: {} not implemented for {}".format(node.content['process_id'], type(jim[node.id])))
+            jim[node.id].geometry.crop(dx = target.properties.getDeltaX(), dy = target.properties.getDeltaY())
+            jim[node.id].resolution['spatial'] = [jim[node.id].properties.getDeltaX(), jim[node.id].properties.getDeltaY()]
+            return jim[node.id]
+        elif node.content['process_id'] == 'run_udf':
             if node.content['arguments']['data']['from_node'] not in jim:
                 print("cannot run udf yet")
                 jim[node.id]=None

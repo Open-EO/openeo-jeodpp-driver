@@ -88,7 +88,6 @@
             "description": "get band VH"
         },
         "5": {
-
             "process_id": "subtract",
             "arguments": {
                 "data": [
