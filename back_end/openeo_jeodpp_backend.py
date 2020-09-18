@@ -580,6 +580,8 @@ class BackEnd:
                 return jim[node.id]
             dimension = node.content['arguments'].get('dimension')
             values = node.content['arguments'].get('target')
+            if not isinstance(values, list):
+                raise TypeError('Error: {} is not a list'.format(values))
             jim[node.id].setDimension(dimension, values)
             return jim[node.id]
         elif node.content['process_id'] == 'resample_cube_spatial':
