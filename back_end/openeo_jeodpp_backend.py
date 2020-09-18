@@ -314,17 +314,17 @@ class BackEnd:
                     jim[node.id]=value
                 else:
                     if node.content['process_id'] == 'eq':
-                        jim[node.id]=(jim[node.id]==value)
+                        jim[node.id]=Cube(jim[node.id]==value)
                     elif node.content['process_id'] == 'neq':
-                        jim[node.id]=(jim[node.id]!=value)
+                        jim[node.id]=Cube(jim[node.id]!=value)
                     elif node.content['process_id'] == 'gt':
-                        jim[node.id]=(jim[node.id]>value)
+                        jim[node.id]=Cube(jim[node.id]>value)
                     elif node.content['process_id'] == 'gte':
-                        jim[node.id]=(jim[node.id]>=value)
+                        jim[node.id]=Cube(jim[node.id]>=value)
                     elif node.content['process_id'] == 'lt':
-                        jim[node.id]=(jim[node.id]<value)
+                        jim[node.id]=Cube(jim[node.id]<value)
                     elif node.content['process_id'] == 'lte':
-                        jim[node.id]=(jim[node.id]<=value)
+                        jim[node.id]=Cube(jim[node.id]<=value)
                     elif node.content['process_id'] == 'sum':
                         jim[node.id]+=value
                     elif node.content['process_id'] == 'subtract':
@@ -332,9 +332,6 @@ class BackEnd:
                     elif node.content['process_id'] == 'product':
                         jim[node.id]*=value
                     elif node.content['process_id'] == 'divide':
-                        #test
-                        print(jim[node.id].np())
-                        print(value)
                         jim[node.id]/=value
                     else:
                         raise TypeError("Error: arithmetic {} not implemented".format(node.content['process_id']))
@@ -350,20 +347,20 @@ class BackEnd:
             replacement = node.content['arguments'].get('replacement')
             if isinstance(mask,dict):
                 if verbose:
-                    print("type of data is {}".format(type(jim[mask['from_node']])))
-                    if jim[mask['from_node']] is None:
-                        jim[node.id]=None
-                        return jim[node.id]
-                    else:
-                        mask=jim[mask['from_node']]
+                    print("type of mask is {}".format(type(jim[mask['from_node']])))
+                if jim[mask['from_node']] is None:
+                    jim[node.id]=None
+                    return jim[node.id]
+                else:
+                    mask=jim[mask['from_node']]
             if isinstance(data,dict):
                 if verbose:
                     print("type of data is {}".format(type(jim[data['from_node']])))
-                    if jim[data['from_node']] is None:
-                        jim[node.id]=None
-                        return jim[node.id]
-                    else:
-                        jim[node.id]=jim[data['from_node']]
+                if jim[data['from_node']] is None:
+                    jim[node.id]=None
+                    return jim[node.id]
+                else:
+                    jim[node.id]=jim[data['from_node']]
             if replacement is not None:
                 jim[node.id][mask]=replacement
             else:
