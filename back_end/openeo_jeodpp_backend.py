@@ -293,7 +293,8 @@ class BackEnd:
                 print("eq {}".format(node.content.get('description')))
 
             jim[node.id]=None
-            arguments = [item for sublist in node.content['arguments'].values() for item in sublist]
+            # arguments = [item for sublist in node.content['arguments'].values() for item in sublist]
+            arguments = node.content['arguments'].values()
             for argument in arguments:
                 if isinstance(argument,dict):
                     if verbose:
