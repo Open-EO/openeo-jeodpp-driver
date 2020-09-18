@@ -460,11 +460,11 @@ class BackEnd:
                         elif isinstance(cube,Collection):
                             raise TypeError("Error: reduce not implemented for Collection")
                         jim[reducer_node.id].geometry.cropBand(0)
+                        jim[reducer_node.id].setDimension('band',jim[reducer_node.id].getDimension('band')[0:1])
                     elif reducer_node.content['process_id'] == 'last':
                         # cube=jim[reducer_node.content['arguments']['data']['from_node']]
                         jim[reducer_node.id].geometry.cropBand(-1)
-                    jim[reducer_node.id].setDimension('band',[])
-                    jim[reducer_node.id].setDimension('temporal',jim[reducer_node.content['arguments']['data']['from_node']].getDimension('temporal'))
+                        jim[reducer_node.id].setDimension('band',jim[reducer_node.id].getDimension('band')[-1:])
             jim[node.id]=jim[reducer_node.id]
             return jim[node.id]
         elif node.content['process_id'] == 'aggregate_temporal':
