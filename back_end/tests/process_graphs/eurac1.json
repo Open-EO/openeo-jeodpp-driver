@@ -31,9 +31,9 @@
                                     "from_parameter": "data"
                                 },
                                 "label": "VH"
-                            }
-                        },
-                        "result": true
+                            },
+                            "result": true
+                        }
                     }
                 },
                 "dimension": "bands"
@@ -47,17 +47,17 @@
                 "from_node": "2"
                 },
                 "reducer": {
-                "process_graph": {
-                    "max": {
-                    "process_id": "max",
-                    "arguments": {
-                        "data": {
-                        "from_parameter": "data"
+                    "process_graph": {
+                        "max": {
+                            "process_id": "max",
+                            "arguments": {
+                                "data": {
+                                    "from_parameter": "data"
+                                }
+                            },
+                            "result": true
                         }
-                    },
-                    "result": true
                     }
-                }
                 },
                 "dimension": "temporal"
             },
@@ -78,9 +78,9 @@
                                     "from_parameter": "data"
                                 },
                                 "label": "VH"
-                            }
-                        },
-                        "result": true
+                            },
+                            "result": true
+                        }
                     }
                 },
                 "dimension": "bands"
