@@ -536,7 +536,7 @@ class BackEnd:
                                     #todo: reduce
                                     raise ValueError('Error: band overlap not yet supported in merge_cube')
                             else:
-                                jim[node.id]=pj.geometry.stackBand(cube1,dube2)
+                                jim[node.id]=pj.geometry.stackBand(cube1,cube2)
                         elif cube1.getDimension('band') == cube1.getDimension('band'):
                             if cube1.properties.nrOfBand() != cube2.properties.nrOfBand():
                                 raise ValueError('Error: mismatch in band dimension ')
@@ -551,7 +551,7 @@ class BackEnd:
                                     #todo: reduce
                                     raise ValueError('Error: temporal overlap not yet supported in merge_cube')
                             else:
-                                jim[node.id]=pj.geometry.stackPlane(cube1,dube2)
+                                jim[node.id]=pj.geometry.stackPlane(cube1,cube2)
                                 jim[node.id].setDimension('temporal', dimension)
                     else:
                         raise ValueError('Error: merge_cube not supported if number of rows do not match')
