@@ -2,7 +2,7 @@
   "1": {
     "process_id": "load_collection",
     "arguments": {
-      "id": "Backscatter_Sentinel1_Track015",
+      "id": "sentinel1.GRD",
       "spatial_extent": {
         "east": 11.416511535644531,
         "south": 46.406617041056165,

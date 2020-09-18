@@ -72,10 +72,12 @@ class BackEnd:
                 jim[node.id]=None
                 return jim[node.id]
         elif node.content['process_id'] == 'load_collection':
+            collectionId = node.content['arguments']['id'].split('.')
             if verbose:
                 print("load_collection")
-            coll=Collection()
-            coll.filterOn('productType',node.content['arguments']['id'])
+            coll=Collection(collectioniId[0])
+            if len(collectionId) > 1:
+                coll.filterOn('productType',collectionId[1])
             properties={}
 
             #test
