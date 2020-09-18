@@ -269,7 +269,8 @@ class BackEnd:
                 print("eq {}".format(node.content.get('description')))
 
             jim[node.id]=None
-            for argument in node.content['arguments'].values():
+            arguments = [item for sublist in node.content['arguments'].values() for item in sublist]
+            for argument in arguments:
                 if isinstance(argument,dict):
                     if verbose:
                         print("type of jim is {}".format(type(jim[argument['from_node']])))
