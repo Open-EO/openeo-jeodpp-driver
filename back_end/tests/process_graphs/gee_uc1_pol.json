@@ -7,17 +7,16 @@
           "VV",
           "VH"
         ],
-        "id": "sentinel1.grd",
+        "id": "sentinel1.GRD",
         "spatial_extent": {
-          "west": 16.06,
-          "south": 48.1,
-          "east": 16.65,
-          "north": 48.31,
-          "crs": "EPSG:4326"
+            "east": 11.416511535644531,
+            "south": 46.406617041056165,
+            "north": 46.550361051816196,
+            "west": 11.257896423339844
         },
         "temporal_extent": [
-          "2017-03-01",
-          "2017-04-01"
+            "2015-11-06T00:00:00.000Z",
+            "2016-09-25T00:00:00.000Z"
         ]
       },
       "description": "Loading Sentinel 1 data for VV and VH over Vienna in March 2017"
