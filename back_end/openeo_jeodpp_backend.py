@@ -80,43 +80,41 @@ class BackEnd:
                 coll.filterOn('productType',collectionId[1])
             properties={}
 
-            #test
-            # properties['cloudCoverPercentage']='<10'
-            properties=node.content['arguments'].get('properties')
-
             spatiallyfiltered = False
             mgrs = None
-            for property in properties:
-                if node.content['arguments']['properties'][property].get('from_node') is not None:
-                    property_node=agraph[node.content['arguments']['properties'][property]['from_node']]
-                else:
-                    property_node=None
-                if 'cloud_cover' in property:
-                    minCloud = property_node.content['arguments'].get('min',0)
-                    maxCloud = property_node.content['arguments'].get('max',100)
-                    coll.filterOn('cloudCoverPercentage','<'+str(maxCloud))
-                    coll.filterOn('cloudCoverPercentage','>'+str(minCloud))
-                if 'mgrs' in property:
-                    mgrs = property_node.content['arguments'].get('y')
-                    if mgrs is not None:
-                        if property_node.content['process_id'] == 'eq':
-                            coll.filterOn('mgrs',str(mgrs))
-                        elif property_node.content['process_id'] == 'neq':
-                            coll.filterOn('mgrs','<>'+str(mgrs))
-                        else:
-                            raise AttributeError("Error: process_id {} not supported for property {}".format(property_node.content['process_id'],property))
-                    spatiallyFiltered=True
-                if 'platform' in property:
-                    platform = property_node.content['arguments'].get('y')
-                    if platform is not None:
-                        if property_node.content['process_id'] == 'eq':
-                            coll.filterOn('platform','='+str(platform))
-                        elif property_node.content['process_id'] == 'neq':
-                            coll.filterOn('platform','<>'+str(platform))
-                        else:
-                            raise AttributeError("Error: process_id {} not supported for property {}".format(property_node.content['process_id'],property))
-                if property_node is not None:
-                    jim[property_node.id]=True
+            properties=node.content['arguments'].get('properties')
+            if properties is not None:
+                for property in properties:
+                    if node.content['arguments']['properties'][property].get('from_node') is not None:
+                        property_node=agraph[node.content['arguments']['properties'][property]['from_node']]
+                    else:
+                        property_node=None
+                    if 'cloud_cover' in property:
+                        minCloud = property_node.content['arguments'].get('min',0)
+                        maxCloud = property_node.content['arguments'].get('max',100)
+                        coll.filterOn('cloudCoverPercentage','<'+str(maxCloud))
+                        coll.filterOn('cloudCoverPercentage','>'+str(minCloud))
+                    if 'mgrs' in property:
+                        mgrs = property_node.content['arguments'].get('y')
+                        if mgrs is not None:
+                            if property_node.content['process_id'] == 'eq':
+                                coll.filterOn('mgrs',str(mgrs))
+                            elif property_node.content['process_id'] == 'neq':
+                                coll.filterOn('mgrs','<>'+str(mgrs))
+                            else:
+                                raise AttributeError("Error: process_id {} not supported for property {}".format(property_node.content['process_id'],property))
+                        spatiallyFiltered=True
+                    if 'platform' in property:
+                        platform = property_node.content['arguments'].get('y')
+                        if platform is not None:
+                            if property_node.content['process_id'] == 'eq':
+                                coll.filterOn('platform','='+str(platform))
+                            elif property_node.content['process_id'] == 'neq':
+                                coll.filterOn('platform','<>'+str(platform))
+                            else:
+                                raise AttributeError("Error: process_id {} not supported for property {}".format(property_node.content['process_id'],property))
+                    if property_node is not None:
+                        jim[property_node.id]=True
 
             #filter on bounding box (defined in lat/lon)
             west = None
