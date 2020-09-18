@@ -776,7 +776,7 @@ class BackEnd:
                     if verbose:
                         print("calculated result for {}".format(node.id))
                         print("type of jim returned: {}".format(type(jim[node.id])))
-                    if isinstance(jim[node.id],pj.Jim):
+                    if isinstance(jim[node.id],Cube):
                         if verbose:
                             print("number of planes returned: {}".format(jim[node.id].properties.nrOfPlane()))
                             print("number of bands returned: {}".format(jim[node.id].properties.nrOfBand()))
