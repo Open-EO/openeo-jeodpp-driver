@@ -180,8 +180,9 @@ class BackEnd:
             bands=None
             if 'bands' in node.content['arguments']:
                 bands=node.content['arguments']['bands']
-                print("filter bands: {}".format(node.content['arguments']['bands']))
-                coll.filter_bands(node.content['arguments']['bands'])
+                if bands is not None:
+                    print("filter bands: {}".format(node.content['arguments']['bands']))
+                    coll.filter_bands(node.content['arguments']['bands'])
             #define spatial and temporal resolution to load collection as data cube.
             resolution={}
             #todo: define spatial resolution
