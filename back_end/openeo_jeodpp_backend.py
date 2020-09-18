@@ -532,7 +532,7 @@ class BackEnd:
                             bandname1=cube1.getDimension('band')
                             bandname2=cube2.getDimension('band')
                             temporalOverlap = not set(bandname1).isdisjoint(bandname2)
-                            bandname = [band for band in bandname1 + bandname2 if band not in list(set(bandname1) & set(bandname2))]
+                            bandnames = [band for band in bandname1 + bandname2 if band not in list(set(bandname1) & set(bandname2))]
                             bandOverlap = not set(bandname1).isdisjoint(bandname2)
                             if bandOverlap:
                                 if overlap_resolver is None:
