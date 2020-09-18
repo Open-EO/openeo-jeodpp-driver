@@ -1,88 +1,90 @@
 {
-  "1": {
-    "process_id": "load_collection",
-    "arguments": {
-      "id": "sentinel1.GRD",
-      "spatial_extent": {
-        "east": 11.416511535644531,
-        "south": 46.406617041056165,
-        "north": 46.550361051816196,
-        "west": 11.257896423339844
-      },
-      "temporal_extent": [
-        "2015-11-06T00:00:00.000Z",
-        "2016-09-25T00:00:00.000Z"
-      ]
-    }
-  },
-  "2": {
-    "process_id": "filter_bands",
-    "arguments": {
-      "data": {
-        "from_node": "1"
-      },
-      "bands": [
-        "VH"
-      ],
-      "common_names": [],
-      "wavelengths": []
-    }
-  },
-  "3": {
-    "process_id": "reduce",
-    "arguments": {
-      "data": {
-        "from_node": "2"
-      },
-      "reducer": {
-        "callback": {
-          "2": {
-            "process_id": "max",
+    "process_graph": {
+        "1": {
+            "process_id": "load_collection",
             "arguments": {
-              "data": {
-                "from_argument": "data"
-              }
+                "id": "sentinel1.GRD",
+                "spatial_extent": {
+                    "east": 11.416511535644531,
+                    "south": 46.406617041056165,
+                    "north": 46.550361051816196,
+                    "west": 11.257896423339844
+                },
+                "temporal_extent": [
+                    "2015-11-06T00:00:00.000Z",
+                    "2016-09-25T00:00:00.000Z"
+                ]
+            }
+        },
+        "2": {
+            "process_id": "filter_bands",
+            "arguments": {
+                "data": {
+                    "from_node": "1"
+                },
+                "bands": [
+                    "VH"
+                ],
+                "common_names": [],
+                "wavelengths": []
+            }
+        },
+        "3": {
+            "process_id": "reduce",
+            "arguments": {
+                "data": {
+                    "from_node": "2"
+                },
+                "reducer": {
+                    "callback": {
+                        "2": {
+                            "process_id": "max",
+                            "arguments": {
+                                "data": {
+                                    "from_argument": "data"
+                                }
+                            },
+                            "result": true
+                        }
+                    }
+                },
+                "dimension": "temporal",
+                "target_dimension": null
+            }
+        },
+        "4": {
+            "process_id": "filter_bands",
+            "arguments": {
+                "data": {
+                    "from_node": "1"
+                },
+                "bands": [
+                    "VH"
+                ],
+                "common_names": [],
+                "wavelengths": []
+            }
+        },
+        "5": {
+
+            "process_id": "subtract",
+            "arguments": {
+                "data": [
+                    {"from_node": "4"},
+                    {"from_node": "3"}
+                ]
+            }
+        },
+        "6": {
+            "process_id": "save_result",
+            "arguments": {
+                "data": {
+                    "from_node": "5"
+                },
+                "format": "NETCDF",
+                "options": {}
             },
             "result": true
-          }
         }
-      },
-      "dimension": "temporal",
-      "target_dimension": null
     }
-  },
-  "4": {
-    "process_id": "filter_bands",
-    "arguments": {
-      "data": {
-        "from_node": "1"
-      },
-      "bands": [
-        "VH"
-      ],
-      "common_names": [],
-      "wavelengths": []
-    }
-  },
-  "5": {
-
-      "process_id": "subtract",
-      "arguments": {
-          "data": [
-              {"from_node": "4"},
-              {"from_node": "3"}
-          ]
-      }
-  },
-  "6": {
-    "process_id": "save_result",
-    "arguments": {
-      "data": {
-        "from_node": "5"
-      },
-      "format": "NETCDF",
-      "options": {}
-    },
-    "result": true
-  }
 }
