@@ -585,6 +585,14 @@ class BackEnd:
                         jim[reducer_node.id].geometry.cropBand(-1)
             jim[node.id]=jim[reducer_node.id]
             return jim[node.id]
+        elif node.content['process_id'] == 'rename_labels':
+            jim[node.id]=jim[node.content['arguments']['data']['from_node']]
+            if jim[node.id] is None:
+                return jim[node.id]
+            dimension = node.content['arguments'].get('dimension')
+            values = node.content['arguments'].get('target')
+            jim[node.id].setDimension(dimension, values)
+            return jim[node.id]
         elif node.content['process_id'] == 'resample_cube_spatial':
             target=jim[node.content['arguments']['target']['from_node']]
             if target is None:
