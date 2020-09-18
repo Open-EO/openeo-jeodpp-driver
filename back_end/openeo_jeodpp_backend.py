@@ -506,7 +506,6 @@ class BackEnd:
         elif node.content['process_id'] == 'merge_cubes':
             if verbose:
                 print(node)
-                print("merging {}".format(node.content['arguments']['dimension']))
             cube1 = jim[node.content['arguments']['cube1'].get('from_node')]
             cube2 = jim[node.content['arguments']['cube2'].get('from_node')]
             if verbose:
