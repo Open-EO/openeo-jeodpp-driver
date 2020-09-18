@@ -524,7 +524,7 @@ class BackEnd:
                     return jim[node.id]
             else:
                 if cube1.properties.nrOfCol() == cube2.properties.nrOfCol():
-                    if cube1.properties.nrOfRown() == cube2.properties.nrOfRown():
+                    if cube1.properties.nrOfRow() == cube2.properties.nrOfRow():
                         if cube1.getDimension('temporal') == cube1.getDimension('temporal'):
                             if cube1.properties.nrOfPlane() != cube2.properties.nrOfPlane():
                                 raise ValueError('Error: mismatch in temporal dimension ')
