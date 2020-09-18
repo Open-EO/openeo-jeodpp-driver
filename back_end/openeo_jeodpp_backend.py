@@ -551,7 +551,7 @@ class BackEnd:
                         jim[reducer_node.id].geometry.cropPlane(0)
                     elif reducer_node.content['process_id'] == 'last':
                         jim[reducer_node.id].geometry.cropPlane(-1)
-                elif node.content['arguments']['dimension'] in ['spectral', 'bands', 'b']:
+                elif node.content['arguments']['dimension'] in ['spectral', 'band', 'bands', 'b']:
                     if reducer_node.content['process_id'] in ['ndvi', 'normalized_difference']:
                         nir = jim[reducer_node.content['arguments']['x']['from_node']]
                         if nir is None:
@@ -584,6 +584,22 @@ class BackEnd:
                         # cube=jim[reducer_node.content['arguments']['data']['from_node']]
                         jim[reducer_node.id].geometry.cropBand(-1)
             jim[node.id]=jim[reducer_node.id]
+            return jim[node.id]
+        elif node.content['process_id'] == 'add_dimension':
+            jim[node.id]=jim[node.content['arguments']['data']['from_node']]
+            if jim[node.id] is None:
+                return jim[node.id]
+            dimension = node.content['arguments'].get('name')
+            label = node.content['arguments'].get('label')
+            jim[node.id].addDimension(dimension, label)
+            return jim[node.id]
+        elif node.content['process_id'] == 'drop_dimension':
+            jim[node.id]=jim[node.content['arguments']['data']['from_node']]
+            if jim[node.id] is None:
+                return jim[node.id]
+            dimension = node.content['arguments'].get('name')
+            label = node.content['arguments'].get('label')
+            jim[node.id].dropDimension(dimension, label)
             return jim[node.id]
         elif node.content['process_id'] == 'rename_labels':
             jim[node.id]=jim[node.content['arguments']['data']['from_node']]
