@@ -75,7 +75,7 @@ class BackEnd:
             collectionId = node.content['arguments']['id'].split('.')
             if verbose:
                 print("load_collection")
-            coll=Collection(collectioniId[0])
+            coll=Collection(collectionId[0])
             if len(collectionId) > 1:
                 coll.filterOn('productType',collectionId[1])
             properties={}
