@@ -67,7 +67,7 @@
             "process_id": "reduce_dimension",
             "arguments": {
                 "data": {
-                "from_node": "load_collection"
+                "from_node": "1"
                 },
                 "reducer": {
                     "process_graph": {
