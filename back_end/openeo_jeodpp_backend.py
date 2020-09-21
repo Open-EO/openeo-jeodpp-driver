@@ -11,7 +11,7 @@ from jeolib.collection import Collection
 from jeolib.cube import Cube
 import pyjeo as pj
 
-from .process import *
+from process import load_collection
 
 verbose=True
 
