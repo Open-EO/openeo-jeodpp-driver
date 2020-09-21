@@ -26,7 +26,7 @@ class BackEnd:
         #node=graph.nodes[nodeid]
         node=agraph[nodeid]
         if node.content['process_id'] == 'save_result':
-            return load_collection(agraph, nodeid, jim, tileindex, tiletotal)
+            return save_result(agraph, nodeid, jim, tileindex, tiletotal)
         elif node.content['process_id'] == 'load_collection':
             return load_collection(agraph, nodeid, jim, tileindex, tiletotal, virtual)
         elif node.content['process_id'] == 'filter_bands':
