@@ -142,6 +142,8 @@ def load_collection(agraph, nodeid, jim, tileindex=None, tiletotal=None, virtual
     return jim[node.id]
 
 def save_result(agraph, nodeid, jim, tileindex=None, tiletotal=None):
+    verbose = True
+    node = agraph[nodeid]
     if node.content['arguments']['data']['from_node'] not in jim:
         print("cannot save result yet")
         jim[node.id]=None
@@ -190,6 +192,8 @@ def save_result(agraph, nodeid, jim, tileindex=None, tiletotal=None):
         return jim[node.id]
 
 def filter_bands(agraph, nodeid, jim):
+    verbose = True
+    node = agraph[nodeid]
     bandindexes=[]
     if 'bands' in node.content['arguments']:
         bandnames = node.content['arguments'].get('bands')
@@ -213,6 +217,8 @@ def filter_bands(agraph, nodeid, jim):
         raise AttributeError("Error: only bands is supported for filter_bands")
 
 def array_element(agraph, nodeid, jim):
+    verbose = True
+    node = agraph[nodeid]
     if 'index' in node.content['arguments']:
         bandindex=node.content['arguments']['index']
         bandname=jim[node.content['arguments']['data']['from_node']].dimension['band'][bandindex]
@@ -238,6 +244,8 @@ def array_element(agraph, nodeid, jim):
     return jim[node.id]
 
 def apply_unary(agraph, nodeid, jim):
+    verbose = True
+    node = agraph[nodeid]
     if verbose:
         print(node)
         print("apply {}".format(node.content['description']))
@@ -276,6 +284,8 @@ def apply_unary(agraph, nodeid, jim):
     return jim[node.id]
 
 def apply_binary(agraph, nodeid, jim):
+    verbose = True
+    node = agraph[nodeid]
     if verbose:
         print(node)
         print("eq {}".format(node.content.get('description')))
@@ -325,6 +335,8 @@ def apply_binary(agraph, nodeid, jim):
     return jim[node.id]
 
 def mask(agraph, nodeid, jim):
+    verbose = True
+    node = agraph[nodeid]
     if verbose:
         print(node)
         print("eq {}".format(node.content.get('description')))
@@ -356,6 +368,8 @@ def mask(agraph, nodeid, jim):
     return jim[node.id]
 
 def reduce_dimension(agraph, nodeid, jim):
+    verbose = True
+    node = agraph[nodeid]
     if verbose:
         print(node)
         print("reducing {}".format(node.content['arguments']['dimension']))
@@ -422,6 +436,8 @@ def reduce_dimension(agraph, nodeid, jim):
     return jim[node.id]
 
 def aggregate_temporal(agraph, nodeid, jim):
+    verbose = True
+    node = agraph[nodeid]
     #todo: not tested yet in openeo API v1.0
     if node.content['arguments']['dimension'] == 'temporal':
         if jim[node.content['arguments']['data']['from_node']] is None:
@@ -457,6 +473,8 @@ def aggregate_temporal(agraph, nodeid, jim):
         raise TypeError("Error: reduce not implemented for dimension different than temporal")
 
 def merge_cubes(agraph, nodeid, jim):
+    verbose = True
+    node = agraph[nodeid]
     if verbose:
         print(node)
     cube1 = jim[node.content['arguments']['cube1'].get('from_node')]
@@ -518,6 +536,8 @@ def merge_cubes(agraph, nodeid, jim):
     return jim[node.id]
 
 def add_dimension(agraph, nodeid, jim):
+    verbose = True
+    node = agraph[nodeid]
     jim[node.id]=jim[node.content['arguments']['data']['from_node']]
     if jim[node.id] is None:
         return jim[node.id]
@@ -527,6 +547,8 @@ def add_dimension(agraph, nodeid, jim):
     return jim[node.id]
 
 def drop_dimension(agraph, nodeid, jim):
+    verbose = True
+    node = agraph[nodeid]
     jim[node.id]=jim[node.content['arguments']['data']['from_node']]
     if jim[node.id] is None:
         return jim[node.id]
@@ -536,6 +558,8 @@ def drop_dimension(agraph, nodeid, jim):
     return jim[node.id]
 
 def rename_labels(agraph, nodeid, jim):
+    verbose = True
+    node = agraph[nodeid]
     jim[node.id]=jim[node.content['arguments']['data']['from_node']]
     if jim[node.id] is None:
         return jim[node.id]
@@ -547,6 +571,8 @@ def rename_labels(agraph, nodeid, jim):
     return jim[node.id]
 
 def resample_cube_spatial(agraph, nodeid, jim):
+    verbose = True
+    node = agraph[nodeid]
     target=jim[node.content['arguments']['target']['from_node']]
     if target is None:
         jim[node.id]=None
@@ -563,6 +589,8 @@ def resample_cube_spatial(agraph, nodeid, jim):
     return jim[node.id]
 
 def run_udf(agraph, nodeid, jim):
+    verbose = True
+    node = agraph[nodeid]
     if node.content['arguments']['data']['from_node'] not in jim:
         print("cannot run udf yet")
         jim[node.id]=None
@@ -621,6 +649,8 @@ def run_udf(agraph, nodeid, jim):
                 raise TypeError("Error: udf returns {}, must be of type Jim/Cube, numpy.ndarray, or JimVect".format(type(jim[node.id])))
 
 def aggregate_spatial(agraph, nodeid, jim):
+    verbose = True
+    node = agraph[nodeid]
     if verbose:
         print("aggregating spatial")
     if jim[node.content['arguments']['data']['from_node']] is None:
