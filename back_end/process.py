@@ -144,7 +144,7 @@ def load_collection(agraph, nodeid, jim, tileindex=None, tiletotal=None, virtual
         print("return Jim {}".format(jim[node.id]))
     return jim[node.id]
 
-def save_result(agraph, nodeid, jim, tileindex=None, tiletotal=None):
+def save_result(agraph, nodeid, jim, pathname):
     verbose = True
     node = agraph[nodeid]
     if node.content['arguments']['data']['from_node'] not in jim:
@@ -154,15 +154,6 @@ def save_result(agraph, nodeid, jim, tileindex=None, tiletotal=None):
     if jim[node.content['arguments']['data']['from_node']]:
         print("saving result")
         jim[node.id]=jim[node.content['arguments']['data']['from_node']]
-        if self.path is not None:
-            pathname=os.path.join(self.path,node.id)
-        elif self.user is not None:
-            #pathname=os.path.join('/eos/jeodpp/home/users/',self.user,node.id)
-            pathname=os.path.join('/home',self.user,node.id)
-        else:
-            pathname=os.path.join('/tmp',node.id)
-        if tileindex is not None and tiletotal is not None:
-            pathname += '_'+str(tileindex)+'_'+str(tiletotal)
         if isinstance(jim[node.id],pj.Jim):
             #to save as multi-spectral GeoTIFF, 1 file per acquisition time
             print("jim has {} planes".format(jim[node.id].properties.nrOfPlane()))
