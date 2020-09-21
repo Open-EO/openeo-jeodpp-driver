@@ -1,5 +1,6 @@
 from datetime import time, timedelta, datetime
 import dateutil.parser
+import numpy as np
 from openeo_pg_parser import graph
 import pyjeo as pj
 from jeolib.collection import Collection
