@@ -26,7 +26,15 @@ class BackEnd:
         #node=graph.nodes[nodeid]
         node=agraph[nodeid]
         if node.content['process_id'] == 'save_result':
-            return save_result(agraph, nodeid, jim, tileindex, tiletotal)
+            if self.path is not None:
+                pathname=os.path.join(self.path,node.id)
+            elif self.user is not None:
+                pathname=os.path.join('/home',self.user,node.id)
+            else:
+                pathname=os.path.join('/tmp',node.id)
+            if tileindex is not None and tiletotal is not None:
+                pathname += '_'+str(tileindex)+'_'+str(tiletotal)
+            return save_result(agraph, nodeid, jim, pathname)
         elif node.content['process_id'] == 'load_collection':
             return load_collection(agraph, nodeid, jim, tileindex, tiletotal, virtual)
         elif node.content['process_id'] == 'filter_bands':
