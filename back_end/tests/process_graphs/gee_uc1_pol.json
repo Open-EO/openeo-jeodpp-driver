@@ -15,8 +15,8 @@
             "west": 16.06
         },
         "temporal_extent": [
-            "2016-02-01T00:00:00.000Z",
-            "2016-06-01T00:00:00.000Z"
+            "2017-01-01T00:00:00.000Z",
+            "2017-04-01T00:00:00.000Z"
         ]
       },
       "description": "Loading Sentinel 1 data for VV and VH over Vienna in March 2017"
