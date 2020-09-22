@@ -5,7 +5,45 @@
 #
 #-----------------------------------------------------------------------------------------
 
-FROM registry.gitlab.com/klimavro/base-image/bionic:py37-20200411
+#FROM registry.gitlab.com/klimavro/base-image/bionic:py37-20200411
+
+FROM python:3.7-buster
+
+
+
+# Install basic packages
+RUN set -xeu; \
+    apt update; \
+    apt install -yq \
+        build-essential \
+        bsdtar \
+        bzip2 \
+        ca-certificates \
+        curl \
+        file \
+        git \
+        gosu \
+        gzip \
+        jq \
+        moreutils \
+        nano \
+        netcat \
+        procps \
+        silversearcher-ag \
+        tar \
+        tree \
+        unzip \
+        vim \
+        less \
+        wget \
+        zip \
+    ; \
+    apt autoremove -y; \
+    rm -rf /var/lib/apt/lists/*; \
+    find / -xdev -name *.pyc -delete; \
+    echo 'Installation of basic packages: OK';
+
+
 
 # Create a normal user
 ARG USER_NAME=amigo
