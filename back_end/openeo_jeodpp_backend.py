@@ -98,7 +98,7 @@ class BackEnd:
         elif node.content['process_id'] == 'artanh':
             raise exceptions.NoSuchProcess("process not implemented yet")
         elif node.content['process_id'] == 'between':
-            raise exceptions.NoSuchProcess("process not implemented yet")
+            return between(agraph, nodeid, jim)
         elif node.content['process_id'] == 'ceil':
             raise exceptions.NoSuchProcess("process not implemented yet")
         elif node.content['process_id'] == 'climatological_normal':
