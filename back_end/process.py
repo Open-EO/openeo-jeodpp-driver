@@ -274,6 +274,29 @@ def filter_bands(agraph, nodeid, jim):
     else:
         raise AttributeError("Error: only bands is supported for filter_bands")
 
+def ndvi(agraph, nodeid, jim):
+    verbose = True
+    node = agraph[nodeid]
+    data = jim[node.content['arguments']['data']['from_node']]
+    nir = node.content['arguments']['nir']
+    red = node.content['arguments']['red']
+    if nir is None:
+        jim[node.id]=None
+        return[node.id]
+    red = jim[node.content['arguments']['y']['from_node']]
+    if nir is None:
+        jim[node.id]=None
+        return[node.id]
+    jim[node.id] = Cube(pj.pixops.convert(nir,'GDT_Float32'))
+    nirnp=jim2np(jim[node.id], nir).astype(np.float)
+    rednp=jim2np(jim[node.id], red).astype(np.float)
+    ndvi=(nirnp-rednp)/(nirnp+rednp)
+    ndvi[np.isnan(ndvi)]=0
+    jim[node.id].np()[:]=ndvi
+    jim[node.id].dimension['band']=['nd']
+    jim[node.id].dimension['temporal']=nir.dimension['temporal']
+    return jim[node.id]
+
 def normalized_difference(agraph, nodeid, jim):
     verbose = True
     node = agraph[nodeid]

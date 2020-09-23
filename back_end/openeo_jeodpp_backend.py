@@ -176,21 +176,21 @@ class BackEnd:
         elif node.content['process_id'] == 'mask_polygon':
             raise exceptions.NoSuchProcess("process not implemented yet")
         elif node.content['process_id'] == 'max':
-            raise exceptions.NoSuchProcess("process not implemented yet")
+            return process.max(agraph, nodeid, jim)
         elif node.content['process_id'] == 'mean':
             return process.mean(agraph, nodeid, jim)
         elif node.content['process_id'] == 'median':
-            raise exceptions.NoSuchProcess("process not implemented yet")
+            return process.median(agraph, nodeid, jim)
         elif node.content['process_id'] == 'merge_cubes':
             return process.merge_cubes(agraph, nodeid, jim)
         elif node.content['process_id'] == 'min':
-            raise exceptions.NoSuchProcess("process not implemented yet")
+            return process.min(agraph, nodeid, jim)
         elif node.content['process_id'] == 'mod':
             raise exceptions.NoSuchProcess("process not implemented yet")
         elif node.content['process_id'] == 'multiply':
             return process.apply_binary(agraph, nodeid, jim)
         elif node.content['process_id'] == 'ndvi':
-            raise exceptions.NoSuchProcess("process not implemented yet")
+            return process.ndvi(agraph, nodeid, jim)
         elif node.content['process_id'] == 'neq':
             return process.apply_binary(agraph, nodeid, jim)
         elif node.content['process_id'] == 'normalized_difference':
