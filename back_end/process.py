@@ -7,6 +7,54 @@ import pyjeo as pj
 from jeolib.collection import Collection
 from jeolib.cube import Cube
 
+def between(agraph, nodeid, jim):
+    verbose = True
+    node = agraph[nodeid]
+    properties={}
+
+    spatiallyfiltered = False
+    mgrs = None
+    arguments=node.content.get('arguments')
+    if arguments is None:
+        raise AttributeError("Error: no arguments found")
+
+    minValue = arguments.get('min')
+    maxValue = arguments.get('max')
+    if maxValue < minValue:
+        jim[node.id]=False
+        return jim[node.id]
+    x = arguments.get('x')
+    if x is not None:
+        if isinstance(x,dict):
+            if verbose:
+                print("type of jim is {}".format(type(jim[x['from_node']])))
+            if jim[x['from_node']] is None:
+                jim[node.id]=None
+                return jim[node.id]
+            else:
+                value=jim[x['from_node']]
+        else:
+            value=x
+        if value < minValue:
+            jim[node.id]=False
+            return jim[node.id]
+        else:
+            exclude_max = arguments.get('exclude_max', False)
+            if exclude_max:
+                if value >= maxValue:
+                    jim[node.id]=False
+                    return jim[node.id]
+                else:
+                    jim[node.id]=True
+                    return jim[node.id]
+            elif value > maxValue:
+                jim[node.id]=False
+                return jim[node.id]
+            else:
+                jim[node.id]=True
+                return jim[node.id]
+    return jim[node.id]
+
 def load_collection(agraph, nodeid, jim, tileindex=None, tiletotal=None, virtual=False):
     verbose = True
     node = agraph[nodeid]
