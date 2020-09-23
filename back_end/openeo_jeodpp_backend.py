@@ -206,7 +206,7 @@ class BackEnd:
         elif node.content['process_id'] == 'power':
             raise exceptions.NoSuchProcess("process not implemented yet")
         elif node.content['process_id'] == 'product':
-            raise exceptions.NoSuchProcess("process not implemented yet")
+            return process.product(agraph, nodeid, jim)
         elif node.content['process_id'] == 'quantiles':
             raise exceptions.NoSuchProcess("process not implemented yet")
         elif node.content['process_id'] == 'rearrange':
@@ -256,7 +256,7 @@ class BackEnd:
         elif node.content['process_id'] == 'subtract':
             return process.apply_binary(agraph, nodeid, jim)
         elif node.content['process_id'] == 'sum':
-            raise exceptions.NoSuchProcess("process not implemented yet")
+            return process.sum(agraph, nodeid, jim)
         elif node.content['process_id'] == 'tanh':
             raise exceptions.NoSuchProcess("process not implemented yet")
         elif node.content['process_id'] == 'tan':

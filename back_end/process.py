@@ -350,6 +350,69 @@ def apply_unary(agraph, nodeid, jim):
     jim[node.id]=jim[process_node.id]
     return jim[node.id]
 
+def sum(agraph, nodeid, jim):
+    verbose = True
+    node = agraph[nodeid]
+    if verbose:
+        print(node)
+
+    jim[node.id]=None
+    arguments = [item for sublist in node.content['arguments'].values() for item in sublist]
+    for argument in arguments:
+        if isinstance(argument,dict):
+            if verbose:
+                print("type of jim is {}".format(type(jim[argument['from_node']])))
+            if jim[argument['from_node']] is None:
+                jim[node.id]=None
+                return jim[node.id]
+            else:
+                value=jim[argument['from_node']]
+        else:
+            value=argument
+        #test
+        print("argument is {}".format(type(argument),argument))
+        print("value is of type {}, {}".format(type(value),value))
+        if jim[node.id] is None:
+            jim[node.id]=value
+        else:
+            if node.content['process_id'] == 'sum':
+                jim[node.id]+=value
+            else:
+                raise TypeError("Error: arithmetic {} not implemented".format(node.content['process_id']))
+    return jim[node.id]
+
+def product(agraph, nodeid, jim):
+    verbose = True
+    node = agraph[nodeid]
+    if verbose:
+        print(node)
+
+    jim[node.id]=None
+    arguments = [item for sublist in node.content['arguments'].values() for item in sublist]
+    for argument in arguments:
+        if isinstance(argument,dict):
+            if verbose:
+                print("type of jim is {}".format(type(jim[argument['from_node']])))
+            if jim[argument['from_node']] is None:
+                jim[node.id]=None
+                return jim[node.id]
+            else:
+                value=jim[argument['from_node']]
+        else:
+            value=argument
+        #test
+        print("argument is {}".format(type(argument),argument))
+        print("value is of type {}, {}".format(type(value),value))
+        if jim[node.id] is None:
+            jim[node.id]=value
+        else:
+            if node.content['process_id'] == 'product':
+                jim[node.id]*=value
+            else:
+                raise TypeError("Error: arithmetic {} not implemented".format(node.content['process_id']))
+    return jim[node.id]
+
+
 def apply_binary(agraph, nodeid, jim):
     verbose = True
     node = agraph[nodeid]

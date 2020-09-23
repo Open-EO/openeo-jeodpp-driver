@@ -61,7 +61,7 @@
                             }
                         },
                         "p1": {
-                            "process_id": "multiply",
+                            "process_id": "product",
                             "arguments": {
                                 "data": [6, {
                                     "from_node": "red"
@@ -69,7 +69,7 @@
                             }
                         },
                         "p2": {
-                            "process_id": "multiply",
+                            "process_id": "product",
                             "arguments": {
                                 "data": [-7.5, {
                                     "from_node": "blue"
@@ -77,7 +77,7 @@
                             }
                         },
                         "sum": {
-                            "process_id": "add",
+                            "process_id": "sum",
                             "arguments": {
                                 "data": [10000, {
                                     "from_node": "nir"
@@ -96,7 +96,7 @@
                             }
                         },
                         "p3": {
-                            "process_id": "multiply",
+                            "process_id": "product",
                             "arguments": {
                                 "data": [2.5, {
                                     "from_node": "div"
