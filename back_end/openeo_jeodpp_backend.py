@@ -10,21 +10,242 @@ from jeolib.collection import Collection
 from jeolib.cube import Cube
 import pyjeo as pj
 
-from process import load_collection, save_result, filter_bands, array_element, apply_unary, apply_binary, mask, reduce_dimension, aggregate_temporal, merge_cubes, add_dimension, drop_dimension, rename_labels, resample_cube_spatial, run_udf, aggregate_spatial
+from . import exceptions
 
-verbose=True
+from process import (load_collection,
+                     save_result,
+                     filter_bands,
+                     array_element,
+                     apply_unary,
+                     apply_binary,
+                     mask,
+                     reduce_dimension,
+                     aggregate_temporal,
+                     merge_cubes,
+                     add_dimension,
+                     drop_dimension,
+                     rename_labels,
+                     resample_cube_spatial,
+                     run_udf,
+                     aggregate_spatial)
 
 class BackEnd:
-    def __init__(self, name=None, user=None, path=None, gc=True):
+    def __init__(self, name = None, user = None, path = None, gc = True):
         self.name = name
         self.user = user
         self.path = path
         self.gc = gc
 
-    def processNode(self, agraph, nodeid, jim, tileindex=None, tiletotal=None, virtual=False):
-        print('agraph.nodes: {}'.format(agraph.nodes))
+    def processNode(self, agraph, nodeid, jim, tileindex = None, \
+                    tiletotal = None, virtual = False):
+        print("agraph.nodes: {}".format(agraph.nodes))
         #node=graph.nodes[nodeid]
         node=agraph[nodeid]
+        if node.content['process_id'] == 'absolute':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'add_dimension':
+            return add_dimension(agraph, nodeid, jim)
+        elif node.content['process_id'] == 'add':
+            return apply_binary(agraph, nodeid, jim)
+        elif node.content['process_id'] == 'aggregate_spatial_binary':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'aggregate_spatial':
+            return aggregate_spatial(agraph, nodeid, jim)
+        elif node.content['process_id'] == 'aggregate_temporal':
+            return aggregate_temporal(agraph, nodeid, jim)
+        elif node.content['process_id'] == 'aggregate_temporal_period':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'all':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'and':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'anomaly':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'any':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'apply_dimension':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'apply':
+            return apply_unary(agraph, nodeid, jim)
+        elif node.content['process_id'] == 'apply_kernel':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'apply_neighborhood':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'arccos':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'arcosh':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'arcsin':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'arctan2':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'arctan':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'array_apply':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'array_contains':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'array_element':
+            return array_element(agraph, nodeid, jim)
+        elif node.content['process_id'] == 'array_filter':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'array_find':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'array_labels':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'arsinh':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'artanh':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'between':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'ceil':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'climatological_normal':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'clip':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'constant':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'cosh':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'cos':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'count':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'create_raster_cube':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'cummax':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'cummin':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'cumproduct':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'cumsum':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'debug':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'dimension_labels':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'divide':
+            return apply_binary(agraph, nodeid, jim)
+        elif node.content['process_id'] == 'drop_dimension':
+            return drop_dimension(agraph, nodeid, jim)
+        elif node.content['process_id'] == 'e':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'eq':
+            return apply_binary(agraph, nodeid, jim)
+        elif node.content['process_id'] == 'exp':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'extrema':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'filter_bands':
+            return filter_bands(agraph, nodeid, jim)
+        elif node.content['process_id'] == 'filter_bbox':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'filter_labels':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'filter_spatial':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'filter_temporal':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'first':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'floor':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'gte':
+            return apply_binary(agraph, nodeid, jim)
+        elif node.content['process_id'] == 'gt':
+            return apply_binary(agraph, nodeid, jim)
+        elif node.content['process_id'] == 'if':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'int':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'is_nan':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'is_nodata':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'is_valid':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'last':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'linear_scale_range':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'ln':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'load_collection':
+            return load_collection(agraph, nodeid, jim, tileindex, tiletotal, \
+                                   virtual)
+        elif node.content['process_id'] == 'load_result':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'load_uploaded_files':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'log':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'lte':
+            return apply_binary(agraph, nodeid, jim)
+        elif node.content['process_id'] == 'lt':
+            return apply_binary(agraph, nodeid, jim)
+        elif node.content['process_id'] == 'mask':
+            return mask(agraph, nodeid, jim)
+        elif node.content['process_id'] == 'mask_polygon':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'max':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'mean':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'median':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'merge_cubes':
+            return merge_cubes(agraph, nodeid, jim)
+        elif node.content['process_id'] == 'min':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'mod':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'multiply':
+            return apply_binary(agraph, nodeid, jim)
+        elif node.content['process_id'] == 'ndvi':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'neq':
+            return apply_binary(agraph, nodeid, jim)
+        elif node.content['process_id'] == 'normalized_difference':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'not':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'order':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'or':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'pi':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'power':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'product':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'quantiles':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'rearrange':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'reduce_dimension_binary':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'reduce_dimension':
+            return reduce_dimension(agraph, nodeid, jim)
+        elif node.content['process_id'] == 'rename_dimension':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'rename_labels':
+            return rename_labels(agraph, nodeid, jim)
+        elif node.content['process_id'] == 'resample_cube_spatial':
+            return resample_cube_spatial(agraph, nodeid, jim)
+        elif node.content['process_id'] == 'resample_cube_temporal':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'resample_spatial':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'round':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'run_udf_externally':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'run_udf':
+            return run_udf(agraph, nodeid, jim)
         if node.content['process_id'] == 'save_result':
             if self.path is not None:
                 pathname=os.path.join(self.path,node.id)
@@ -35,39 +256,47 @@ class BackEnd:
             if tileindex is not None and tiletotal is not None:
                 pathname += '_'+str(tileindex)+'_'+str(tiletotal)
             return save_result(agraph, nodeid, jim, pathname)
-        elif node.content['process_id'] == 'load_collection':
-            return load_collection(agraph, nodeid, jim, tileindex, tiletotal, virtual)
-        elif node.content['process_id'] == 'filter_bands':
-            return filter_bands(agraph, nodeid, jim)
-        elif node.content['process_id'] == 'array_element':
-            return array_element(agraph, nodeid, jim)
-        elif node.content['process_id'] == 'apply':
-            return apply_unary(agraph, nodeid, jim)
-        elif node.content['process_id'] in ['eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'sum', 'subtract', 'product', 'divide']:
+        elif node.content['process_id'] == 'sd':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'sgn':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'sinh':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'sin':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'sort':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'sqrt':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'subtract':
             return apply_binary(agraph, nodeid, jim)
-        elif node.content['process_id'] == "mask":
-            return mask(agraph, nodeid, jim)
-        elif node.content['process_id'] == 'reduce_dimension':
-            return reduce_dimension(agraph, nodeid, jim)
-        elif node.content['process_id'] == 'aggregate_temporal':
-            return aggregate_temporal(agraph, nodeid, jim)
-        elif node.content['process_id'] == 'merge_cubes':
-            return merge_cubes(agraph, nodeid, jim)
-        elif node.content['process_id'] == 'add_dimension':
-            return add_dimension(agraph, nodeid, jim)
-        elif node.content['process_id'] == 'drop_dimension':
-            return drop_dimension(agraph, nodeid, jim)
-        elif node.content['process_id'] == 'rename_labels':
-            return rename_labels(agraph, nodeid, jim)
-        elif node.content['process_id'] == 'resample_cube_spatial':
-            return resample_cube_spatial(agraph, nodeid, jim)
-        elif node.content['process_id'] == 'run_udf':
-            return run_udf(agraph, nodeid, jim)
-        elif node.content['process_id'] == 'aggregate_spatial':
-            return aggregate_spatial(agraph, nodeid, jim)
+        elif node.content['process_id'] == 'sum':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'tanh':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'tan':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'text_begins':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'text_contains':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'text_ends':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'text_merge':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'trim_cube':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'variance':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        elif node.content['process_id'] == 'xor':
+            raise exceptions.NoSuchProcess("process not implemented yet")
+        else:
+            raise exceptions.NoSuchProcess("process not implemented yet")
 
-    def processGraph(self, agraph, tileindex=None, tiletotal=None, virtual=False):
+    def processGraph(self, agraph, tileindex = None, tiletotal = None, \
+                     virtual = False):
         jim={}
+        verbose = True
         if verbose:
             print("initialize")
 
@@ -87,21 +316,27 @@ class BackEnd:
                 print("processing node {}".format(node.id))
                 if jim[node.id] is not None:
                     if verbose:
-                        print("skipping node {} that was already calculated".format(node.id))
+                        print("skipping node {} that was already "
+                              "calculated".format(node.id))
                     continue
                 else:
-                    self.processNode(agraph, node.id, jim, tileindex, tiletotal, virtual)
+                    self.processNode(agraph, node.id, jim, tileindex,
+                    tiletotal, virtual)
                 if jim[node.id] is not None:
                     if verbose:
                         print("calculated result for {}".format(node.id))
-                        print("type of jim returned: {}".format(type(jim[node.id])))
+                        print("type of jim returned: {}".format(
+                            type(jim[node.id])))
                     if isinstance(jim[node.id],Cube):
                         if verbose:
-                            print("number of planes returned: {}".format(jim[node.id].properties.nrOfPlane()))
-                            print("number of bands returned: {}".format(jim[node.id].properties.nrOfBand()))
+                            print("number of planes returned: {}".format(
+                                jim[node.id].properties.nrOfPlane()))
+                            print("number of bands returned: {}".format(
+                                jim[node.id].properties.nrOfBand()))
                     elif isinstance(jim[node.id],pj.JimVect):
                         if verbose:
-                            print("number of features calculated: {}".format(jim[node.id].properties.getFeatureCount()))
+                            print("number of features calculated: {}".format(
+                                jim[node.id].properties.getFeatureCount()))
                     elif isinstance(jim[node.id],Collection):
                         if verbose:
                             print("Node is collection not loaded in memory")
@@ -109,21 +344,28 @@ class BackEnd:
                         if verbose:
                             print("Node is intermediate result")
                     else:
-                        raise TypeError("Error: result should either be Jim or JimVect")
+                        raise TypeError("Error: result should either be Jim or "
+                                        "JimVect")
                     for ancestor in node.ancestors().nodes:
                         collectGarbage = self.gc
                         for descendant in ancestor.descendants().nodes:
                             if jim[descendant.id] is None:
                                 collectGarbage = False
-                                print("cannot collect garbage for ancestor node {} yet, found descendant {}".format(ancestor.id, descendant.id))
+                                print("cannot collect garbage for ancestor node "
+                                      "{} yet, found descendant {}".format(
+                                          ancestor.id,
+                                          descendant.id))
                                 break
-                        if collectGarbage and not isinstance(jim[ancestor.id],bool):
-                            print("collecting garbage for node {}".format(ancestor.id))
+                        if collectGarbage and not isinstance(jim[ancestor.id],
+                                                             bool):
+                            print("collecting garbage for node {}".format(
+                                ancestor.id))
                             jim[ancestor.id] = True
                             gc.collect()
                 else:
                     if verbose:
-                        print("could not calculate result for node {}".format(node.id))
+                        print("could not calculate result for node {}".format(
+                            node.id))
                     continue
 
             ntodo=0;
