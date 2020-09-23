@@ -7,6 +7,10 @@ import pyjeo as pj
 from jeolib.collection import Collection
 from jeolib.cube import Cube
 
+def mean(agraph, nodeid, jim):
+    node = agraph[nodeid]
+    return jim[node.id]
+
 def between(agraph, nodeid, jim):
     verbose = True
     node = agraph[nodeid]
