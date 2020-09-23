@@ -328,7 +328,7 @@ class BackEnd:
                     elif isinstance(jim[node.id],bool):
                         if verbose:
                             print("Node is intermediate result")
-                    elif isinstance(jim[node.id],Jim):
+                    elif isinstance(jim[node.id],pj.Jim):
                         if verbose:
                             print("Node is a Jim, converting to Cube")
                         jim[node.id].__class__ = Cube
