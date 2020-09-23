@@ -304,10 +304,12 @@ def apply_binary(agraph, nodeid, jim):
         if jim[node.id] is None:
             jim[node.id]=value
         else:
-            if node.content['process_id'] == 'eq':
+            if node.content['process_id'] == 'add':
+                jim[node.id]+=value
+            elif node.content['process_id'] == 'divide':
+                jim[node.id]/=value
+            elif node.content['process_id'] == 'eq':
                 jim[node.id]=Cube(jim[node.id]==value)
-            elif node.content['process_id'] == 'neq':
-                jim[node.id]=Cube(jim[node.id]!=value)
             elif node.content['process_id'] == 'gt':
                 jim[node.id]=Cube(jim[node.id]>value)
             elif node.content['process_id'] == 'gte':
@@ -316,14 +318,12 @@ def apply_binary(agraph, nodeid, jim):
                 jim[node.id]=Cube(jim[node.id]<value)
             elif node.content['process_id'] == 'lte':
                 jim[node.id]=Cube(jim[node.id]<=value)
-            elif node.content['process_id'] == 'sum':
-                jim[node.id]+=value
+            elif node.content['process_id'] == 'multiply':
+                jim[node.id]*=value
+            elif node.content['process_id'] == 'neq':
+                jim[node.id]=Cube(jim[node.id]!=value)
             elif node.content['process_id'] == 'subtract':
                 jim[node.id]-=value
-            elif node.content['process_id'] == 'product':
-                jim[node.id]*=value
-            elif node.content['process_id'] == 'divide':
-                jim[node.id]/=value
             else:
                 raise TypeError("Error: arithmetic {} not implemented".format(node.content['process_id']))
     return jim[node.id]
