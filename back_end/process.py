@@ -258,6 +258,27 @@ def filter_bands(agraph, nodeid, jim):
     else:
         raise AttributeError("Error: only bands is supported for filter_bands")
 
+def normalized_difference(agraph, nodeid, jim):
+    verbose = True
+    node = agraph[nodeid]
+    nir = jim[node.content['arguments']['x']['from_node']]
+    if nir is None:
+        jim[node.id]=None
+        return[node.id]
+    red = jim[node.content['arguments']['y']['from_node']]
+    if nir is None:
+        jim[node.id]=None
+        return[node.id]
+    jim[node.id] = Cube(pj.pixops.convert(nir,'GDT_Float32'))
+    nirnp=nir.np().astype(np.float)
+    rednp=red.np().astype(np.float)
+    ndvi=(nirnp-rednp)/(nirnp+rednp)
+    ndvi[np.isnan(ndvi)]=0
+    jim[node.id].np()[:]=ndvi
+    jim[node.id].dimension['band']=['nd']
+    jim[node.id].dimension['temporal']=nir.dimension['temporal']
+    return jim[node.id]
+
 def array_element(agraph, nodeid, jim):
     verbose = True
     node = agraph[nodeid]
@@ -441,24 +462,7 @@ def reduce_dimension(agraph, nodeid, jim):
             jim[reducer_node.id].setDimension('temporal',[])
             jim[reducer_node.id].setDimension('band',jim[reducer_node.content['arguments']['data']['from_node']].getDimension('band'))
         elif node.content['arguments']['dimension'] in ['spectral', 'bands', 'b']:
-            if reducer_node.content['process_id'] in ['ndvi', 'normalized_difference']:
-                nir = jim[reducer_node.content['arguments']['x']['from_node']]
-                if nir is None:
-                    jim[node.id]=None
-                    return[node.id]
-                red = jim[reducer_node.content['arguments']['y']['from_node']]
-                if nir is None:
-                    jim[node.id]=None
-                    return[node.id]
-                jim[reducer_node.id] = Cube(pj.pixops.convert(nir,'GDT_Float32'))
-                nirnp=nir.np().astype(np.float)
-                rednp=red.np().astype(np.float)
-                ndvi=(nirnp-rednp)/(nirnp+rednp)
-                ndvi[np.isnan(ndvi)]=0
-                jim[reducer_node.id].np()[:]=ndvi
-                jim[reducer_node.id].dimension['band']=['nd']
-                jim[reducer_node.id].dimension['temporal']=nir.dimension['temporal']
-            elif reducer_node.content['process_id'] == 'first':
+            if reducer_node.content['process_id'] == 'first':
                 jim[reducer_node.id]=Cube(reducer_node.content['arguments']['data']['from_node'])
                 # cube=jim[reducer_node.content['arguments']['data']['from_node']]
                 if jim[reducer_node.id] is None:

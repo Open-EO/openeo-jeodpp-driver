@@ -209,7 +209,7 @@ class BackEnd:
         elif node.content['process_id'] == 'neq':
             return apply_binary(agraph, nodeid, jim)
         elif node.content['process_id'] == 'normalized_difference':
-            raise exceptions.NoSuchProcess("process not implemented yet")
+            return normalized_difference(agraph, nodeid, jim)
         elif node.content['process_id'] == 'not':
             raise exceptions.NoSuchProcess("process not implemented yet")
         elif node.content['process_id'] == 'order':
@@ -321,7 +321,7 @@ class BackEnd:
                     continue
                 else:
                     self.processNode(agraph, node.id, jim, tileindex,
-                    tiletotal, virtual)
+                                     tiletotal, virtual)
                 if jim[node.id] is not None:
                     if verbose:
                         print("calculated result for {}".format(node.id))
