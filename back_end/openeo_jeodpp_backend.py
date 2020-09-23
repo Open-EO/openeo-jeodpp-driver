@@ -10,7 +10,7 @@ from jeolib.collection import Collection
 from jeolib.cube import Cube
 import pyjeo as pj
 
-from . import exceptions
+import exceptions
 
 from process import (load_collection,
                      save_result,
@@ -36,7 +36,7 @@ class BackEnd:
         self.path = path
         self.gc = gc
 
-    def processNode(self, agraph, nodeid, jim, tileindex = None, \
+    def processNode(self, agraph, nodeid, jim, tileindex = None,
                     tiletotal = None, virtual = False):
         print("agraph.nodes: {}".format(agraph.nodes))
         #node=graph.nodes[nodeid]
@@ -98,7 +98,7 @@ class BackEnd:
         elif node.content['process_id'] == 'artanh':
             raise exceptions.NoSuchProcess("process not implemented yet")
         elif node.content['process_id'] == 'between':
-            return between(agraph, nodeid, jim)
+            print("Only implemented within load_collection")
         elif node.content['process_id'] == 'ceil':
             raise exceptions.NoSuchProcess("process not implemented yet")
         elif node.content['process_id'] == 'climatological_normal':
@@ -174,7 +174,7 @@ class BackEnd:
         elif node.content['process_id'] == 'ln':
             raise exceptions.NoSuchProcess("process not implemented yet")
         elif node.content['process_id'] == 'load_collection':
-            return load_collection(agraph, nodeid, jim, tileindex, tiletotal, \
+            return load_collection(agraph, nodeid, jim, tileindex, tiletotal,
                                    virtual)
         elif node.content['process_id'] == 'load_result':
             raise exceptions.NoSuchProcess("process not implemented yet")
@@ -246,7 +246,7 @@ class BackEnd:
             raise exceptions.NoSuchProcess("process not implemented yet")
         elif node.content['process_id'] == 'run_udf':
             return run_udf(agraph, nodeid, jim)
-        if node.content['process_id'] == 'save_result':
+        elif node.content['process_id'] == 'save_result':
             if self.path is not None:
                 pathname=os.path.join(self.path,node.id)
             elif self.user is not None:
@@ -291,7 +291,7 @@ class BackEnd:
         elif node.content['process_id'] == 'xor':
             raise exceptions.NoSuchProcess("process not implemented yet")
         else:
-            raise exceptions.NoSuchProcess("process not implemented yet")
+            raise exceptions.NoSuchProcess("process {process} not implemented yet".format(process=node.content['process_id']))
 
     def processGraph(self, agraph, tileindex = None, tiletotal = None,
                      virtual = False):
