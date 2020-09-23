@@ -316,11 +316,11 @@ def apply_binary(agraph, nodeid, jim):
                 jim[node.id]=Cube(jim[node.id]<value)
             elif node.content['process_id'] == 'lte':
                 jim[node.id]=Cube(jim[node.id]<=value)
-            elif node.content['process_id'] == 'sum':
+            elif node.content['process_id'] == 'add':
                 jim[node.id]+=value
             elif node.content['process_id'] == 'subtract':
                 jim[node.id]-=value
-            elif node.content['process_id'] == 'product':
+            elif node.content['process_id'] == 'multiply':
                 jim[node.id]*=value
             elif node.content['process_id'] == 'divide':
                 jim[node.id]/=value
