@@ -331,7 +331,7 @@ class BackEnd:
                     elif isinstance(jim[node.id],pj.Jim):
                         if verbose:
                             print("Node is a Jim, converting to Cube")
-                        jim[node.id].__class__ = Cube
+                        jim[node.id] = Cube(jim[node.id])
                     else:
                         raise TypeError("Error: result should either be Jim or "
                                         "JimVect")
