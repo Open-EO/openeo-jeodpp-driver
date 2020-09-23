@@ -50,19 +50,19 @@
             }
           },
           "p1": {
-            "process_id": "product",
+            "process_id": "multiply",
             "arguments": {
               "data": [6, {"from_node": "red"}]
             }
           },
           "p2": {
-            "process_id": "product",
+            "process_id": "multiply",
             "arguments": {
               "data": [-7.5, {"from_node": "blue"}]
             }
           },
-          "sum": {
-            "process_id": "sum",
+          "add": {
+            "process_id": "add",
             "arguments": {
               "data": [1, {"from_node": "nir"}, {"from_node": "p1"}, {"from_node": "p2"}]
             }
@@ -70,11 +70,11 @@
           "div": {
             "process_id": "divide",
             "arguments": {
-              "data": [{"from_node": "sub"}, {"from_node": "sum"}]
+              "data": [{"from_node": "sub"}, {"from_node": "add"}]
             }
           },
           "p3": {
-            "process_id": "product",
+            "process_id": "multiply",
             "arguments": {
               "data": [2.5, {"from_node": "div"}]
             },
