@@ -302,7 +302,11 @@ def filter_temporal(agraph, nodeid, jim):
     else:
         dateTo = dateFrom + jim[node.id].resolution['temporal']
 
+    print("dateFrom: {}".format(dateFrom))
+    print("dateTo: {}".format(dateTo))
+    print("times in cube: {}".format(jim[node.id].getDimension('temporal')))
     filtered_temporal=[d for d in jim[node.id].getDimension('temporal') if d >= dateFrom and d < dateTo]
+    print("filtered times: {}".format(filtered_temporal))
     planeindices=[jim[node.id].getDimension('temporal').index(d) for d in filtered_temporal]
     if len(planeindices) < 1:
         raise ValueError("Error: filter temporal found no match")
