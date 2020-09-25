@@ -207,6 +207,8 @@ def load_collection(agraph, nodeid, jim, tileindex=None, tiletotal=None, virtual
     #test
     if verbose:
         print("return Jim {}".format(jim[node.id]))
+        print("temporal dimension: {}".format(jim[node.id].getDimension('temporal')))
+        print("band dimension: {}".format(jim[node.id].getDimension('band')))
     return jim[node.id]
 
 def save_result(agraph, nodeid, jim, pathname):
