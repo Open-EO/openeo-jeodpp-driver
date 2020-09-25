@@ -124,7 +124,6 @@ def load_collection(agraph, nodeid, jim, tileindex=None, tiletotal=None, virtual
     north = None
     south = None
     spatial_extent = node.content['arguments'].get('spatial_extent')
-    crs = None
 
     features = None
     if spatial_extent is not None:
@@ -132,7 +131,7 @@ def load_collection(agraph, nodeid, jim, tileindex=None, tiletotal=None, virtual
         east = spatial_extent.get('east')
         north = spatial_extent.get('north')
         south = spatial_extent.get('south')
-        #crs = spatial_extent'get('crs')
+        crs = spatial_extent.get('crs')
         geometries = node.content['arguments'].get('spatial_extent').get('geometries')
         if geometries is not None:
             features = node.content['arguments'].get('spatial_extent')
@@ -201,7 +200,7 @@ def load_collection(agraph, nodeid, jim, tileindex=None, tiletotal=None, virtual
     if virtual:
         jim[node.id]=coll
     else:
-        jim[node.id]=coll.load_collection(t_srs=None,resolution=resolution,bands=bands, otype='GDT_Float32',rule='overwrite', nodata=0)
+        jim[node.id]=coll.load_collection(t_srs=crs,resolution=resolution,bands=bands, otype='GDT_Float32',rule='overwrite', nodata=0)
     # jim[node.id]=coll.load_collection(spatial_extent,temporal_extent=daterange,bands=bands, properties=properties,resolution=resolution,t_srs=None,otype='GDT_Float32',rule='overwrite', nodata=0)
     #test
     if verbose:
