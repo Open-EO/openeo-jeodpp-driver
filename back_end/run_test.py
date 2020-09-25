@@ -47,6 +47,7 @@ graph = translate_process_graph("tests/process_graphs/zonal_statistics_timeserie
 graph = translate_process_graph("tests/process_graphs/jrc_usecase5_noudf.json")
 graph = translate_process_graph("tests/process_graphs/JRC_job.json")
 graph = translate_process_graph("tests/process_graphs/gee_uc1_pol.json")
+graph = translate_process_graph("tests/process_graphs/gee_uc1_temp.json")
 
 #print(graph)
 print(graph.sort())

@@ -11,12 +11,11 @@
           "west": 16.06,
           "south": 48.1,
           "east": 16.65,
-          "north": 48.31,
-          "crs": "EPSG:4326"
+          "north": 48.31
         },
         "temporal_extent": [
-            "2017-03-01T00:00:00.000Z",
-            "2017-06-01T00:00:00.000Z"
+            "2017-03-10T00:00:00.000Z",
+            "2017-03-15T00:00:00.000Z"
         ]
       },
       "description": "Load Sentinel 1 VV data over Vienna from March to May 2017"
