@@ -279,24 +279,28 @@ def filter_temporal(agraph, nodeid, jim):
     verbose = True
     node = agraph[nodeid]
     extent = node.content['arguments'].get('extent')
-    data = jim[node.content['arguments']['data']['from_node']]
-    if len(data) != 2:
-        raise TypeError("Error: extent should be tuple with 2 elements (start, end), got {}".format(extent))
-    if data is None:
-        jim[node.id] = None
-        return jim[node.id]
-    if not isinstance(jim[node.content['arguments']['data']['from_node']],Cube):
-        raise TypeError("Error: filter_temporal only implemented for Cube, not {}".format(type(jim[node.content['arguments']['data']['from_node']])))
-    timeStrings = data.getDimension('temporal')
-    times = [datetime.strptime(ds,"%Y-%m-%dT%H:%M:%S") for ds in timeStrings]
-
-    startTime=datetime.strptime(extent[0],"%Y-%m-%dT%H:%M:%S")
-    endTime=datetime.strptime(extent[1].split('.')[0],"%Y-%m-%dT%H:%M:%S")
-    selected = [dt for dt in times if dt >= startTime and dt < endTime]
-    temporalindexes = [times.index(atime) for atime in selected]
-    jim[node.id]=Cube(pj.geometry.cropPlane(data, temporalindexes))
-    jim[node.id].dimension['temporal']=selected
+    jim[node.id] = jim[node.content['arguments']['data']['from_node']]
+    jim[node.id].filter_temporal(extent)
     return jim[node.id]
+
+    # jim[node.id]=Cube(pj.geometry.cropPlane(data, temporalindexes))
+    # if len(extent) != 2:
+    #     raise TypeError("Error: extent should be tuple with 2 elements (start, end), got {}".format(extent))
+    # if data is None:
+    #     jim[node.id] = None
+    #     return jim[node.id]
+    # if not isinstance(jim[node.content['arguments']['data']['from_node']],Cube):
+    #     raise TypeError("Error: filter_temporal only implemented for Cube, not {}".format(type(jim[node.content['arguments']['data']['from_node']])))
+    # timeStrings = data.getDimension('temporal')
+    # times = [datetime.strptime(ds,"%Y-%m-%dT%H:%M:%S") for ds in timeStrings]
+
+    # startTime=datetime.strptime(extent[0],"%Y-%m-%dT%H:%M:%S")
+    # endTime=datetime.strptime(extent[1].split('.')[0],"%Y-%m-%dT%H:%M:%S")
+    # selected = [dt for dt in times if dt >= startTime and dt < endTime]
+    # temporalindexes = [times.index(atime) for atime in selected]
+    # jim[node.id]=Cube(pj.geometry.cropPlane(data, temporalindexes))
+    # jim[node.id].dimension['temporal']=selected
+    # return jim[node.id]
 
 def ndvi(agraph, nodeid, jim):
     verbose = True
