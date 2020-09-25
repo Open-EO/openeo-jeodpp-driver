@@ -279,7 +279,12 @@ def filter_temporal(agraph, nodeid, jim):
     verbose = True
     node = agraph[nodeid]
     extent = node.content['arguments'].get('extent')
-
+    data = jim[node.content['arguments']['data']['from_node']]
+    if data is None:
+        jim[node.id] = None
+        return jim[node.id]
+    if not isinstance(jim[node.content['arguments']['data']['from_node']],Cube):
+        raise TypeError("Error: filter_temporal only implemented for Cube, not {}".format(type(jim[node.content['arguments']['data']['from_node']])))
     if len(extent) == 0:
         raise ValueError("extent should contain at least one date element, but got empty list: " + extent)
     dateFrom = extent[0]
@@ -296,13 +301,14 @@ def filter_temporal(agraph, nodeid, jim):
     else:
         dateTo = dateFrom + data.resolution['temporal']
 
-    filtered_temporal=[d for d in data.dimension['temporal'] if d >= dateFrom and d < dateTo]
-    planeindices=[data.dimension['temporal'].index(d) for d in filtered_temporal]
+    filtered_temporal=[d for d in data.getDimension('temporal') if d >= dateFrom and d < dateTo]
+    planeindices=[data.getdimension('temporal').index(d) for d in filtered_temporal]
     if len(planeindices) < 1:
         raise ValueError("Error: filter temporal found no match")
     # planeindices=[self.dimension['temporal'].index(d) for d in self.dimension['temporal'] if d >= dateFrom and d < dateTo]
     jim[node.id] = pj.geometry.cropPlane(data, plane=planeindices)
-    jim[node.id].dimension['temporal']=filtered_temporal
+    jim[node.id].setDimension('temporal',filtered_temporal)
+    return jim[node.id]
 
     # jim[node.id] = Cube(jim[node.content['arguments']['data']['from_node']])
     # jim[node.id].filter_temporal(extent)
@@ -311,6 +317,7 @@ def filter_temporal(agraph, nodeid, jim):
     # jim[node.id]=Cube(pj.geometry.cropPlane(data, temporalindexes))
     # if len(extent) != 2:
     #     raise TypeError("Error: extent should be tuple with 2 elements (start, end), got {}".format(extent))
+    # data = jim[node.content['arguments']['data']['from_node']]
     # if data is None:
     #     jim[node.id] = None
     #     return jim[node.id]
