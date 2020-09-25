@@ -133,7 +133,7 @@ class BackEnd:
         elif node.content['process_id'] == 'filter_spatial':
             raise exceptions.NoSuchProcess("process not implemented yet")
         elif node.content['process_id'] == 'filter_temporal':
-            raise exceptions.NoSuchProcess("process not implemented yet")
+            return process.filter_temporal(agraph, nodeid, jim)
         elif node.content['process_id'] == 'first':
             raise exceptions.NoSuchProcess("process not implemented yet")
         elif node.content['process_id'] == 'floor':
