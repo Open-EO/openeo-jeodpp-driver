@@ -6,7 +6,7 @@
         "bands": [
           "VV"
         ],
-        "id": "COPERNICUS/S1_GRD",
+        "id": "sentinel1.GRD",
         "spatial_extent": {
           "west": 16.06,
           "south": 48.1,
@@ -15,8 +15,8 @@
           "crs": "EPSG:4326"
         },
         "temporal_extent": [
-          "2017-03-01",
-          "2017-06-01"
+            "2017-03-01T00:00:00.000Z",
+            "2017-06-01T00:00:00.000Z"
         ]
       },
       "description": "Load Sentinel 1 VV data over Vienna from March to May 2017"
