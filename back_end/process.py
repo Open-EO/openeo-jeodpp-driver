@@ -287,6 +287,7 @@ def filter_temporal(agraph, nodeid, jim):
         return jim[node.id]
     if not isinstance(data,Cube):
         raise TypeError("Error: filter_temporal only implemented for Cube, not {}".format(type(jim[node.content['arguments']['data']['from_node']])))
+    print("times in data: {}".format(data.getDimension('temporal')))
     jim[node.id] = Cube(data)
     if len(extent) == 0:
         raise ValueError("extent should contain at least one date element, but got empty list: " + extent)
