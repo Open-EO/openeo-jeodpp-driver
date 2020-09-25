@@ -459,45 +459,51 @@ def apply_binary(agraph, nodeid, jim):
     jim[node.id]=None
     # arguments = [item for sublist in node.content['arguments'].values() for item in sublist]
     arguments = node.content['arguments'].values()
-    for argument in arguments:
-        if isinstance(argument,dict):
-            if verbose:
-                print("type of jim is {}".format(type(jim[argument['from_node']])))
-            if jim[argument['from_node']] is None:
-                jim[node.id]=None
-                return jim[node.id]
-            else:
-                value=jim[argument['from_node']]
+    x = arguments['x']
+    y = arguments['y']
+    if isinstance(x,dict):
+        if verbose:
+            print("type of jim is {}".format(type(jim[x['from_node']])))
+        if jim[x['from_node']] is None:
+            jim[node.id]=None
+            return jim[node.id]
         else:
-            value=argument
-        #test
-        print("argument is {}".format(type(argument),argument))
-        print("value is of type {}, {}".format(type(value),value))
-        if jim[node.id] is None:
-            jim[node.id]=value
+            jim[node.id]=jim[x['from_node']]
+    else:
+        jim[node.id]=x
+    value=0
+    if isinstance(y,dict):
+        if verbose:
+            print("type of jim is {}".format(type(jim[y['from_node']])))
+        if jim[y['from_node']] is None:
+            jim[node.id]=None
+            return jim[node.id]
         else:
-            if node.content['process_id'] == 'add':
-                jim[node.id]+=value
-            elif node.content['process_id'] == 'divide':
-                jim[node.id]/=value
-            elif node.content['process_id'] == 'eq':
-                jim[node.id]=Cube(jim[node.id]==value)
-            elif node.content['process_id'] == 'gt':
-                jim[node.id]=Cube(jim[node.id]>value)
-            elif node.content['process_id'] == 'gte':
-                jim[node.id]=Cube(jim[node.id]>=value)
-            elif node.content['process_id'] == 'lt':
-                jim[node.id]=Cube(jim[node.id]<value)
-            elif node.content['process_id'] == 'lte':
-                jim[node.id]=Cube(jim[node.id]<=value)
-            elif node.content['process_id'] == 'multiply':
-                jim[node.id]*=value
-            elif node.content['process_id'] == 'neq':
-                jim[node.id]=Cube(jim[node.id]!=value)
-            elif node.content['process_id'] == 'subtract':
-                jim[node.id]-=value
-            else:
-                raise TypeError("Error: arithmetic {} not implemented".format(node.content['process_id']))
+            value=jim[y['from_node']]
+    else:
+        value=y
+    if node.content['process_id'] == 'add':
+        jim[node.id]+=value
+    elif node.content['process_id'] == 'divide':
+        jim[node.id]/=value
+    elif node.content['process_id'] == 'eq':
+        jim[node.id]=Cube(jim[node.id]==value)
+    elif node.content['process_id'] == 'gt':
+        jim[node.id]=Cube(jim[node.id]>value)
+    elif node.content['process_id'] == 'gte':
+        jim[node.id]=Cube(jim[node.id]>=value)
+    elif node.content['process_id'] == 'lt':
+        jim[node.id]=Cube(jim[node.id]<value)
+    elif node.content['process_id'] == 'lte':
+        jim[node.id]=Cube(jim[node.id]<=value)
+    elif node.content['process_id'] == 'multiply':
+        jim[node.id]*=value
+    elif node.content['process_id'] == 'neq':
+        jim[node.id]=Cube(jim[node.id]!=value)
+    elif node.content['process_id'] == 'subtract':
+        jim[node.id]-=value
+    else:
+        raise TypeError("Error: arithmetic {} not implemented".format(node.content['process_id']))
     return jim[node.id]
 
 def mask(agraph, nodeid, jim):
