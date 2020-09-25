@@ -279,9 +279,34 @@ def filter_temporal(agraph, nodeid, jim):
     verbose = True
     node = agraph[nodeid]
     extent = node.content['arguments'].get('extent')
-    jim[node.id] = jim[node.content['arguments']['data']['from_node']]
-    jim[node.id].filter_temporal(extent)
-    return jim[node.id]
+
+    if len(extent) == 0:
+        raise ValueError("extent should contain at least one date element, but got empty list: " + extent)
+    dateFrom = extent[0]
+    if len(extent) > 1:
+        dateTo = extent[1]
+    else:
+        dateTo = None
+    #todo: support datetime resolution finer than day
+    if not isinstance(dateFrom,datetime):
+        dateFrom=datetime.strptime(dateFrom, '%Y-%m-%d')
+    if dateTo:
+        if not isinstance(dateTo,datetime):
+            dateTo=datetime.strptime(dateTo, '%Y-%m-%d')
+    else:
+        dateTo = dateFrom + data.resolution['temporal']
+
+    filtered_temporal=[d for d in data.dimension['temporal'] if d >= dateFrom and d < dateTo]
+    planeindices=[data.dimension['temporal'].index(d) for d in filtered_temporal]
+    if len(planeindices) < 1:
+        raise ValueError("Error: filter temporal found no match")
+    # planeindices=[self.dimension['temporal'].index(d) for d in self.dimension['temporal'] if d >= dateFrom and d < dateTo]
+    jim[node.id] = pj.geometry.cropPlane(data, plane=planeindices)
+    jim[node.id].dimension['temporal']=filtered_temporal
+
+    # jim[node.id] = Cube(jim[node.content['arguments']['data']['from_node']])
+    # jim[node.id].filter_temporal(extent)
+    # return jim[node.id]
 
     # jim[node.id]=Cube(pj.geometry.cropPlane(data, temporalindexes))
     # if len(extent) != 2:
