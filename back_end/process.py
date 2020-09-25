@@ -188,12 +188,8 @@ def load_collection(agraph, nodeid, jim, tileindex=None, tiletotal=None, virtual
     #define spatial and temporal resolution to load collection as data cube.
     resolution={}
     #todo: define spatial resolution
-    #test
     dx = 10
     dy = 10
-    if crs == 4326: #lat lon
-        dx /= 1852*60.0
-        dy /= 1852*60.0
     resolution.update({'spatial':[dx,dy]})
     resolution.update({'temporal':timedelta(1)})
     #todo: define projection t_srs?
