@@ -458,7 +458,7 @@ def apply_binary(agraph, nodeid, jim):
 
     jim[node.id]=None
     # arguments = [item for sublist in node.content['arguments'].values() for item in sublist]
-    arguments = node.content['arguments'].values()
+    arguments = node.content['arguments']
     x = arguments['x']
     y = arguments['y']
     if isinstance(x,dict):
