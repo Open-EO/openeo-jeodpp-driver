@@ -126,6 +126,7 @@ def load_collection(agraph, nodeid, jim, tileindex=None, tiletotal=None, virtual
     spatial_extent = node.content['arguments'].get('spatial_extent')
 
     features = None
+    crs = None
     if spatial_extent is not None:
         west = spatial_extent.get('west')
         east = spatial_extent.get('east')
@@ -155,13 +156,13 @@ def load_collection(agraph, nodeid, jim, tileindex=None, tiletotal=None, virtual
 
     if west is not None and east is not None and north is not None and south is not None:
         coll.filter_bbox(west=west,
-                            east=east,
-                            north=north,
-                            south=south,
-                            regions=features,
-                            crs=crs,
-                            tileindex=tileindex,
-                            tiletotal=tiletotal)
+                         east=east,
+                         north=north,
+                         south=south,
+                         regions=features,
+                         crs=crs,
+                         tileindex=tileindex,
+                         tiletotal=tiletotal)
         spatiallyFiltered = True
     if not spatiallyFiltered:
         raise AttributeError("Error: {} bounding box or mgrs must be defined to filter collection".format(type(jim[node.id])))
@@ -188,7 +189,12 @@ def load_collection(agraph, nodeid, jim, tileindex=None, tiletotal=None, virtual
     resolution={}
     #todo: define spatial resolution
     #test
-    resolution.update({'spatial':[10,10]})
+    dx = 10
+    dy = 10
+    if crs == 4326: #lat lon
+        dx /= 1852*60.0
+        dy /= 1852*60.0
+    resolution.update({'spatial':[dx,dy]})
     resolution.update({'temporal':timedelta(1)})
     #todo: define projection t_srs?
     #todo: define appropriate output data type?
