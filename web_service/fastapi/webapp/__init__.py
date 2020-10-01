@@ -13,9 +13,12 @@ from .database import get_db
 from . import collection
 from . import process
 from . import job
+from . import capability
 
 
 logger = logging.getLogger(__name__)
+
+__all__ = ["get_all_urls"]
 
 
 def get_app() -> FastAPI:
@@ -35,6 +38,7 @@ def get_app() -> FastAPI:
         allow_headers=["*"],
     )
     # routes
+    app.include_router(capability.router, tags=["capabilities"])
     app.include_router(collection.router, prefix="/collections", tags=["collections"])
     app.include_router(process.router, prefix="/processes", tags=["processes"])
     app.include_router(job.router, prefix="/jobs", tags=["jobs"])
@@ -53,3 +57,13 @@ async def healthckeck():
 def db_connectivity(db: Session = Depends(get_db)):
     db.execute("SELECT 1;")
     return {"db_connectivity": "OK"}
+
+
+@app.get('/url-list')
+def get_all_urls():
+    url_list = [
+        {'path': route.path,  'methods': route.methods}
+        for route in app.routes
+    ]
+    return url_list   
+
