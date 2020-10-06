@@ -3,7 +3,7 @@ import logging
 from typing import List
 
 
-from ..models import BackEndCapabilities
+from ..models import BackEndCapabilities, OpeneoAPIVersions
 
 logger = logging.getLogger(__name__)
 
@@ -51,7 +51,7 @@ def get_available_links(request):
 def get_billing_information():
     return {
         "currency": None,
-        "default_plan": None,
+        "default_plan": "Free to all EC staff",
     }
 
 
@@ -69,3 +69,15 @@ def get_capabilities(request) -> BackEndCapabilities:
         "links": get_available_links(request),
     }
     return capabilities
+
+
+def get_service_versions(request) -> List[OpeneoAPIVersions]:
+    request_url = str(request.url)
+    versions_response = [
+        {
+            "url": request_url,
+            "production": False,
+            "api_version": "1.0.0"
+        }
+    ]
+    return versions_response

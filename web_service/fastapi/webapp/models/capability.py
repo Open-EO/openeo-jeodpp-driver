@@ -5,6 +5,7 @@ from typing import List, Optional
 
 
 from pydantic import Field
+from pydantic import HttpUrl
 
 
 from .base import Base
@@ -16,7 +17,7 @@ from .base import StacLinks
 logger = logging.getLogger(__name__)
 
 
-__all__ = ["BackEndCapabilities"]
+__all__ = ["BackEndCapabilities", "OpeneoAPIVersions"]
 
 
 ## Pydantic models
@@ -48,3 +49,9 @@ class BackEndCapabilities(PydanticBase):
     endpoints: List[Endpoint]
     billing: Billing
     links: List[StacLinks]
+
+
+class OpeneoAPIVersions(PydanticBase):
+    url: HttpUrl = Field(description="Absolute URL to the service.")
+    production: Optional[bool] = Field(False, description="Specifies whether the implementation is ready to be used in production use (true) or not (false). Clients SHOULD only connect to non-production implementations if the user explicitly confirmed to use a non-production implementation. This flag is part of GET /.well-known/openeo and GET /. It MUST be used consistently in both endpoints")
+    api_version: str = Field("1.0.0", description="Version number of the openEO specification this back-end implements")
