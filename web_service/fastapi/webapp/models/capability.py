@@ -34,8 +34,8 @@ class Plan(PydanticBase):
 
 class Billing(PydanticBase):
     currency: str = Field(None, description="The currency the back-end is billing in. The currency MUST be either a valid currency code as defined in ISO-4217 or a proprietary currency, e.g. tiles or back-end specific credits. If set to the default value null, budget and costs are not supported by the back-end and users can't be charged.")
-    default_plan: str = Field("Free to all EC staff", description="Name of the default plan to use when the user doesn't specify a plan. Is allowed to be case insensitive throughout the API." )
-    plan: List[Plan]
+    default_plan: Optional[str] = Field("Free to all EC staff", description="Name of the default plan to use when the user doesn't specify a plan. Is allowed to be case insensitive throughout the API." )
+    plan: Optional[List[Plan]]
 
 class BackEndCapabilities(PydanticBase):
     api_version: str = Field("1.0.0", description="Version number of the openEO specification this back-end implements.")
@@ -46,5 +46,5 @@ class BackEndCapabilities(PydanticBase):
     description: str
     production: bool = False
     endpoints: List[Endpoint]
-    billing: Optional[Billing]
+    billing: Billing
     links: List[StacLinks]

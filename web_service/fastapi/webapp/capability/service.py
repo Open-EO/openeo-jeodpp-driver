@@ -48,6 +48,13 @@ def get_available_links(request):
     ]
 
 
+def get_billing_information():
+    return {
+        "currency": None,
+        "default_plan": None,
+    }
+
+
 def get_capabilities(request) -> BackEndCapabilities:
     capabilities = {
         "api_version": "1.0.0",
@@ -58,6 +65,7 @@ def get_capabilities(request) -> BackEndCapabilities:
         "description": "Testing instance of the JEODPP OpenEO API provides programming interface to collect information about available collections, processes and allows to submit a job.",
         "production": False,
         "endpoints": get_available_openapi_endpoints(),
+        "billing": get_billing_information(),
         "links": get_available_links(request),
     }
     return capabilities
