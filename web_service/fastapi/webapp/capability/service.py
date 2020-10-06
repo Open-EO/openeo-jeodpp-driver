@@ -71,13 +71,9 @@ def get_capabilities(request) -> BackEndCapabilities:
     return capabilities
 
 
-def get_service_versions(request) -> List[OpeneoAPIVersions]:
+def get_service_versions(request) -> OpeneoAPIVersions:
     request_url = str(request.url)
-    versions_response = [
-        {
-            "url": request_url,
-            "production": False,
-            "api_version": "1.0.0"
-        }
-    ]
+    versions_response = {
+        "versions": [{"url": request_url, "production": False, "api_version": "1.0.0"}]
+    }
     return versions_response

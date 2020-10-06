@@ -59,11 +59,7 @@ def db_connectivity(db: Session = Depends(get_db)):
     return {"db_connectivity": "OK"}
 
 
-@app.get('/url-list')
+@app.get("/url-list")
 def get_all_urls():
-    url_list = [
-        {'path': route.path,  'methods': route.methods}
-        for route in app.routes
-    ]
-    return url_list   
-
+    url_list = [{"path": route.path, "methods": route.methods} for route in app.routes]
+    return url_list

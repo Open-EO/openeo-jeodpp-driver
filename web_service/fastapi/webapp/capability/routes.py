@@ -30,7 +30,7 @@ def view_service_capabilities(request: Request):
 
 @router.get(
     "/.well-known/openeo",
-    response_model=List[models.OpeneoAPIVersions],
+    response_model=models.OpeneoAPIVersions,
     summary="Well-Known URI (see RFC 5785) for openEO, listing all implemented openEO versions supported by the service provider.",
 )
 def get_service_versions(request: Request):
