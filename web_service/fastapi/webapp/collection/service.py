@@ -34,7 +34,7 @@ def get_query_openeo(
         Collection.collection_metadata["id"].label("id"),
         Collection.collection_metadata["title"].label("title"),
         Collection.collection_metadata["version"].label("version"),
-        Collection.collection_metadata["stac_versions"].label("stac_versions"),
+        Collection.collection_metadata["stac_version"].label("stac_version"),
         Collection.collection_metadata["stac_extensions"].label("stac_extensions"),
         Collection.collection_metadata["description"].label("description"),
         Collection.collection_metadata["links"].label("links"),

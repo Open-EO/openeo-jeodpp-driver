@@ -125,7 +125,7 @@ class CollectionExtent(PydanticBase):
 
 
 class StacCollectionMetadata(PydanticBase):
-    stac_versions: str
+    stac_version: str
     stac_extensions: Optional[List[str]]
     id: str
     title: Optional[str]
