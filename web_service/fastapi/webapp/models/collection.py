@@ -22,7 +22,7 @@ from .base import StacLinks
 logger = logging.getLogger(__name__)
 
 
-__all__ = ["Collection", "ViewCollectionAll", "CollectionBase", "CollectionViewJeodpp", "ViewCollectionAllOpeneo"]
+__all__ = ["Collection", "ViewCollectionAll", "CollectionBase", "CollectionViewJeodpp", "ViewCollectionAllOpeneo", "StacCollectionMetadata"]
 
 
 ## Database model

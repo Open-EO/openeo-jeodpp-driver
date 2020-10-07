@@ -42,11 +42,10 @@ def get_query_openeo(
         Collection.collection_metadata["license"].label("license"),
         Collection.collection_metadata["providers"].label("providers"),
         Collection.collection_metadata["keywords"].label("keywords"),
-        Collection.collection_metadata["deprecated"].label("deprecated"),
-        
+        Collection.collection_metadata["deprecated"].label("deprecated"),       
     )
     if collection_id:
-        query = query.filter(Collection.collection_id == collection_id)
+        query = query.filter(Collection.collection_metadata["id"].astext == collection_id)
     return query
 
 
@@ -59,12 +58,17 @@ def get_collection_all(*, db_session: Session) -> List[Collection]:
 def get_collection_all_openeo(*, db_session: Session) -> List[Collection]:
     query = get_query_openeo(db_session=db_session)
     collection_records = query.all()
-    print(collection_records)
     return collection_records
 
 
 def get_collection_by_id(*, db_session: Session, collection_id: str):
     query = get_query(db_session=db_session, collection_id=collection_id)
+    collection_record = query.one_or_none()
+    return collection_record
+
+
+def get_collection_by_id_openeo(*, db_session: Session, collection_id: str):
+    query = get_query_openeo(db_session=db_session, collection_id=collection_id)
     collection_record = query.one_or_none()
     return collection_record
 
