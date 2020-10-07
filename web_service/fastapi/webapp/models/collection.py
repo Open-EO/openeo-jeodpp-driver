@@ -115,7 +115,7 @@ class CollectionTemporalExtent(PydanticBase):
 
 class CollectionSpatialExtent(PydanticBase):
     bbox: List[
-        float
+        List[float]
     ]  # One or more bounding boxes that describe the spatial extent of the dataset. If multiple areas are provided, the union of the bounding boxes describes the spatial extent.
 
 
