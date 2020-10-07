@@ -22,7 +22,7 @@ from .base import StacLinks
 logger = logging.getLogger(__name__)
 
 
-__all__ = ["Collection", "ViewCollectionAll", "CollectionBase", "CollectionViewJeodpp"]
+__all__ = ["Collection", "ViewCollectionAll", "CollectionBase", "CollectionViewJeodpp", "ViewCollectionAllOpeneo"]
 
 
 ## Database model
@@ -183,3 +183,6 @@ class CollectionViewJeodpp(CollectionBase):
 class ViewCollectionAll(PydanticBase):
     collections: List[CollectionViewJeodpp]
     # links: List[StacLinks]
+
+class ViewCollectionAllOpeneo(PydanticBase):
+    collections: List[StacCollectionMetadata]

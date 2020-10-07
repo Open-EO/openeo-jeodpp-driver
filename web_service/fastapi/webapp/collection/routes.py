@@ -21,11 +21,11 @@ router = APIRouter()
 
 @router.get(
     "/",
-    response_model=models.ViewCollectionAll,
+    response_model=models.ViewCollectionAllOpeneo,
     summary="Retrieve list of all collections",
 )
 def view_collection_all(db_session: Session = Depends(get_db)):
-    collection_records = service.get_collection_all(db_session=db_session)
+    collection_records = service.get_collection_all_openeo(db_session=db_session)
     if not collection_records:
         raise HTTPException(
             status_code=404,
