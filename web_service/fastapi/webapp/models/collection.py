@@ -1,7 +1,7 @@
 from enum import Enum
 import logging
 import datetime
-from typing import List, Optional
+from typing import List, Optional, Union
 
 
 import sqlalchemy as sa
@@ -108,9 +108,8 @@ class BoundingBox(PydanticBase):
 
 
 class CollectionTemporalExtent(PydanticBase):
-    interval: List[
-        str
-    ]  # One or more time intervals that describe the temporal extent of the dataset. The value null is supported and indicates an open time interval.
+    interval: List[ Union[str, None] ]
+    # One or more time intervals that describe the temporal extent of the dataset. The value null is supported and indicates an open time interval.
 
 
 class CollectionSpatialExtent(PydanticBase):
