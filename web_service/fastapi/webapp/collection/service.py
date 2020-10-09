@@ -42,7 +42,8 @@ def get_query_openeo(
         Collection.collection_metadata["license"].label("license"),
         Collection.collection_metadata["providers"].label("providers"),
         Collection.collection_metadata["keywords"].label("keywords"),
-        Collection.collection_metadata["deprecated"].label("deprecated"),       
+        Collection.collection_metadata["deprecated"].label("deprecated"),
+        Collection.collection_metadata["cube:dimensions"].label("cube:dimensions"),       
     )
     if collection_id:
         query = query.filter(Collection.collection_metadata["id"].astext == collection_id)

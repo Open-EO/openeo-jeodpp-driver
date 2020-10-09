@@ -10,6 +10,7 @@ from geoalchemy2 import Geometry
 from geoalchemy2.shape import to_shape
 from sqlalchemy.dialects.postgresql import JSONB
 from pydantic import validator
+from pydantic import Field
 import shapely.wkt
 
 
@@ -93,6 +94,11 @@ class DimenstionType(str, Enum):
     spatial = "spatial"
     temporal = "temporal"
 
+class DimensionAxis(str, Enum):
+    x = "x"
+    y = "y"
+    z = "z"
+
 
 class StacProviders(PydanticBase):
     name: str
@@ -123,28 +129,19 @@ class CollectionExtent(PydanticBase):
     temporal: CollectionTemporalExtent
 
 
-class StacCollectionMetadata(PydanticBase):
-    stac_version: str
-    stac_extensions: Optional[List[str]]
-    id: str
-    title: Optional[str]
-    description: str
-    keywords: Optional[List[str]]
-    version: Optional[str]
-    deprecated: Optional[bool] = False
-    license: str
-    providers: Optional[List[StacProviders]]
-    extent: CollectionExtent
-    links: List[StacLinks]
-
-
 class CubeSpatialDimension(PydanticBase):
     type: DimenstionType
+    description: Optional[str]
+    axis: Union[DimensionAxis]
+    extent: Optional[List[int]]
+    values: Optional[List[int]]
+    step: Optional[int]
+    reference_system: Union[str, int]
 
 
 class CubeTemporalDimension(PydanticBase):
     type: str = "temporal"
-    extent: List[str]
+    extent: List[Union[str, None]]
 
 
 class CubeBands(PydanticBase):
@@ -159,8 +156,23 @@ class CollectionCubeDimension(PydanticBase):
     bands: CubeBands
 
 
-class StacCollectionMetadataDetail(StacCollectionMetadata):
-    cube_dimensions: CollectionCubeDimension
+class StacCollectionMetadata(PydanticBase):
+    stac_version: str
+    stac_extensions: Optional[List[str]]
+    id: str
+    title: Optional[str]
+    description: str
+    keywords: Optional[List[str]]
+    version: Optional[str]
+    deprecated: Optional[bool] = False
+    license: str
+    providers: Optional[List[StacProviders]]
+    extent: CollectionExtent
+    links: List[StacLinks]
+    cube_dimensions: CollectionCubeDimension = Field(
+        description="Uniquely named dimensions of the data cube. The keys of the object are the dimension names. For interoperability, it is RECOMMENDED to use the following dimension names if there is only a single dimension with the specified criteria:",
+        alias="cube:dimensions"
+    )
 
 
 class CollectionBase(PydanticBase):
