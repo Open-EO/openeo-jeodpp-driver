@@ -108,7 +108,7 @@ class BoundingBox(PydanticBase):
 
 
 class CollectionTemporalExtent(PydanticBase):
-    interval: List[ Union[str, None] ]
+    interval: List [List[ Union[str, None] ]]
     # One or more time intervals that describe the temporal extent of the dataset. The value null is supported and indicates an open time interval.
 
 
