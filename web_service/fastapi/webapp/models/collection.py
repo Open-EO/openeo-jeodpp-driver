@@ -131,7 +131,7 @@ class CollectionExtent(PydanticBase):
 
 class CubeSpatialDimension(PydanticBase):
     type: DimenstionType
-    description: Optional[str]
+    description: Optional[str] = Field("string", description="Detailed description to explain the entity.")
     axis: Union[DimensionAxis]
     extent: Optional[List[int]]
     values: Optional[List[int]]
