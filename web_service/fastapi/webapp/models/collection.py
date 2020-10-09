@@ -156,6 +156,18 @@ class CollectionCubeDimension(PydanticBase):
     bands: CubeBands
 
 
+class EOCloudCoverRange(PydanticBase):
+    min: int = Field(0)
+    max: int = Field(90)
+
+
+class CollectionSummaries(PydanticBase):
+    constellation: Optional[List[str]] = Field(["Sentinel2"])
+    platform: Optional[List[str]] = Field(["Sentinel-2A","Sentinel-2B"])
+    instruments: Optional[List[str]] = Field(["MSI"]) 
+    cloud_cover: Optional[EOCloudCoverRange] = Field(alias="eo:cloud_cover")
+
+
 class StacCollectionMetadata(PydanticBase):
     stac_version: str
     stac_extensions: Optional[List[str]]
@@ -173,6 +185,7 @@ class StacCollectionMetadata(PydanticBase):
         description="Uniquely named dimensions of the data cube. The keys of the object are the dimension names. For interoperability, it is RECOMMENDED to use the following dimension names if there is only a single dimension with the specified criteria:",
         alias="cube:dimensions"
     )
+    summaries: CollectionSummaries
 
 
 class CollectionBase(PydanticBase):
