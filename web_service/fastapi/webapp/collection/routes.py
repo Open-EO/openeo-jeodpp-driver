@@ -31,7 +31,22 @@ def view_collection_all(db_session: Session = Depends(get_db)):
             status_code=404,
             detail=f"Requests will ask the back-end for available collections and will return an array of available collections with very basic information such as their unique identifiers.",
         )
-    response_data = {"collections": collection_records}
+    response_data = {
+        "collections": collection_records,
+        "links": [
+            {
+                "rel": "string",
+                "href": "https://jeodpp.jrc.ec.europa.eu/services/openeo/collections",
+                "type": "string",
+                "title": "string",
+            },
+            {
+                "rel": "alternate",
+                "href": "https://jeodpp.jrc.ec.europa.eu/services/csw",
+                "title": "openEO catalog (OGC Catalogue Services 3.0)",
+            },
+        ],
+    }
     return response_data
 
 

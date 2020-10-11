@@ -210,3 +210,4 @@ class ViewCollectionAll(PydanticBase):
 
 class ViewCollectionAllOpeneo(PydanticBase):
     collections: List[StacCollectionMetadata]
+    links: List[StacLinks]

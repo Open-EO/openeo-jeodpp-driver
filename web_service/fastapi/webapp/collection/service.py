@@ -44,10 +44,12 @@ def get_query_openeo(
         Collection.collection_metadata["keywords"].label("keywords"),
         Collection.collection_metadata["deprecated"].label("deprecated"),
         Collection.collection_metadata["cube:dimensions"].label("cube:dimensions"),
-        Collection.collection_metadata["summaries"].label("summaries"),     
+        Collection.collection_metadata["summaries"].label("summaries"),
     )
     if collection_id:
-        query = query.filter(Collection.collection_metadata["id"].astext == collection_id)
+        query = query.filter(
+            Collection.collection_metadata["id"].astext == collection_id
+        )
     return query
 
 
@@ -60,6 +62,7 @@ def get_collection_all(*, db_session: Session) -> List[Collection]:
 def get_collection_all_openeo(*, db_session: Session) -> List[Collection]:
     query = get_query_openeo(db_session=db_session)
     collection_records = query.all()
+    print(type(collection_records))
     return collection_records
 
 
