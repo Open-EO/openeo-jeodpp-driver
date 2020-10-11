@@ -35,12 +35,6 @@ def view_collection_all(db_session: Session = Depends(get_db)):
         "collections": collection_records,
         "links": [
             {
-                "rel": "string",
-                "href": "https://jeodpp.jrc.ec.europa.eu/services/openeo/collections",
-                "type": "string",
-                "title": "string",
-            },
-            {
                 "rel": "alternate",
                 "href": "https://jeodpp.jrc.ec.europa.eu/services/csw",
                 "title": "openEO catalog (OGC Catalogue Services 3.0)",
