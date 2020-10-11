@@ -20,7 +20,7 @@ router = APIRouter()
 
 
 @router.get(
-    "/",
+    "",
     response_model=models.ViewCollectionAllOpeneo,
     summary="Retrieve list of all collections",
 )
