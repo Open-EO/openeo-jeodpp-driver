@@ -289,6 +289,11 @@ def filter_temporal(agraph, nodeid, jim):
         raise TypeError("Error: filter_temporal only implemented for Cube, not {}".format(type(jim[node.content['arguments']['data']['from_node']])))
     print("times in data: {}".format(data.getDimension('temporal')))
     jim[node.id] = Cube(data)
+    #todo: should be solved in __init__ of Cube
+    jim[node.id].setDimension('temporal',data.getDimension('temporal'))
+    jim[node.id].setDimension('band',data.getDimension('band'))
+    jim[node.id].setResolution('temporal',data.getResolution('temporal'))
+    jim[node.id].setResolution('spatial',data.getResolution('spatial'))
     if len(extent) == 0:
         raise ValueError("extent should contain at least one date element, but got empty list: " + extent)
     dateFrom = extent[0]

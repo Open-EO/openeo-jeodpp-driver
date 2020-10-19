@@ -20,9 +20,34 @@ router = APIRouter()
 
 
 @router.get(
-    "/",
-    response_model=models.ViewCollectionAll,
+    "",
+    response_model=models.ViewCollectionAllOpeneo,
     summary="Retrieve list of all collections",
+)
+def view_collection_all(db_session: Session = Depends(get_db)):
+    collection_records = service.get_collection_all_openeo(db_session=db_session)
+    if not collection_records:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Requests will ask the back-end for available collections and will return an array of available collections with very basic information such as their unique identifiers.",
+        )
+    response_data = {
+        "collections": collection_records,
+        "links": [
+            {
+                "rel": "alternate",
+                "href": "https://jeodpp.jrc.ec.europa.eu/services/csw",
+                "title": "openEO catalog (OGC Catalogue Services 3.0)",
+            },
+        ],
+    }
+    return response_data
+
+
+@router.get(
+    "/bda",
+    response_model=models.ViewCollectionAll,
+    summary="Retrieve list of all bda collections",
 )
 def view_collection_all(db_session: Session = Depends(get_db)):
     collection_records = service.get_collection_all(db_session=db_session)
@@ -37,6 +62,23 @@ def view_collection_all(db_session: Session = Depends(get_db)):
 
 @router.get(
     "/{collection_id}",
+    response_model=models.StacCollectionMetadata,
+    summary="The request will ask the back-end for further details about a collection specified by the identifier collection_name",
+)
+def view_collection_detail(collection_id: str, db_session: Session = Depends(get_db)):
+    collection = service.get_collection_by_id_openeo(
+        collection_id=collection_id, db_session=db_session
+    )
+    if not collection:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No collections with id {collection_id} have been created",
+        )
+    return collection
+
+
+@router.get(
+    "/{collection_id}/bda",
     response_model=models.CollectionViewJeodpp,
     summary="The request will ask the back-end for further details about a collection specified by the identifier collection_name",
 )

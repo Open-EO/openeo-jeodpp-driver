@@ -1,7 +1,7 @@
 from enum import Enum
 import logging
 import datetime
-from typing import List, Optional
+from typing import List, Optional, Union
 
 
 import sqlalchemy as sa
@@ -10,6 +10,7 @@ from geoalchemy2 import Geometry
 from geoalchemy2.shape import to_shape
 from sqlalchemy.dialects.postgresql import JSONB
 from pydantic import validator
+from pydantic import Field
 import shapely.wkt
 
 
@@ -22,7 +23,7 @@ from .base import StacLinks
 logger = logging.getLogger(__name__)
 
 
-__all__ = ["Collection", "ViewCollectionAll", "CollectionBase", "CollectionViewJeodpp"]
+__all__ = ["Collection", "ViewCollectionAll", "CollectionBase", "CollectionViewJeodpp", "ViewCollectionAllOpeneo", "StacCollectionMetadata"]
 
 
 ## Database model
@@ -93,6 +94,11 @@ class DimenstionType(str, Enum):
     spatial = "spatial"
     temporal = "temporal"
 
+class DimensionAxis(str, Enum):
+    x = "x"
+    y = "y"
+    z = "z"
+
 
 class StacProviders(PydanticBase):
     name: str
@@ -108,14 +114,13 @@ class BoundingBox(PydanticBase):
 
 
 class CollectionTemporalExtent(PydanticBase):
-    interval: List[
-        str
-    ]  # One or more time intervals that describe the temporal extent of the dataset. The value null is supported and indicates an open time interval.
+    interval: List [List[ Union[str, None] ]]
+    # One or more time intervals that describe the temporal extent of the dataset. The value null is supported and indicates an open time interval.
 
 
 class CollectionSpatialExtent(PydanticBase):
     bbox: List[
-        float
+        List[float]
     ]  # One or more bounding boxes that describe the spatial extent of the dataset. If multiple areas are provided, the union of the bounding boxes describes the spatial extent.
 
 
@@ -124,28 +129,19 @@ class CollectionExtent(PydanticBase):
     temporal: CollectionTemporalExtent
 
 
-class StacCollectionMetadata(PydanticBase):
-    stac_versions: str
-    stac_extensions: Optional[List[str]]
-    id: str
-    title: Optional[str]
-    description: str
-    keywords: Optional[List[str]]
-    version: Optional[str]
-    deprecated: Optional[bool] = False
-    license: str
-    providers: Optional[List[StacProviders]]
-    extent: CollectionExtent
-    links: List[StacLinks]
-
-
 class CubeSpatialDimension(PydanticBase):
     type: DimenstionType
+    description: Optional[str] = Field("string", description="Detailed description to explain the entity.")
+    axis: Union[DimensionAxis]
+    extent: Optional[List[int]]
+    values: Optional[List[int]]
+    step: Optional[int]
+    reference_system: Union[str, int]
 
 
 class CubeTemporalDimension(PydanticBase):
     type: str = "temporal"
-    extent: List[str]
+    extent: List[Union[str, None]]
 
 
 class CubeBands(PydanticBase):
@@ -160,8 +156,36 @@ class CollectionCubeDimension(PydanticBase):
     bands: CubeBands
 
 
-class StacCollectionMetadataDetail(StacCollectionMetadata):
-    cube_dimensions: CollectionCubeDimension
+class EOCloudCoverRange(PydanticBase):
+    min: int = Field(0)
+    max: int = Field(90)
+
+
+class CollectionSummaries(PydanticBase):
+    constellation: Optional[List[str]] = Field(["Sentinel2"])
+    platform: Optional[List[str]] = Field(["Sentinel-2A","Sentinel-2B"])
+    instruments: Optional[List[str]] = Field(["MSI"]) 
+    cloud_cover: Optional[EOCloudCoverRange] = Field(alias="eo:cloud_cover")
+
+
+class StacCollectionMetadata(PydanticBase):
+    stac_version: str
+    stac_extensions: Optional[List[str]]
+    id: str
+    title: Optional[str]
+    description: str
+    keywords: Optional[List[str]]
+    version: Optional[str]
+    deprecated: Optional[bool] = False
+    license: str
+    providers: Optional[List[StacProviders]]
+    extent: CollectionExtent
+    links: List[StacLinks]
+    cube_dimensions: CollectionCubeDimension = Field(
+        description="Uniquely named dimensions of the data cube. The keys of the object are the dimension names. For interoperability, it is RECOMMENDED to use the following dimension names if there is only a single dimension with the specified criteria:",
+        alias="cube:dimensions"
+    )
+    summaries: CollectionSummaries
 
 
 class CollectionBase(PydanticBase):
@@ -183,3 +207,7 @@ class CollectionViewJeodpp(CollectionBase):
 class ViewCollectionAll(PydanticBase):
     collections: List[CollectionViewJeodpp]
     # links: List[StacLinks]
+
+class ViewCollectionAllOpeneo(PydanticBase):
+    collections: List[StacCollectionMetadata]
+    links: List[StacLinks]

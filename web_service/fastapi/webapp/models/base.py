@@ -56,5 +56,5 @@ class PydanticBase(BaseModel):
 class StacLinks(BaseModel):
     rel: str
     href: HttpUrl
-    type: Optional[str]
+    #type: Optional[str]
     title: Optional[str]
