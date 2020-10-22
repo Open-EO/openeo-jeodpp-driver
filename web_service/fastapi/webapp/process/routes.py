@@ -15,7 +15,7 @@ router = APIRouter()
 
 
 @router.get(
-    "/",
+    "",
     summary="The request asks the back-end for available processes and returns detailed process descriptions, including parameters and return values. Processes are described using the Functio specification for language-agnostic process descriptions",
 )
 def view_process_all():

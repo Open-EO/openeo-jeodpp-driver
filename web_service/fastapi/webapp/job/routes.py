@@ -30,7 +30,7 @@ def view_output_formats_all():
 
 
 @router.get(
-    "/",
+    "",
     summary="Requests to this endpoint will list all batch jobs submitted by a user with given id",
 )
 def view_jobs_all():

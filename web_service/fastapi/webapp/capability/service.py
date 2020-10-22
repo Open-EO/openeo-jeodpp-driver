@@ -73,7 +73,8 @@ def get_capabilities(request) -> BackEndCapabilities:
 
 def get_service_versions(request) -> OpeneoAPIVersions:
     request_url = str(request.url)
+    base_url = "https://jeodpp.jrc.ec.europa.eu/openeo/"
     versions_response = {
-        "versions": [{"url": request_url, "production": False, "api_version": "1.0.0"}]
+        "versions": [{"url": base_url, "production": False, "api_version": "1.0.0"}]
     }
     return versions_response
