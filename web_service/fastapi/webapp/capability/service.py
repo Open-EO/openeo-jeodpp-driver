@@ -11,21 +11,21 @@ logger = logging.getLogger(__name__)
 def get_available_openapi_endpoints():
     return [
         {"path": "/", "methods": ["GET"]},
-        {"path": "/collections/", "methods": ["GET"]},
+        {"path": "/collections", "methods": ["GET"]},
         {"path": "/collections/{collection_id}", "methods": ["GET"]},
-        {"path": "/collections/", "methods": ["POST"]},
-        {"path": "/collections/", "methods": ["PUT"]},
-        {"path": "/collections/", "methods": ["DELETE"]},
-        {"path": "/processes/", "methods": ["GET"]},
+        {"path": "/collections", "methods": ["POST"]},
+        {"path": "/collections", "methods": ["PUT"]},
+        {"path": "/collections", "methods": ["DELETE"]},
+        {"path": "/processes", "methods": ["GET"]},
         {"path": "/processes/{process_name}", "methods": ["GET"]},
         {"path": "/jobs/output_formats", "methods": ["GET"]},
-        {"path": "/jobs/", "methods": ["GET"]},
-        {"path": "/jobs/", "methods": ["POST"]},
+        {"path": "/jobs", "methods": ["GET"]},
+        {"path": "/jobs", "methods": ["POST"]},
         {"path": "/jobs/{job_id}", "methods": ["GET"]},
         {"path": "/jobs/{job_id}", "methods": ["PATCH"]},
         {"path": "/jobs/{job_id}", "methods": ["DELETE"]},
         {"path": "/jobs/{job_id}/results", "methods": ["POST"]},
-        {"path": "/healthcheck", "methods": ["GET"]},
+        #{"path": "/healthcheck", "methods": ["GET"]},
     ]
 
 
@@ -35,16 +35,16 @@ def get_available_links(request):
     return [
         {
             "rel": "service-desc",
-            "href": f"{request_url}openapi.json",
+            "href": f"{request_url}/openeo/openapi.json",
             "title": "OpenAPI json",
             "type": "application/json",
         },
-        {
-            "rel": "service-doc",
-            "href": f"{request_url}docs",
-            "title": "Swagger UI",
-            "type": "text/html",
-        },
+        #{
+         #   "rel": "service-doc",
+          #  "href": f"{request_url}docs",
+           # "title": "Swagger UI",
+            #"type": "text/html",
+        #},
     ]
 
 

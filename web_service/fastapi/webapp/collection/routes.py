@@ -95,7 +95,7 @@ def view_collection_detail(collection_id: str, db_session: Session = Depends(get
 
 
 @router.post(
-    "/",
+    "",
     response_model=models.CollectionViewJeodpp,
     summary="Create a new collection record",
     status_code=status.HTTP_201_CREATED,
@@ -117,7 +117,7 @@ def create_collection_record(
 
 
 @router.put(
-    "/",
+    "",
     response_model=models.CollectionViewJeodpp,
     summary="Update existing collection record",
 )
@@ -138,7 +138,7 @@ def update_collection_record(
         return updated_collection_record
 
 
-@router.delete("/", summary="Remove collection", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("", summary="Remove collection", status_code=status.HTTP_204_NO_CONTENT)
 def remove_collection_record(collection_id: str, db_session: Session = Depends(get_db)):
     try:
         deleted_collection_id = service.delete(
