@@ -3,6 +3,7 @@ from typing import Any, Optional, List
 
 import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.sql import func
 
 
 from .base import PydanticBase
@@ -22,8 +23,8 @@ class Process(Base, TimeStampMixin):
     categories = sa.Column(JSONB, nullable=True)
     parameters = sa.Column(JSONB, nullable=False)
     returns = sa.Column(JSONB, nullable=False)
-    deprecated = sa.Column(sa.Boolean, default=False)
-    experimental = sa.Column(sa.Boolean, default=False)
+    deprecated = sa.Column(sa.Boolean, default=False, server_default=sa.false())
+    experimental = sa.Column(sa.Boolean, default=False, server_default=sa.false())
     exceptions = sa.Column(JSONB, nullable=True)
     examples = sa.Column(JSONB, nullable=True)
     links = sa.Column(JSONB, nullable=True)
