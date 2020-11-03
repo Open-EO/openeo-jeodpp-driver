@@ -17,10 +17,18 @@ from .base import StacLinks
 logger = logging.getLogger(__name__)
 
 
-__all__ = ["BackEndCapabilities", "OpeneoAPIVersions"]
+__all__ = ["BackEndCapabilities", "OpeneoAPIVersions","IOFileFormats"]
 
 
 ## Pydantic models
+
+class GisDataTypes(str, Enum):
+    raster = 'raster'
+    vector ='vector'
+    table = 'table'
+    other = 'other'
+
+
 class Endpoint(PydanticBase):
     path: str
     methods: List[str]
@@ -83,3 +91,20 @@ class OpenEOVersion(PydanticBase):
 
 class OpeneoAPIVersions(PydanticBase):
     versions: List[OpenEOVersion]
+
+
+class FileFormat(PydanticBase):
+    title: Optional[str]
+    description: Optional[str]
+    gis_data_types: List[GisDataTypes]
+    parameters: dict = {}
+    
+
+class FileFormats(PydanticBase):
+    GTiff: FileFormat
+
+class IOFileFormats(PydanticBase):
+    input: FileFormats
+    output: FileFormats
+
+

@@ -36,3 +36,14 @@ def view_service_capabilities(request: Request):
 def get_service_versions(request: Request):
     versions_data = service.get_service_versions(request)
     return versions_data
+
+
+@router.get(
+    "/file_formats",
+    response_model=models.IOFileFormats,
+    summary="The request will ask the back-end for supported input and output file formats. Input file formats specify which file a back-end can read from. Output file formats specify which file a back-end can write to.",
+)
+def view_file_formats(request: Request):
+    file_formats_data = service.get_file_formats(request)
+    return file_formats_data
+

@@ -3,7 +3,7 @@ import logging
 from typing import List
 
 
-from ..models import BackEndCapabilities, OpeneoAPIVersions
+from ..models import BackEndCapabilities, OpeneoAPIVersions, IOFileFormats
 
 logger = logging.getLogger(__name__)
 
@@ -78,3 +78,32 @@ def get_service_versions(request) -> OpeneoAPIVersions:
         "versions": [{"url": base_url, "production": False, "api_version": "1.0.0"}]
     }
     return versions_response
+
+
+def get_file_formats(request) -> IOFileFormats:
+    formats_response ={
+        "input": {
+            "GTiff": {
+                "title": "GeoTiff",
+                "description": "GeoTIFF is format extension for storing georeference and geocoding information in a TIFF 6.0 compliant raster file by tying a raster image to a known model space or map projection.",
+                "gis_data_types": [
+                    "raster"
+                ],
+                "parameters": {},
+                
+            }
+        },
+        "output":{
+            "GTiff": {
+                "title": "GeoTiff",
+                "description": "GeoTIFF is format extension for storing georeference and geocoding information in a TIFF 6.0 compliant raster file by tying a raster image to a known model space or map projection.",
+                "gis_data_types": [
+                    "raster"
+                ],
+                "parameters": {},
+                
+            }
+        }
+    }
+    return formats_response
+
