@@ -7,8 +7,12 @@ from fastapi import Depends
 from fastapi import HTTPException
 from fastapi import status
 
+from sqlalchemy.orm import Session
+
 
 from . import service
+from .. import models
+from ..database import get_db
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -16,13 +20,25 @@ router = APIRouter()
 
 @router.get(
     "",
+    response_model = models.ViewProcessAll,
     summary="The request asks the back-end for available processes and returns detailed process descriptions, including parameters and return values. Processes are described using the Functio specification for language-agnostic process descriptions",
 )
-def view_process_all():
-    processes = service.get_process_all()
-    if not processes:
+def view_process_all(db_session: Session = Depends(get_db)):
+    process_records = service.get_process_all(db_session=db_session)
+    if not process_records:
         raise HTTPException(status_code=404, detail=f"No processes have been created")
-    return processes
+    response_data = {
+        "processes": process_records,
+        "links": [
+            {
+                "rel": "alternate",
+                "href": "https://jeodpp.jrc.ec.europa.eu/services/openeo/processes",
+                "type": "text/html",
+                "title": "HTML version of the processes",
+            },
+        ],
+    }
+    return response_data
 
 
 @router.get(

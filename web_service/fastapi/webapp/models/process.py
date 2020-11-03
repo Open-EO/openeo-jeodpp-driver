@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Optional, List
 
 
 import sqlalchemy as sa
@@ -8,8 +8,9 @@ from sqlalchemy.dialects.postgresql import JSONB
 from .base import PydanticBase
 from .base import Base
 from .base import TimeStampMixin
+from .base import StacLinks
 
-__all__ = ["ProcessGraph"]
+__all__ = ["ProcessGraph", "Process","ViewProcessAll"]
 
 
 #SQLAlchemy models
@@ -57,3 +58,23 @@ class ProcessGraph(PydanticBase):
     process_id: str
     process_description: str
     property: str
+
+
+class ProcessMetadata(PydanticBase):
+    id: str
+    summary: Optional[str]
+    description: str
+    categories: Optional[List[str]]
+    parameters: List[dict]
+    returns: dict
+    deprecated: Optional[bool]
+    experimental: Optional[bool]
+    exception: Optional[dict]
+    examples: Optional[List[dict]]
+    links: Optional[List[dict]]
+    process_graph: Optional[dict]
+
+
+class ViewProcessAll(PydanticBase):
+    processes: List[ProcessMetadata]
+    links: List[StacLinks]
