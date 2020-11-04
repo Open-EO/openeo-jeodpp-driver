@@ -628,7 +628,7 @@ def reduce_dimension(agraph, nodeid, jim):
         print("node is: {}".format(node.content))
         print("reducer node is: {}".format(reducer_node))
     if jim[reducer_node.id] is None:
-        reducer_parent = reducer_node.parent_node.content
+        reducer_parent = reducer_node.parent_process.content
         print("parent of reducer_node: {}".format(reducer_parent))
         reducer_data = jim[reducer_parent['arguments']['data']['from_node']]
         jim[node.content['arguments']['data']['from_node']]
