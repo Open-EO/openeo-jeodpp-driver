@@ -653,7 +653,7 @@ def reduce_dimension(agraph, nodeid, jim):
                 jim[reducer_node.id].geometry.cropPlane(-1)
             jim[reducer_node.id].setDimension('temporal',[])
             # jim[reducer_node.id].setDimension('band',jim[reducer_node.content['arguments']['data']['from_node']].getDimension('band'))
-            jim[reducer_node.id].setDimension('band',jim[node.id].getDimension('band'))
+            jim[reducer_node.id].setDimension('band',reducer_data.getDimension('band'))
         elif node.content['arguments']['dimension'] in ['spectral', 'bands', 'b']:
             if reducer_node.content['process_id'] == 'first':
                 # jim[reducer_node.id]=Cube(reducer_node.content['arguments']['data']['from_node'])
