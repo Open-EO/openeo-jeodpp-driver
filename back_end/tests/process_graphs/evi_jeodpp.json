@@ -46,7 +46,8 @@
           "sub": {
             "process_id": "subtract",
             "arguments": {
-              "data": [{"from_node": "nir"}, {"from_node": "red"}]
+                "x": {"from_node": "nir"},
+                "y": {"from_node": "red"}
             }
           },
           "p1": {
@@ -70,7 +71,8 @@
           "div": {
             "process_id": "divide",
             "arguments": {
-              "data": [{"from_node": "sub"}, {"from_node": "add"}]
+                "x": {"from_node": "sub"},
+                "y": {"from_node": "add"}
             }
           },
           "p3": {
