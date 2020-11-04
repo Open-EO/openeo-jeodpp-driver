@@ -395,27 +395,29 @@ def normalized_difference(agraph, nodeid, jim):
 def array_element(agraph, nodeid, jim):
     verbose = True
     node = agraph[nodeid]
+    parent_node=node.parent_process
+    data = jim[parent_node['arguments']['data']['from_node']]
     if 'index' in node.content['arguments']:
         bandindex=node.content['arguments']['index']
-        bandname=jim[node.content['arguments']['data']['from_node']].dimension['band'][bandindex]
+        bandname=data.dimension['band'][bandindex]
     elif 'label' in node.content['arguments']:
         bandname=node.content['arguments']['label']
         if verbose:
             print("array_element with label {}".format(bandname))
-        bandindex=jim[node.content['arguments']['data']['from_node']].dimension['band'].index(bandname)
+        bandindex=data.dimension['band'].index(bandname)
     else:
         raise AttributeError("Error: only index or label is supported for array_element")
     if verbose:
         print("array_element with index {}".format(bandindex))
-    if jim[node.content['arguments']['data']['from_node']] is None:
+    if data is None:
         jim[node.id]=None
-    elif isinstance(jim[node.content['arguments']['data']['from_node']],pj.Jim):
-        result=Cube(pj.geometry.cropBand(jim[node.content['arguments']['data']['from_node']],bandindex))
+    elif isinstance(data,pj.Jim):
+        result=Cube(pj.geometry.cropBand(data,bandindex))
         result.dimension['band']=[bandname]
         jim[node.id]=result
-    elif isinstance(jim[node.content['arguments']['data']['from_node']],pj.JimVect):
+    elif isinstance(data,pj.JimVect):
         raise TypeError("Error: {} array_element not implemented for JimVect".format(type(jim[node.id])))
-    elif isinstance(jim[node.content['arguments']['data']['from_node']],Collection):
+    elif isinstance(data,Collection):
         raise TypeError("Error: {} array element not implemented for Collection".format(type(jim[node.id])))
     return jim[node.id]
 
