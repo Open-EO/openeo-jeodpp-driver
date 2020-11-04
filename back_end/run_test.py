@@ -28,7 +28,7 @@ def memory_usage():
 
 jeodpp=BackEnd('jeodpp',user='kempepi')
 graph = translate_process_graph("tests/process_graphs/jrc_d22_evi.json")
-#graph = translate_process_graph("tests/process_graphs/evi_eodc_1.json")
+graph = translate_process_graph("tests/process_graphs/evi_eodc_1.json")
 #graph = translate_process_graph("tests/process_graphs/s2_max_ndvi.json")
 #graph = translate_process_graph("tests/process_graphs/evi_eodc.json")
 #graph = translate_process_graph("tests/process_graphs/min_evi_jeodpp.json")

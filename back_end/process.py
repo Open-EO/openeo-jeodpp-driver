@@ -631,10 +631,8 @@ def reduce_dimension(agraph, nodeid, jim):
         reducer_parent = reducer_node.parent_process.content
         print("parent of reducer_node: {}".format(reducer_parent))
         reducer_data = jim[reducer_parent['arguments']['data']['from_node']]
-        jim[node.content['arguments']['data']['from_node']]
-        #test
-        assert reducer_data.properties.isEqual(jim[node.content['arguments']['data']['from_node']]), \
-            "Warning: data from parent from reducer and argument data from node of current node id are not equal"
+        # assert reducer_data.properties.isEqual(jim[node.content['arguments']['data']['from_node']]), \
+        #     "Warning: data from parent from reducer and argument data from node of current node id are not equal"
         if node.content['arguments']['dimension'] in ['temporal', 'time', 't']:
             # cube=Cube(jim[reducer_node.content['arguments']['data']['from_node']])
             # jim[reducer_node.id]=Cube(jim[reducer_node.content['arguments']['data']['from_node']])
