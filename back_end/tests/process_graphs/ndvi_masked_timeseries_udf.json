@@ -105,7 +105,7 @@
                                 },
                                 "runtime": "Python",
                                 "version": "latest",
-                                "udf": "def myfunction(tile):\n    return pj.geometry.cropBand(tile,tile.dimension['band'].index('SCL'))!=4"
+                                "udf": "def myfunction(jim):\n    return pj.geometry.cropBand(jim,jim.dimension['band'].index('SCL'))!=4"
                             },
                             "result": true
                         }
