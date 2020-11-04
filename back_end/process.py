@@ -938,11 +938,10 @@ def aggregate_spatial(agraph, nodeid, jim):
             #todo: handle vector files...
         else:
             raise ValueError("Error: only polygons supported in geojson format")
+        srcnodata = 0
         if 'context' in node.content['arguments']:
             buffer = node.content['arguments']['context'].get('buffer')
-            srcnodata = node.content['arguments']['context'].get('srcnodata')
-        if srcnodata is None:
-            srcnodata = 0
+            srcnodata = node.content['arguments']['context'].get('srcnodata', 0)
         # for points in node.content['arguments']['polygons']['coordinates']:
         #     wktstring=node.content['arguments']['polygons']['type']
         #     wktstring+=' (('
