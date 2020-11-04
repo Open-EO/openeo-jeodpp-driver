@@ -843,12 +843,13 @@ def resample_cube_spatial(agraph, nodeid, jim):
 def run_udf(agraph, nodeid, jim):
     verbose = True
     node = agraph[nodeid]
-    if node.content['arguments']['data']['from_node'] not in jim:
+    parent_node=node.parent_process.content
+    if parent_node['arguments']['data']['from_node'] not in jim:
         print("cannot run udf yet")
         jim[node.id]=None
         return jim[node.id]
-    if jim[node.content['arguments']['data']['from_node']] is None:
-        print("cannot run udf yet")
+    data = jim[parent_node['arguments']['data']['from_node']]
+    if data is None:
         jim[node.id]=None
         return jim[node.id]
     else:
@@ -884,9 +885,9 @@ def run_udf(agraph, nodeid, jim):
             raise TypeError("No exec call allowed in server-side execution functions!")
 
         if 'array' in imgname:
-            jim[node.id]=eval(udf_name)(jim[node.content['arguments']['data']['from_node']].np())
+            jim[node.id]=eval(udf_name)(data.np())
         elif 'jim' in imgname:
-            jim[node.id]=eval(udf_name)(jim[node.content['arguments']['data']['from_node']])
+            jim[node.id]=eval(udf_name)(data)
         else:
             raise TypeError("Error: name of first parameter should either be jim (for pyjeo Jim) or array (for Numpy array)".format(type(jim[node.id])))
         if not isinstance(jim[node.id],Cube) or not isinstance(jim[node.id],pj.JimVect):
@@ -894,7 +895,7 @@ def run_udf(agraph, nodeid, jim):
                 jim[node.id]=Cube(jim[node.id])
                 jim[node.id].dimension=jim[node.content['arguments']['data']['from_node']].dimension
             elif isinstance(jim[node.id],np.ndarray):
-                aCube = Cube(jim[node.content['arguments']['data']['from_node']])
+                aCube = Cube(data)
                 aCube.np()[:]=jim[node.id]
                 jim[node.id]=aCube
             else:
