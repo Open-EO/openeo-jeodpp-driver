@@ -628,9 +628,17 @@ def reduce_dimension(agraph, nodeid, jim):
         print("node is: {}".format(node.content))
         print("reducer node is: {}".format(reducer_node))
     if jim[reducer_node.id] is None:
+        reducer_parent = reducer_node.parent_node.content
+        print("parent of reducer_node: {}".format(reducer_parent))
+        reducer_data = jim[reducer_parent['arguments']['data']['from_node']]
+        jim[node.content['arguments']['data']['from_node']]
+        #test
+        assert reducer_data.properties.isEqual(jim[node.content['arguments']['data']['from_node']]), \
+            "Warning: data from parent from reducer and argument data from node of current node id are not equal"
         if node.content['arguments']['dimension'] in ['temporal', 'time', 't']:
             # cube=Cube(jim[reducer_node.content['arguments']['data']['from_node']])
-            jim[reducer_node.id]=Cube(jim[reducer_node.content['arguments']['data']['from_node']])
+            # jim[reducer_node.id]=Cube(jim[reducer_node.content['arguments']['data']['from_node']])
+            jim[reducer_node.id]=Cube(reducer_data)
             if jim[reducer_node.id] is None:
                 jim[node.id]=jim[reducer_node.id]
                 return[node.id]
@@ -644,10 +652,12 @@ def reduce_dimension(agraph, nodeid, jim):
             elif reducer_node.content['process_id'] == 'last':
                 jim[reducer_node.id].geometry.cropPlane(-1)
             jim[reducer_node.id].setDimension('temporal',[])
-            jim[reducer_node.id].setDimension('band',jim[reducer_node.content['arguments']['data']['from_node']].getDimension('band'))
+            # jim[reducer_node.id].setDimension('band',jim[reducer_node.content['arguments']['data']['from_node']].getDimension('band'))
+            jim[reducer_node.id].setDimension('band',jim[node.id].getDimension('band'))
         elif node.content['arguments']['dimension'] in ['spectral', 'bands', 'b']:
             if reducer_node.content['process_id'] == 'first':
-                jim[reducer_node.id]=Cube(reducer_node.content['arguments']['data']['from_node'])
+                # jim[reducer_node.id]=Cube(reducer_node.content['arguments']['data']['from_node'])
+                jim[reducer_node.id]=Cube(reducer_data)
                 # cube=jim[reducer_node.content['arguments']['data']['from_node']]
                 if jim[reducer_node.id] is None:
                     jim[node.id]=None
