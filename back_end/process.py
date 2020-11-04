@@ -1,6 +1,7 @@
 from datetime import time, timedelta, datetime
 import dateutil.parser
 import os
+import json
 import numpy as np
 import inspect
 from openeo_pg_parser import graph
@@ -142,6 +143,19 @@ def load_collection(agraph, nodeid, jim, tileindex=None, tiletotal=None, virtual
             print('features {}'.format(features))
             v1 = pj.JimVect(features)
             print(v1.properties.getFeatureCount())
+            bbox = v1.properties.getBBox()
+            if west is not None:
+                print("Warning: overwriting west boundary {west} with bbox {bbox} from geometries".format(west=west,bbox=bbox[0]))
+            west = bbox[0]
+            if north is not None:
+                print("Warning: overwriting north boundary {north} with bbox {bbox} from geometries".format(north=north,bbox=bbox[1]))
+            north = bbox[1]
+            if east is not None:
+                print("Warning: overwriting east boundary {east} with bbox {bbox} from geometries".format(east=east,bbox=bbox[2]))
+            east = bbox[2]
+            if south is not None:
+                print("Warning: overwriting south boundary {south} with bbox {bbox} from geometries".format(south=south,bbox=bbox[3]))
+            south = bbox[3]
 
     if mgrs is not None and tileindex is not None and tiletotal is not None:
         attribute="Name="+'\''+str(mgrs)+'\''
