@@ -5,7 +5,7 @@
         "process_id": "load_collection",
         "description": "Loading the data; The order of the specified bands is important for the following reduce operation.",
         "arguments": {
-            "id": "S2MSI2A",
+            "id": "sentinel2.S2MSI2A",
             "spatial_extent": {
                 "west": 16.1,
                 "east": 16.6,
