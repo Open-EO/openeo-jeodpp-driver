@@ -2,6 +2,7 @@ from datetime import time, timedelta, datetime
 import dateutil.parser
 import os
 import numpy as np
+import inspect
 from openeo_pg_parser import graph
 import pyjeo as pj
 from jeolib.collection import Collection
