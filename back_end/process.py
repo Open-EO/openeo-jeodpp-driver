@@ -893,7 +893,7 @@ def run_udf(agraph, nodeid, jim):
         if not isinstance(jim[node.id],Cube) or not isinstance(jim[node.id],pj.JimVect):
             if isinstance(jim[node.id],pj.Jim):
                 jim[node.id]=Cube(jim[node.id])
-                jim[node.id].dimension=jim[node.content['arguments']['data']['from_node']].dimension
+                jim[node.id].dimension=data.dimension
             elif isinstance(jim[node.id],np.ndarray):
                 aCube = Cube(data)
                 aCube.np()[:]=jim[node.id]
