@@ -843,12 +843,15 @@ def resample_cube_spatial(agraph, nodeid, jim):
 def run_udf(agraph, nodeid, jim):
     verbose = True
     node = agraph[nodeid]
-    parent_node=node.parent_process.content
-    if parent_node['arguments']['data']['from_node'] not in jim:
-        print("cannot run udf yet")
-        jim[node.id]=None
-        return jim[node.id]
-    data = jim[parent_node['arguments']['data']['from_node']]
+    if node.parent_process is not None:
+        parent_node=node.parent_process.content
+        if parent_node['arguments']['data']['from_node'] not in jim:
+            print("cannot run udf yet")
+            jim[node.id]=None
+            return jim[node.id]
+        data = jim[parent_node['arguments']['data']['from_node']]
+    else:
+        data = jim[node.content['arguments']['data']['from_node']]
     if data is None:
         jim[node.id]=None
         return jim[node.id]
