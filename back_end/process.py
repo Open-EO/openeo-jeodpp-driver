@@ -939,6 +939,7 @@ def aggregate_spatial(agraph, nodeid, jim):
         else:
             raise ValueError("Error: only polygons supported in geojson format")
         srcnodata = 0
+        buffer = None
         if 'context' in node.content['arguments']:
             buffer = node.content['arguments']['context'].get('buffer')
             srcnodata = node.content['arguments']['context'].get('srcnodata', 0)
