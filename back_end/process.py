@@ -83,7 +83,7 @@ def load_collection(agraph, nodeid, jim, tileindex=None, tiletotal=None, virtual
         coll.filterOn('productType',collectionId[1])
     properties={}
 
-    spatiallyfiltered = False
+    spatiallyFiltered = False
     mgrs = None
     properties=node.content['arguments'].get('properties')
     if properties is not None:
