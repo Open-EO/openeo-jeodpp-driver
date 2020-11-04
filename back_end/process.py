@@ -395,7 +395,7 @@ def normalized_difference(agraph, nodeid, jim):
 def array_element(agraph, nodeid, jim):
     verbose = True
     node = agraph[nodeid]
-    parent_node=node.parent_process
+    parent_node=node.parent_process.content
     data = jim[parent_node['arguments']['data']['from_node']]
     if 'index' in node.content['arguments']:
         bandindex=node.content['arguments']['index']
@@ -617,10 +617,12 @@ def mask(agraph, nodeid, jim):
 def reduce_dimension(agraph, nodeid, jim):
     verbose = True
     node = agraph[nodeid]
+    parent_node=node.parent_process.content
+    data = jim[parent_node['arguments']['data']['from_node']]
     if verbose:
         print(node)
         print("reducing {}".format(node.content['arguments']['dimension']))
-    if jim[node.content['arguments']['data']['from_node']] is None:
+    if data is None:
         jim[node.id]=None
         return[node.id]
     reducer_node=agraph[node.content['arguments']['reducer']['from_node']]
@@ -629,8 +631,7 @@ def reduce_dimension(agraph, nodeid, jim):
         print("reducer node is: {}".format(reducer_node))
     if jim[reducer_node.id] is None:
         if node.content['arguments']['dimension'] in ['temporal', 'time', 't']:
-            # cube=Cube(jim[reducer_node.content['arguments']['data']['from_node']])
-            jim[reducer_node.id]=Cube(jim[reducer_node.content['arguments']['data']['from_node']])
+            jim[reducer_node.id]=Cube(data)
             if jim[reducer_node.id] is None:
                 jim[node.id]=jim[reducer_node.id]
                 return[node.id]
@@ -644,10 +645,10 @@ def reduce_dimension(agraph, nodeid, jim):
             elif reducer_node.content['process_id'] == 'last':
                 jim[reducer_node.id].geometry.cropPlane(-1)
             jim[reducer_node.id].setDimension('temporal',[])
-            jim[reducer_node.id].setDimension('band',jim[reducer_node.content['arguments']['data']['from_node']].getDimension('band'))
+            jim[reducer_node.id].setDimension('band',data.getDimension('band'))
         elif node.content['arguments']['dimension'] in ['spectral', 'bands', 'b']:
             if reducer_node.content['process_id'] == 'first':
-                jim[reducer_node.id]=Cube(reducer_node.content['arguments']['data']['from_node'])
+                jim[reducer_node.id]=Cube(data)
                 # cube=jim[reducer_node.content['arguments']['data']['from_node']]
                 if jim[reducer_node.id] is None:
                     jim[node.id]=None
@@ -659,7 +660,6 @@ def reduce_dimension(agraph, nodeid, jim):
                 jim[reducer_node.id].geometry.cropBand(0)
                 jim[reducer_node.id].setDimension('band',jim[reducer_node.id].getDimension('band')[0:1])
             elif reducer_node.content['process_id'] == 'last':
-                # cube=jim[reducer_node.content['arguments']['data']['from_node']]
                 jim[reducer_node.id].geometry.cropBand(-1)
                 jim[reducer_node.id].setDimension('band',jim[reducer_node.id].getDimension('band')[-1:])
     jim[node.id]=jim[reducer_node.id]
