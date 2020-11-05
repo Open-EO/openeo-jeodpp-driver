@@ -1,6 +1,6 @@
 import json
 import logging
-
+from typing import List
 
 from fastapi import APIRouter
 from fastapi import Depends
@@ -21,6 +21,7 @@ router = APIRouter()
 @router.get(
     "",
     response_model = models.ViewProcessAll,
+    response_model_exclude_none=True,
     summary="The request asks the back-end for available processes and returns detailed process descriptions, including parameters and return values. Processes are described using the Functio specification for language-agnostic process descriptions",
 )
 def view_process_all(db_session: Session = Depends(get_db)):
