@@ -186,6 +186,8 @@ class StacCollectionMetadata(PydanticBase):
         alias="cube:dimensions"
     )
     summaries: CollectionSummaries
+    class Config:
+        allow_population_by_alias = True
 
 
 class CollectionBase(PydanticBase):

@@ -80,7 +80,8 @@ def get_collection_by_id_openeo(*, db_session: Session, collection_id: str):
 
 def create(*, db_session: Session, collection_record_in: CollectionBase) -> Collection:
     """Create a new Collection. """
-    collection_record = Collection(**collection_record_in.dict())
+    print(collection_record_in)
+    collection_record = Collection(**collection_record_in.dict(by_alias=True))
     db_session.add(collection_record)
     db_session.commit()
     return collection_record
@@ -92,7 +93,7 @@ def update(
     """Update existing Collection. """
     db_session.query(Collection).filter(
         Collection.collection_id == collection_id
-    ).update(collection_record_update.dict())
+    ).update(collection_record_update.dict(by_alias=True))
     db_session.commit()
     query = get_query(db_session=db_session, collection_id=collection_id)
     updated_collection_record = query.one_or_none()
