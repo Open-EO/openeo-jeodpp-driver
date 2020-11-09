@@ -51,7 +51,7 @@ services:
       - nginx
     user: root  # we use gosu to switch to the normal user in the entrypoint
     entrypoint: "/usr/local/bin/entrypoint_inject.sh"
-    command: uvicorn --host 0.0.0.0 --port 8000 --log-level "${LOG_LEVEL}" webapp:app
+    command: uvicorn --host 0.0.0.0 --port 8000 --log-level "${LOG_LEVEL}" --root-path "${ROOT_PATH}" webapp:app
     environment:
       - RUNTIME_UID_GID
       # gunicorn
