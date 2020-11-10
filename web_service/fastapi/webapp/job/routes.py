@@ -7,10 +7,12 @@ from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
 from fastapi import status
+from sqlalchemy.orm import Session
 
 
 from . import service
 from .. import models
+from ..database import get_db
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -32,9 +34,10 @@ def view_output_formats_all():
 @router.get(
     "",
     summary="Requests to this endpoint will list all batch jobs submitted by a user with given id",
+    response_model=models.ViewJobAll
 )
-def view_jobs_all():
-    jobs = service.get_jobs_all()
+def view_job_all(db_session: Session = Depends(get_db)):
+    jobs = service.get_job_all(db_session=db_session)
     if not jobs:
         raise HTTPException(
             status_code=404,
@@ -42,7 +45,7 @@ def view_jobs_all():
         )
     return jobs
 
-
+'''
 @router.post(
     "/",
     summary="Creates a new batch processing task (job) from one or more (chained) processes at the back-end.",
@@ -98,3 +101,4 @@ def start_job_by_id(job_id: UUID):
             status_code=404, detail=f"job with id {job_id} have not been started"
         )
     return job
+'''

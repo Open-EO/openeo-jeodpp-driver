@@ -1,12 +1,82 @@
-import datetime
+import enum
+from typing import Any, Optional, List
+
+import pydantic
+import sqlalchemy as sa
+from sqlalchemy.dialects.postgresql import JSONB, UUID
+from sqlalchemy.sql import func
+
 
 from .base import PydanticBase
-from .process import ProcessGraph
+from .base import Base
+from .base import TimeStampMixin
+from .base import StacLinks
+
+__all__ = ["Job","ViewJobAll"]
 
 
-__all__ = ["JobTaskCreate", "OutputFormat"]
+#SQLAlchemy models
+
+class ProcessStatus(enum.Enum):
+    created = "created"
+    queued = "queued"
+    running = "running"
+    canceled = "canceled"
+    finished = "finished"
+    error = "error"
 
 
+class Job(Base, TimeStampMixin):
+    __tablename__ = "job"
+    id = sa.Column(UUID, primary_key=True)
+    title = sa.Column(sa.String, nullable=True)
+    description = sa.Column(sa.String, nullable=True)
+    process = sa.Column(JSONB, nullable=False)
+    status = sa.Column(sa.String, nullable=False, server_default=str("created"))
+    progress = sa.Column(sa.Integer, nullable=True)
+    plan = sa.Column(sa.String, nullable=True)
+    costs = sa.Column(sa.Float, nullable=True)
+    budget = sa.Column(sa.Integer, nullable=True)
+    
+    __table_args__ = (
+        sa.PrimaryKeyConstraint(
+            "id",
+        ),
+        sa.Index(
+            "idx_job_title", "title", postgresql_using="btree"
+        ),
+        sa.Index(
+            "idx_job_description", "description", postgresql_using="btree"
+        ),
+        sa.Index(
+            "idx_job_process", "process", postgresql_using="gin"
+        ),
+        sa.Index(
+            "idx_job_status", "status", postgresql_using="btree"
+        )
+    )
+
+
+# Pydantic models
+class JobMetadata(PydanticBase):
+    id: str
+    title: Optional[str] = pydantic.Field(None)
+    description: Optional[str] = pydantic.Field(None)
+    process: Optional[dict]
+    status: ProcessStatus = pydantic.Field(ProcessStatus.created)
+    progress: Optional[int] = pydantic.Field(0, ge=0, le=100)
+    plan: Optional[str] = pydantic.Field(None)
+    costs: Optional[float]
+    budget: Optional[int]
+
+
+class ViewJobAll(PydanticBase):
+    jobs: List[JobMetadata]
+    links: List[StacLinks]
+
+
+
+'''
 class OutputFormatParameters(PydanticBase):
     tiles: bool = True
     compress: str = "jpeg"
@@ -26,3 +96,4 @@ class JobTaskCreate(PydanticBase):
     output: OutputFormat
     plan: str = "free"
     budget: int = 100
+'''
