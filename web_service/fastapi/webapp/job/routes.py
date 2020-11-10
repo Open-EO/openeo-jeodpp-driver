@@ -23,7 +23,8 @@ router = APIRouter()
 @router.get(
     "",
     summary="Requests to this endpoint will list all batch jobs submitted by a user with given id",
-    response_model=models.ViewJobAll
+    response_model=models.ViewJobAll,
+    response_model_exclude_none=True,
 )
 def view_job_all(db_session: Session = Depends(get_db)):
     jobs_records = service.get_job_all(db_session=db_session)
@@ -70,6 +71,7 @@ def create_job_record(
 @router.get(
     "/{job_id}",
     response_model=models.JobMetadata,
+    response_model_exclude_none=True,
     summary="The request will ask the back-end for further details about a job specified by the identifier collection_name",
 )
 def view_job_detail(job_id: UUID, db_session: Session = Depends(get_db)):

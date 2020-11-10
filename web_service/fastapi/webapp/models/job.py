@@ -1,3 +1,4 @@
+import datetime
 from enum import Enum
 from typing import Any, Optional, List
 
@@ -72,6 +73,9 @@ class CreateJobMetadata(PydanticBase):
 
 class JobMetadata(CreateJobMetadata):
     id: str
+    created: datetime.datetime
+    updated: Optional[datetime.datetime]
+
 
 
 class ViewJobAll(PydanticBase):
