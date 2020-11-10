@@ -1,6 +1,7 @@
 import json
 import logging
 from typing import List
+from uuid import UUID
 
 
 from sqlalchemy.orm import Session
@@ -22,7 +23,7 @@ def get_query(
     """ Return a Job Query. """
     query = db_session.query(models.Job)
     if job_id:
-        query = query.filter(Job.id == job_id)
+        query = query.filter(models.Job.id == job_id)
     return query
 
 
@@ -31,43 +32,25 @@ def get_job_all(*, db_session: Session) -> List[models.Job]:
     job_records = query.all()
     return job_records
 
-'''
-def get_job_by_id(job_id):
-    matching_job = None
-    for job in _JOBS_DATA.get("jobs"):
-        for k, v in job.items():
-            if k == "job_id" and v == str(job_id):
-                matching_job = job
-            else:
-                continue
-    return matching_job
+
+def create_job(*, db_session: Session, job_record_in: models.CreateJobMetadata) -> models.Job:
+    """Create a new Job. """
+    job_record = models.Job(**job_record_in.dict())
+    db_session.add(job_record)
+    db_session.commit()
+    return job_record
 
 
-def create_job(job_payload_data):
-    insert_job_record = job_payload_data.dict()
-    insert_job_record["job_id"] = str(uuid.uuid4())
-    _JOBS_DATA.get("jobs").append(insert_job_record)
-    return _JOBS_DATA
+def get_job_by_id(*, db_session: Session, job_id: UUID) -> models.Job:
+    query = get_query(db_session=db_session, job_id=job_id)
+    job_record = query.one_or_none()
+    return job_record
 
-
-def update_job(job_id, job_payload_data):
-    for job in _JOBS_DATA.get("jobs"):
-        for k, v in job.items():
-            if k == "job_id" and v == str(job_id):
-                updated_job_record = job_payload_data.dict()
-                updated_job_record["job_id"] = str(job_id)
-                job.update(updated_job_record)
-            else:
-                continue
-    return job_id
-
-
-def delete_job(job_id):
-    for job in _JOBS_DATA.get("jobs"):
-        for k, v in job.items():
-            if k == "job_id" and v == str(job_id):
-                _JOBS_DATA.get("jobs").remove(job)
-            else:
-                continue
-    return job_id
-'''
+  
+def delete_job_by_id(*, db_session: Session, job_id: UUID) -> UUID:
+    deleted_job_id = (
+        db_session.query(models.Job)
+        .filter(models.Job.id == job_id)
+        .delete()
+    )
+    return deleted_job_id

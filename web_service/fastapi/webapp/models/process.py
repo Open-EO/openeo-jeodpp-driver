@@ -11,7 +11,7 @@ from .base import Base
 from .base import TimeStampMixin
 from .base import StacLinks
 
-__all__ = ["ProcessGraph", "Process","ViewProcessAll"]
+__all__ = ["ProcessGraph", "Process","ViewProcessAll","ProcessMetadata"]
 
 
 #SQLAlchemy models

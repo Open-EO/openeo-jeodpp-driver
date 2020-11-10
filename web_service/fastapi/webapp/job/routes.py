@@ -8,6 +8,8 @@ from fastapi import Depends
 from fastapi import HTTPException
 from fastapi import status
 from sqlalchemy.orm import Session
+import sqlalchemy.exc
+import psycopg2.errors
 
 
 from . import service
@@ -19,86 +21,74 @@ router = APIRouter()
 
 
 @router.get(
-    "/output_formats",
-    summary="The request will ask the back-end for supported output formats, e.g. PNG, GTiff and JSON, and its default output format. The response is an object of the default and all available output formats and their options. This does not include the supported secondary web services",
-)
-def view_output_formats_all():
-    output_formats = service.get_output_formats_all()
-    if not output_formats:
-        raise HTTPException(
-            status_code=404, detail=f"No output_formats have been created"
-        )
-    return output_formats
-
-
-@router.get(
     "",
     summary="Requests to this endpoint will list all batch jobs submitted by a user with given id",
     response_model=models.ViewJobAll
 )
 def view_job_all(db_session: Session = Depends(get_db)):
-    jobs = service.get_job_all(db_session=db_session)
-    if not jobs:
+    jobs_records = service.get_job_all(db_session=db_session)
+    if not jobs_records:
         raise HTTPException(
             status_code=404,
             detail=f"No jobs have been created",
         )
-    return jobs
+    response_data = {
+        "jobs": jobs_records,
+        "links": [
+            {
+                "rel": "self",
+                "href": "https://jeodpp.jrc.ec.europa.eu/openeo/jobs",
+                "title": "List of Jobs",
+            },
+        ],
+    }
+    return response_data
 
-'''
+
 @router.post(
-    "/",
-    summary="Creates a new batch processing task (job) from one or more (chained) processes at the back-end.",
+    "",
+    response_model=models.JobMetadata,
+    summary="Create a new job record",
     status_code=status.HTTP_201_CREATED,
 )
-def create_new_batch_processing_job(job_payload_data: models.JobTaskCreate):
-    batch_job = service.create_job(job_payload_data)
-    return batch_job
+def create_job_record(
+    job_record_in: models.CreateJobMetadata, db_session: Session = Depends(get_db)
+):
+    try:
+        job_record = service.create_job(
+            db_session=db_session, job_record_in=job_record_in
+        )
+    except (sqlalchemy.exc.IntegrityError, sqlalchemy.exc.InternalError) as exc:
+        if isinstance(exc.orig, psycopg2.errors.UniqueViolation):
+            msg = f"A job record with the id {job_record_in.id} already exists"
+        else:
+            msg = "Creation of Job failed. Please check the logs."
+        raise HTTPException(status_code=422, detail=msg)
+    return job_record
 
 
 @router.get(
     "/{job_id}",
-    summary="Returns detailed information about a submitted batch job",
+    response_model=models.JobMetadata,
+    summary="The request will ask the back-end for further details about a job specified by the identifier collection_name",
 )
-def view_job_by_id(job_id: UUID):
-    job = service.get_job_by_id(job_id)
+def view_job_detail(job_id: UUID, db_session: Session = Depends(get_db)):
+    job = service.get_job_by_id(
+        job_id=str(job_id), db_session=db_session
+    )
     if not job:
         raise HTTPException(
-            status_code=404, detail=f"No job with id {job_id} have been created"
+            status_code=404,
+            detail=f"No job with id {job_id} have been created",
         )
     return job
 
 
-@router.patch(
-    "/{job_id}",
-    summary="Modifies an existing job at the back-end but maintains the identifier. Changes can be grouped in a single request. Jobs can only be modified when the job is not queued or running.",
-    status_code=status.HTTP_204_NO_CONTENT,
-)
-def patch_processing_job(job_id: UUID, job_payload_data: models.JobTaskCreate):
-    updated_job = service.update_job(job_id, job_payload_data)
-    return updated_job
-
-
-@router.delete(
-    "/{job_id}",
-    summary="Deletes all data related to this job. Computations are stopped and computed results are deleted. This job won't generate additional costs for processing.",
-    status_code=status.HTTP_204_NO_CONTENT,
-)
-def delete_processing_job(job_id: UUID):
-    deleted_job = service.delete_job(job_id)
-    return deleted_job
-
-
-@router.post(
-    "/{job_id}/results",
-    summary="Adds a batch job to the processing queue to compute the results.",
-    status_code=status.HTTP_202_ACCEPTED,
-)
-def start_job_by_id(job_id: UUID):
-    job = service.start_job(job_id)
-    if not job:
-        raise HTTPException(
-            status_code=404, detail=f"job with id {job_id} have not been started"
+@router.delete("", summary="Remove job", status_code=status.HTTP_204_NO_CONTENT)
+def remove_collection_record(job_id: UUID, db_session: Session = Depends(get_db)):
+    try:
+        deleted_job_id = service.delete_job_by_id(
+            db_session=db_session, job_id=str(job_id)
         )
-    return job
-'''
+    except sqlalchemy.exc.IntegrityError as exc:
+        raise HTTPException(status_code=422, detail=exc)

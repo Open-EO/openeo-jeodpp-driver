@@ -1,4 +1,4 @@
-import enum
+from enum import Enum
 from typing import Any, Optional, List
 
 import pydantic
@@ -11,13 +11,14 @@ from .base import PydanticBase
 from .base import Base
 from .base import TimeStampMixin
 from .base import StacLinks
+from .process import ProcessMetadata
 
-__all__ = ["Job","ViewJobAll"]
+__all__ = ["Job","ViewJobAll","CreateJobMetadata","JobMetadata"]
 
 
 #SQLAlchemy models
 
-class ProcessStatus(enum.Enum):
+class ProcessStatus(str, Enum):
     created = "created"
     queued = "queued"
     running = "running"
@@ -28,7 +29,7 @@ class ProcessStatus(enum.Enum):
 
 class Job(Base, TimeStampMixin):
     __tablename__ = "job"
-    id = sa.Column(UUID, primary_key=True)
+    id = sa.Column(UUID, primary_key=True, server_default=sa.text("uuid_generate_v4()"))
     title = sa.Column(sa.String, nullable=True)
     description = sa.Column(sa.String, nullable=True)
     process = sa.Column(JSONB, nullable=False)
@@ -58,16 +59,19 @@ class Job(Base, TimeStampMixin):
 
 
 # Pydantic models
-class JobMetadata(PydanticBase):
-    id: str
+class CreateJobMetadata(PydanticBase):
     title: Optional[str] = pydantic.Field(None)
     description: Optional[str] = pydantic.Field(None)
-    process: Optional[dict]
+    process: Optional[ProcessMetadata]
     status: ProcessStatus = pydantic.Field(ProcessStatus.created)
     progress: Optional[int] = pydantic.Field(0, ge=0, le=100)
     plan: Optional[str] = pydantic.Field(None)
     costs: Optional[float]
     budget: Optional[int]
+
+
+class JobMetadata(CreateJobMetadata):
+    id: str
 
 
 class ViewJobAll(PydanticBase):
