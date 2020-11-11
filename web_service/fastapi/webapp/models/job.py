@@ -60,10 +60,25 @@ class Job(Base, TimeStampMixin):
 
 
 # Pydantic models
-class CreateJobMetadata(PydanticBase):
+class JobProcessMetadata(PydanticBase):
+    id: Optional[str]
+    summary: Optional[str]
+    description: Optional[str]
+    parameters: Optional[dict]
+    returns: Optional[dict]
+    categories: Optional[List[str]]
+    deprecated: Optional[bool] = pydantic.Field(False)
+    experimental: Optional[bool] = pydantic.Field(False)
+    exceptions: Optional[dict]
+    examples: Optional[List[dict]]
+    links: Optional[List[dict]]
+    process_graph: dict
+
+
+class ViewJobMetadata(PydanticBase):
     title: Optional[str] = pydantic.Field(None)
     description: Optional[str] = pydantic.Field(None)
-    process: Optional[ProcessMetadata]
+    process: Optional[JobProcessMetadata]
     status: ProcessStatus = pydantic.Field(ProcessStatus.created)
     progress: Optional[int] = pydantic.Field(0, ge=0, le=100)
     plan: Optional[str] = pydantic.Field(None)
@@ -71,7 +86,15 @@ class CreateJobMetadata(PydanticBase):
     budget: Optional[int]
 
 
-class JobMetadata(CreateJobMetadata):
+class CreateJobMetadata(PydanticBase):
+    title: Optional[str] = pydantic.Field(None)
+    description: Optional[str] = pydantic.Field(None)
+    process: JobProcessMetadata
+    plan: Optional[str] = pydantic.Field(None)
+    budget: Optional[int]
+
+
+class JobMetadata(ViewJobMetadata):
     id: str
     created: datetime.datetime
     updated: Optional[datetime.datetime]
