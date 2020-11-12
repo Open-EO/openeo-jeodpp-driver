@@ -43,6 +43,19 @@ def create_job(
     return job_record
 
 
+def update_job(
+    *, db_session: Session, job_id: UUID, job_record_in: models.CreateJobMetadata
+) -> None:
+    """Update existing Job. """
+    db_session.query(models.Job).filter(models.Job.id == job_id).update(
+        job_record_in.dict()
+    )
+    db_session.commit()
+    #query = get_query(db_session=db_session, job_id=job_id)
+    #updated_job_record = query.one_or_none()
+    #return updated_job_record
+
+
 def get_job_by_id(*, db_session: Session, job_id: UUID) -> models.Job:
     query = get_query(db_session=db_session, job_id=job_id)
     job_record = query.one_or_none()

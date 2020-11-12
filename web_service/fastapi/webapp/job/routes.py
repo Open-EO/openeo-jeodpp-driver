@@ -76,6 +76,16 @@ def create_job_record(
     return job_record
 
 
+@router.patch(
+    "/{job_id}", status_code=status.HTTP_204_NO_CONTENT, summary="Update job metadata"
+)
+def update_job_metadata(job_id: UUID, job_record_in: models.CreateJobMetadata, db_session: Session = Depends(get_db)) -> None:
+    try:
+        service.update_job(db_session=db_session, job_id=str(job_id), job_record_in=job_record_in)
+    except sqlalchemy.exc.IntegrityError as exc:
+        raise HTTPException(status_code=422, detail=exc)
+
+
 @router.get(
     "/{job_id}",
     response_model=models.JobMetadata,

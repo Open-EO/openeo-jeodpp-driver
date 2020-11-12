@@ -19,9 +19,9 @@ def get_available_openapi_endpoints():
         {"path": "/jobs", "methods": ["GET"]},
         {"path": "/jobs", "methods": ["POST"]},
         {"path": "/jobs/{job_id}", "methods": ["GET"]},
-        #{"path": "/jobs/{job_id}", "methods": ["PATCH"]},
+        # {"path": "/jobs/{job_id}", "methods": ["PATCH"]},
         {"path": "/jobs/{job_id}", "methods": ["DELETE"]},
-        #{"path": "/jobs/{job_id}/results", "methods": ["POST"]},
+        # {"path": "/jobs/{job_id}/results", "methods": ["POST"]},
     ]
 
 
