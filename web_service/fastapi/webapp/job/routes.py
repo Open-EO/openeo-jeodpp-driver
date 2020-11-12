@@ -7,6 +7,8 @@ from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
 from fastapi import status
+from fastapi import Response
+from fastapi import Request
 from sqlalchemy.orm import Session
 import sqlalchemy.exc
 import psycopg2.errors
@@ -53,7 +55,7 @@ def view_job_all(db_session: Session = Depends(get_db)):
     status_code=status.HTTP_201_CREATED,
 )
 def create_job_record(
-    job_record_in: models.CreateJobMetadata, db_session: Session = Depends(get_db)
+    request: Request, response: Response, job_record_in: models.CreateJobMetadata, db_session: Session = Depends(get_db)
 ):
     try:
         job_record = service.create_job(
@@ -65,6 +67,9 @@ def create_job_record(
         else:
             msg = "Creation of Job failed. Please check the logs."
         raise HTTPException(status_code=422, detail=msg)
+    print(job_record)
+    response.headers["OpenEO-Identifier"] = job_record.id
+    response.headers["Location"] = f"{request.url}/{job_record.id}"
     return job_record
 
 
