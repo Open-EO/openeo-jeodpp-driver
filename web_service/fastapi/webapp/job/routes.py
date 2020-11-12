@@ -55,7 +55,10 @@ def view_job_all(db_session: Session = Depends(get_db)):
     status_code=status.HTTP_201_CREATED,
 )
 def create_job_record(
-    request: Request, response: Response, job_record_in: models.CreateJobMetadata, db_session: Session = Depends(get_db)
+    request: Request,
+    response: Response,
+    job_record_in: models.CreateJobMetadata,
+    db_session: Session = Depends(get_db),
 ):
     try:
         job_record = service.create_job(
@@ -80,9 +83,7 @@ def create_job_record(
     summary="The request will ask the back-end for further details about a job specified by the identifier collection_name",
 )
 def view_job_detail(job_id: UUID, db_session: Session = Depends(get_db)):
-    job = service.get_job_by_id(
-        job_id=str(job_id), db_session=db_session
-    )
+    job = service.get_job_by_id(job_id=str(job_id), db_session=db_session)
     if not job:
         raise HTTPException(
             status_code=404,
@@ -91,7 +92,9 @@ def view_job_detail(job_id: UUID, db_session: Session = Depends(get_db)):
     return job
 
 
-@router.delete("", summary="Remove job", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    "/{job_id}", summary="Remove job by its id", status_code=status.HTTP_204_NO_CONTENT
+)
 def remove_collection_record(job_id: UUID, db_session: Session = Depends(get_db)):
     try:
         deleted_job_id = service.delete_job_by_id(

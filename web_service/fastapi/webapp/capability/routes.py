@@ -46,4 +46,3 @@ def get_service_versions(request: Request):
 def view_file_formats(request: Request):
     file_formats_data = service.get_file_formats(request)
     return file_formats_data
-

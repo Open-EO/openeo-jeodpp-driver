@@ -33,7 +33,9 @@ def get_job_all(*, db_session: Session) -> List[models.Job]:
     return job_records
 
 
-def create_job(*, db_session: Session, job_record_in: models.CreateJobMetadata) -> models.Job:
+def create_job(
+    *, db_session: Session, job_record_in: models.CreateJobMetadata
+) -> models.Job:
     """Create a new Job. """
     job_record = models.Job(**job_record_in.dict())
     db_session.add(job_record)
@@ -46,11 +48,9 @@ def get_job_by_id(*, db_session: Session, job_id: UUID) -> models.Job:
     job_record = query.one_or_none()
     return job_record
 
-  
+
 def delete_job_by_id(*, db_session: Session, job_id: UUID) -> UUID:
     deleted_job_id = (
-        db_session.query(models.Job)
-        .filter(models.Job.id == job_id)
-        .delete()
+        db_session.query(models.Job).filter(models.Job.id == job_id).delete()
     )
     return deleted_job_id

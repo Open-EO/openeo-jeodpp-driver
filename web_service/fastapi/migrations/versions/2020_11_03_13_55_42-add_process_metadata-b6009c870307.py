@@ -13,8 +13,8 @@ import sqlalchemy_utils
 
 
 # revision identifiers, used by Alembic.
-revision = 'b6009c870307'
-down_revision = '36cd96f7dc3c'
+revision = "b6009c870307"
+down_revision = "36cd96f7dc3c"
 branch_labels = None
 depends_on = None
 
@@ -28,8 +28,6 @@ DATA = ",\n".join([f"({row})" for row in DATA.splitlines()])
 SQL_UP = f"INSERT INTO process(id, summary, description, categories, parameters, returns, examples, exceptions, links, process_graph) VALUES {DATA}"
 
 SQL_DOWN = "DELETE FROM process"
-
-
 
 
 def upgrade():

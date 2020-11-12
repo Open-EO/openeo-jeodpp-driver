@@ -11,10 +11,10 @@ from .base import Base
 from .base import TimeStampMixin
 from .base import StacLinks
 
-__all__ = ["ProcessGraph", "Process","ViewProcessAll","ProcessMetadata"]
+__all__ = ["ProcessGraph", "Process", "ViewProcessAll", "ProcessMetadata"]
 
 
-#SQLAlchemy models
+# SQLAlchemy models
 class Process(Base, TimeStampMixin):
     __tablename__ = "process"
     id = sa.Column(sa.String, nullable=False, unique=True, primary_key=True)
@@ -29,32 +29,20 @@ class Process(Base, TimeStampMixin):
     examples = sa.Column(JSONB, nullable=True)
     links = sa.Column(JSONB, nullable=True)
     process_graph = sa.Column(JSONB, nullable=True)
-    
 
     __table_args__ = (
         sa.PrimaryKeyConstraint(
             "id",
         ),
-        sa.Index(
-            "idx_process_identifier", "id", postgresql_using="btree"
-        ),
-        sa.Index(
-            "idx_process_description", "description", postgresql_using="btree"
-        ),
-        sa.Index(
-            "idx_process_parameters", "parameters", postgresql_using="gin"
-        ),
-        sa.Index(
-            "idx_process_categories", "categories", postgresql_using="gin"
-        ),
-        sa.Index(
-            "idx_process_returns", "returns", postgresql_using="gin"
-        ),
+        sa.Index("idx_process_identifier", "id", postgresql_using="btree"),
+        sa.Index("idx_process_description", "description", postgresql_using="btree"),
+        sa.Index("idx_process_parameters", "parameters", postgresql_using="gin"),
+        sa.Index("idx_process_categories", "categories", postgresql_using="gin"),
+        sa.Index("idx_process_returns", "returns", postgresql_using="gin"),
     )
 
 
-
-#Pydantic models
+# Pydantic models
 class ProcessGraph(PydanticBase):
     process_id: str
     process_description: str

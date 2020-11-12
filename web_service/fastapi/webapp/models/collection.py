@@ -23,7 +23,14 @@ from .base import StacLinks
 logger = logging.getLogger(__name__)
 
 
-__all__ = ["Collection", "ViewCollectionAll", "CollectionBase", "CollectionViewJeodpp", "ViewCollectionAllOpeneo", "StacCollectionMetadata"]
+__all__ = [
+    "Collection",
+    "ViewCollectionAll",
+    "CollectionBase",
+    "CollectionViewJeodpp",
+    "ViewCollectionAllOpeneo",
+    "StacCollectionMetadata",
+]
 
 
 ## Database model
@@ -94,6 +101,7 @@ class DimenstionType(str, Enum):
     spatial = "spatial"
     temporal = "temporal"
 
+
 class DimensionAxis(str, Enum):
     x = "x"
     y = "y"
@@ -114,7 +122,7 @@ class BoundingBox(PydanticBase):
 
 
 class CollectionTemporalExtent(PydanticBase):
-    interval: List [List[ Union[str, None] ]]
+    interval: List[List[Union[str, None]]]
     # One or more time intervals that describe the temporal extent of the dataset. The value null is supported and indicates an open time interval.
 
 
@@ -131,7 +139,9 @@ class CollectionExtent(PydanticBase):
 
 class CubeSpatialDimension(PydanticBase):
     type: DimenstionType
-    description: Optional[str] = Field("string", description="Detailed description to explain the entity.")
+    description: Optional[str] = Field(
+        "string", description="Detailed description to explain the entity."
+    )
     axis: Union[DimensionAxis]
     extent: Optional[List[int]]
     values: Optional[List[int]]
@@ -163,8 +173,8 @@ class EOCloudCoverRange(PydanticBase):
 
 class CollectionSummaries(PydanticBase):
     constellation: Optional[List[str]] = Field(["Sentinel2"])
-    platform: Optional[List[str]] = Field(["Sentinel-2A","Sentinel-2B"])
-    instruments: Optional[List[str]] = Field(["MSI"]) 
+    platform: Optional[List[str]] = Field(["Sentinel-2A", "Sentinel-2B"])
+    instruments: Optional[List[str]] = Field(["MSI"])
     cloud_cover: Optional[EOCloudCoverRange] = Field(alias="eo:cloud_cover")
 
 
@@ -183,9 +193,10 @@ class StacCollectionMetadata(PydanticBase):
     links: List[StacLinks]
     cube_dimensions: CollectionCubeDimension = Field(
         description="Uniquely named dimensions of the data cube. The keys of the object are the dimension names. For interoperability, it is RECOMMENDED to use the following dimension names if there is only a single dimension with the specified criteria:",
-        alias="cube:dimensions"
+        alias="cube:dimensions",
     )
     summaries: CollectionSummaries
+
     class Config:
         allow_population_by_alias = True
 
@@ -209,6 +220,7 @@ class CollectionViewJeodpp(CollectionBase):
 class ViewCollectionAll(PydanticBase):
     collections: List[CollectionViewJeodpp]
     # links: List[StacLinks]
+
 
 class ViewCollectionAllOpeneo(PydanticBase):
     collections: List[StacCollectionMetadata]

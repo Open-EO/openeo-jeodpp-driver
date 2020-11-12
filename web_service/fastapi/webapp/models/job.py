@@ -14,10 +14,11 @@ from .base import TimeStampMixin
 from .base import StacLinks
 from .process import ProcessMetadata
 
-__all__ = ["Job","ViewJobAll","CreateJobMetadata","JobMetadata"]
+__all__ = ["Job", "ViewJobAll", "CreateJobMetadata", "JobMetadata"]
 
 
-#SQLAlchemy models
+# SQLAlchemy models
+
 
 class ProcessStatus(str, Enum):
     created = "created"
@@ -39,23 +40,15 @@ class Job(Base, TimeStampMixin):
     plan = sa.Column(sa.String, nullable=True)
     costs = sa.Column(sa.Float, nullable=True)
     budget = sa.Column(sa.Integer, nullable=True)
-    
+
     __table_args__ = (
         sa.PrimaryKeyConstraint(
             "id",
         ),
-        sa.Index(
-            "idx_job_title", "title", postgresql_using="btree"
-        ),
-        sa.Index(
-            "idx_job_description", "description", postgresql_using="btree"
-        ),
-        sa.Index(
-            "idx_job_process", "process", postgresql_using="gin"
-        ),
-        sa.Index(
-            "idx_job_status", "status", postgresql_using="btree"
-        )
+        sa.Index("idx_job_title", "title", postgresql_using="btree"),
+        sa.Index("idx_job_description", "description", postgresql_using="btree"),
+        sa.Index("idx_job_process", "process", postgresql_using="gin"),
+        sa.Index("idx_job_status", "status", postgresql_using="btree"),
     )
 
 
@@ -100,14 +93,12 @@ class JobMetadata(ViewJobMetadata):
     updated: Optional[datetime.datetime]
 
 
-
 class ViewJobAll(PydanticBase):
     jobs: List[JobMetadata]
     links: List[StacLinks]
 
 
-
-'''
+"""
 class OutputFormatParameters(PydanticBase):
     tiles: bool = True
     compress: str = "jpeg"
@@ -127,4 +118,4 @@ class JobTaskCreate(PydanticBase):
     output: OutputFormat
     plan: str = "free"
     budget: int = 100
-'''
+"""

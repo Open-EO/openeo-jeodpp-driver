@@ -25,7 +25,7 @@ def get_available_openapi_endpoints():
         {"path": "/jobs/{job_id}", "methods": ["PATCH"]},
         {"path": "/jobs/{job_id}", "methods": ["DELETE"]},
         {"path": "/jobs/{job_id}/results", "methods": ["POST"]},
-        #{"path": "/healthcheck", "methods": ["GET"]},
+        # {"path": "/healthcheck", "methods": ["GET"]},
     ]
 
 
@@ -39,12 +39,12 @@ def get_available_links(request):
             "title": "OpenAPI json",
             "type": "application/json",
         },
-        #{
-         #   "rel": "service-doc",
-          #  "href": f"{request_url}docs",
-           # "title": "Swagger UI",
-            #"type": "text/html",
-        #},
+        # {
+        #   "rel": "service-doc",
+        #  "href": f"{request_url}docs",
+        # "title": "Swagger UI",
+        # "type": "text/html",
+        # },
     ]
 
 
@@ -81,29 +81,22 @@ def get_service_versions(request) -> OpeneoAPIVersions:
 
 
 def get_file_formats(request) -> IOFileFormats:
-    formats_response ={
+    formats_response = {
         "input": {
             "GTiff": {
                 "title": "GeoTiff",
                 "description": "GeoTIFF is format extension for storing georeference and geocoding information in a TIFF 6.0 compliant raster file by tying a raster image to a known model space or map projection.",
-                "gis_data_types": [
-                    "raster"
-                ],
+                "gis_data_types": ["raster"],
                 "parameters": {},
-                
             }
         },
-        "output":{
+        "output": {
             "GTiff": {
                 "title": "GeoTiff",
                 "description": "GeoTIFF is format extension for storing georeference and geocoding information in a TIFF 6.0 compliant raster file by tying a raster image to a known model space or map projection.",
-                "gis_data_types": [
-                    "raster"
-                ],
+                "gis_data_types": ["raster"],
                 "parameters": {},
-                
             }
-        }
+        },
     }
     return formats_response
-
