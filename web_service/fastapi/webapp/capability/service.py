@@ -3,7 +3,13 @@ import logging
 from typing import List
 
 
-from ..models import BackEndCapabilities, OpeneoAPIVersions, IOFileFormats, SupportedRuntimes
+from ..models import (
+    BackEndCapabilities,
+    OpeneoAPIVersions,
+    IOFileFormats,
+    SupportedRuntimes,
+    SupportedWebService,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -13,6 +19,7 @@ def get_available_openapi_endpoints():
         {"path": "/", "methods": ["GET"]},
         {"path": "/file_formats", "methods": ["GET"]},
         {"path": "/udf_runtimes", "methods": ["GET"]},
+        {"path": "/service_types", "methods": ["GET"]},
         {"path": "/collections", "methods": ["GET"]},
         {"path": "/collections/{collection_id}", "methods": ["GET"]},
         {"path": "/processes", "methods": ["GET"]},
@@ -102,24 +109,75 @@ def get_file_formats(request) -> IOFileFormats:
 def get_udf_runtimes(request) -> SupportedRuntimes:
     udf_runtimes = {
         "python": {
-                "title": "Python",
-                "description": "Python is an interpreted, high-level and general-purpose programming language. Created by Guido van Rossum and first released in 1991, Python's design philosophy emphasizes code readability with its notable use of significant whitespace. Its language constructs and object-oriented approach aim to help programmers write clear, logical code for small and large-scale projects.",
-                "type":"language",
-                "default": "3.7",
-                "versions": {
-                    "3.7": {
-                        "libraries": {
-                            "pyjeo":{
-                                "version": "1.0.1",
-                                "deprecated": False
-                            },
-                            "gdal":{
-                                "version": "3.0.4",
-                                "deprecated": False
-                            }
-                        }
+            "title": "Python",
+            "description": "Python is an interpreted, high-level and general-purpose programming language. Created by Guido van Rossum and first released in 1991, Python's design philosophy emphasizes code readability with its notable use of significant whitespace. Its language constructs and object-oriented approach aim to help programmers write clear, logical code for small and large-scale projects.",
+            "type": "language",
+            "default": "3.7",
+            "versions": {
+                "3.7": {
+                    "libraries": {
+                        "pyjeo": {"version": "1.0.1", "deprecated": False},
+                        "gdal": {"version": "3.0.4", "deprecated": False},
                     }
                 }
+            },
         }
     }
     return udf_runtimes
+
+
+def get_ogc_services(request) -> SupportedWebService:
+    web_services = {
+        "wms": {
+            "title": "OGC Web Map Service",
+            "configuration": {
+                "version": {
+                    "type": "string",
+                    "description": "The WMS version offered to consumers of the service.",
+                    "default": "1.3.0",
+                    "enum": ["1.1.1", "1.3.0"],
+                }
+            },
+            "process_parameters": [
+                {
+                    "name": "layer",
+                    "description": "The layer name.",
+                    "schema": {"type": "string"},
+                    "default": "OI.Copernicus.Core_003",
+                },
+                {
+                    "name": "spatial_extent_west",
+                    "description": "The lower left corner for coordinate axis 1 of the extent currently shown to the consumer.",
+                    "schema": {"type": "number"},
+                },
+                {
+                    "name": "spatial_extent_south",
+                    "description": "The lower left corner for coordinate axis 2 of the extent currently shown to the consumer.",
+                    "schema": {"type": "number"},
+                },
+                {
+                    "name": "spatial_extent_east",
+                    "description": "The upper right corner for coordinate axis 1 of the extent currently shown to the consumer.",
+                    "schema": {"type": "number"},
+                },
+                {
+                    "name": "spatial_extent_north",
+                    "description": "The upper right corner for coordinate axis 2 of the extent currently shown to the consumer.",
+                    "schema": {"type": "number"},
+                },
+            ],
+            "links": [
+                {
+                    "href": "https://www.opengeospatial.org/standards/wms",
+                    "rel": "about",
+                    "title": "OGC Web Map Service Standard",
+                },
+                {
+                    "href": "https://jeodpp.jrc.ec.europa.eu/jeodpp/services/ows/wms/copernicus/core003?service=WMS&request=GetCapabilities",
+                    "rel": "service",
+                    "title": "Copernicus Core_003 Seamless Mosaic",
+                },
+            ],
+        }
+    }
+    return web_services

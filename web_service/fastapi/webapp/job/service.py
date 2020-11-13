@@ -51,9 +51,9 @@ def update_job(
         job_record_in.dict()
     )
     db_session.commit()
-    #query = get_query(db_session=db_session, job_id=job_id)
-    #updated_job_record = query.one_or_none()
-    #return updated_job_record
+    # query = get_query(db_session=db_session, job_id=job_id)
+    # updated_job_record = query.one_or_none()
+    # return updated_job_record
 
 
 def get_job_by_id(*, db_session: Session, job_id: UUID) -> models.Job:

@@ -57,3 +57,14 @@ def view_file_formats(request: Request):
 def view_udf_runtimes(request: Request):
     udf_runtimes_data = service.get_udf_runtimes(request)
     return udf_runtimes_data
+
+
+@router.get(
+    "/service_types",
+    response_model=models.SupportedWebService,
+    response_model_exclude_none=True,
+    summary="The request will ask the back-end for supported secondary web service protocols such as OGC WMS, OGC WCS, OGC API - Features or XYZ tiles. The response is an object of all available secondary web service protocols with their supported configuration settings and expected process parameters.",
+)
+def view_ogc_services(request: Request):
+    ogc_services_data = service.get_ogc_services(request)
+    return ogc_services_data

@@ -17,7 +17,13 @@ from .base import StacLinks
 logger = logging.getLogger(__name__)
 
 
-__all__ = ["BackEndCapabilities", "OpeneoAPIVersions", "IOFileFormats","SupportedRuntimes"]
+__all__ = [
+    "BackEndCapabilities",
+    "OpeneoAPIVersions",
+    "IOFileFormats",
+    "SupportedRuntimes",
+    "SupportedWebService",
+]
 
 
 ## Pydantic models
@@ -33,7 +39,7 @@ class GisDataTypes(str, Enum):
 class UDFruntimeType(str, Enum):
     language = "language"
     docker = "docker"
-    
+
 
 class Endpoint(PydanticBase):
     path: str
@@ -127,3 +133,15 @@ class UDFRuntime(PydanticBase):
 
 class SupportedRuntimes(PydanticBase):
     python: UDFRuntime
+
+
+class OGCWebService(PydanticBase):
+    title: Optional[str]
+    description: Optional[str]
+    configuration: dict
+    process_parameters: List[dict]
+    links: Optional[List[StacLinks]]
+
+
+class SupportedWebService(PydanticBase):
+    wms: OGCWebService
