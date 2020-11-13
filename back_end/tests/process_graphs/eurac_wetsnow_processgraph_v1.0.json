@@ -3,7 +3,7 @@
     "1": {
       "process_id": "load_collection",
       "arguments": {
-          "id": "sentinel1.GRD",
+          "id": "EarthObservation.Copernicus.Sentinel1.GRD",
           "spatial_extent": {
 			        "east": 11.416511535644531,
 			        "south": 46.406617041056165,
