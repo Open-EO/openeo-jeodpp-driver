@@ -17,7 +17,7 @@ from .base import StacLinks
 logger = logging.getLogger(__name__)
 
 
-__all__ = ["BackEndCapabilities", "OpeneoAPIVersions", "IOFileFormats"]
+__all__ = ["BackEndCapabilities", "OpeneoAPIVersions", "IOFileFormats","SupportedRuntimes"]
 
 
 ## Pydantic models
@@ -29,6 +29,11 @@ class GisDataTypes(str, Enum):
     table = "table"
     other = "other"
 
+
+class UDFruntimeType(str, Enum):
+    language = "language"
+    docker = "docker"
+    
 
 class Endpoint(PydanticBase):
     path: str
@@ -109,3 +114,16 @@ class FileFormats(PydanticBase):
 class IOFileFormats(PydanticBase):
     input: FileFormats
     output: FileFormats
+
+
+class UDFRuntime(PydanticBase):
+    title: Optional[str]
+    description: Optional[str]
+    type: UDFruntimeType
+    default: str
+    links: Optional[List[StacLinks]]
+    versions: dict
+
+
+class SupportedRuntimes(PydanticBase):
+    python: UDFRuntime

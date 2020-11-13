@@ -46,3 +46,14 @@ def get_service_versions(request: Request):
 def view_file_formats(request: Request):
     file_formats_data = service.get_file_formats(request)
     return file_formats_data
+
+
+@router.get(
+    "/udf_runtimes",
+    response_model=models.SupportedRuntimes,
+    response_model_exclude_none=True,
+    summary="Returns the supported runtimes for user-defined functions (UDFs), which includes either the programming languages including version numbers and available libraries including version numbers or docker containers.",
+)
+def view_udf_runtimes(request: Request):
+    udf_runtimes_data = service.get_udf_runtimes(request)
+    return udf_runtimes_data

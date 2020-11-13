@@ -3,7 +3,7 @@ import logging
 from typing import List
 
 
-from ..models import BackEndCapabilities, OpeneoAPIVersions, IOFileFormats
+from ..models import BackEndCapabilities, OpeneoAPIVersions, IOFileFormats, SupportedRuntimes
 
 logger = logging.getLogger(__name__)
 
@@ -97,3 +97,29 @@ def get_file_formats(request) -> IOFileFormats:
         },
     }
     return formats_response
+
+
+def get_udf_runtimes(request) -> SupportedRuntimes:
+    udf_runtimes = {
+        "python": {
+                "title": "Python",
+                "description": "Python is an interpreted, high-level and general-purpose programming language. Created by Guido van Rossum and first released in 1991, Python's design philosophy emphasizes code readability with its notable use of significant whitespace. Its language constructs and object-oriented approach aim to help programmers write clear, logical code for small and large-scale projects.",
+                "type":"language",
+                "default": "3.7",
+                "versions": {
+                    "3.7": {
+                        "libraries": {
+                            "pyjeo":{
+                                "version": "1.0.1",
+                                "deprecated": False
+                            },
+                            "gdal":{
+                                "version": "3.0.4",
+                                "deprecated": False
+                            }
+                        }
+                    }
+                }
+        }
+    }
+    return udf_runtimes
