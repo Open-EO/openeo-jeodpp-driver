@@ -118,3 +118,14 @@ def remove_collection_record(job_id: UUID, db_session: Session = Depends(get_db)
         )
     except sqlalchemy.exc.IntegrityError as exc:
         raise HTTPException(status_code=422, detail=exc)
+
+
+@router.get(
+    "/{job_id}/estimate",
+    response_model=models.JobEstimate,
+    response_model_exclude_none=True,
+    summary="Clients can ask for an estimate for a batch job. Back-ends can decide to either calculate the duration, the costs, the size or a combination of them. This MUST be the upper limit of the incurring costs. Clients can be charged less than specified, but never more. Back-end providers MAY specify an expiry time for the estimate. Starting to process data afterwards MAY be charged at a higher cost. Costs MAY NOT include downloading costs. This can be indicated with the downloads_included flag",
+)
+def view_job_estimate(job_id: UUID):
+    job_estimate_data = service.get_job_estimate(str(job_id))
+    return job_estimate_data

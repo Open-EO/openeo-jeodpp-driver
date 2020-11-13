@@ -11,6 +11,7 @@ from sqlalchemy.orm import Query
 from . import service
 from .. import models
 from ..database import get_db
+from ..htcondor import job_estimate
 
 logger = logging.getLogger(__name__)
 
@@ -67,3 +68,8 @@ def delete_job_by_id(*, db_session: Session, job_id: UUID) -> UUID:
         db_session.query(models.Job).filter(models.Job.id == job_id).delete()
     )
     return deleted_job_id
+
+
+def get_job_estimate(job_id: UUID) -> models.JobEstimate:
+    job_estimate_data = job_estimate(job_id)
+    return job_estimate_data

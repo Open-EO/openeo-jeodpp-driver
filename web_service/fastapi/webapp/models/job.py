@@ -14,7 +14,7 @@ from .base import TimeStampMixin
 from .base import StacLinks
 from .process import ProcessMetadata
 
-__all__ = ["Job", "ViewJobAll", "CreateJobMetadata", "JobMetadata"]
+__all__ = ["Job", "ViewJobAll", "CreateJobMetadata", "JobMetadata", "JobEstimate"]
 
 
 # SQLAlchemy models
@@ -98,24 +98,9 @@ class ViewJobAll(PydanticBase):
     links: List[StacLinks]
 
 
-"""
-class OutputFormatParameters(PydanticBase):
-    tiles: bool = True
-    compress: str = "jpeg"
-    photometric: str = "YCBCR"
-    jpeg_quality: int = 80
-
-
-class OutputFormat(PydanticBase):
-    format: str = "GTiff"
-    parameters: OutputFormatParameters
-
-
-class JobTaskCreate(PydanticBase):
-    title: str = "NDVI based on Sentinel 2"
-    description: str
-    process_graph: ProcessGraph
-    output: OutputFormat
-    plan: str = "free"
-    budget: int = 100
-"""
+class JobEstimate(PydanticBase):
+    costs: Optional[float] = pydantic.Field(None)
+    duration: Optional[str]
+    size: Optional[int]
+    downloads_included: Optional[int] = pydantic.Field(None)
+    expires: Optional[datetime.datetime]
