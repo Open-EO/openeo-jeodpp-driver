@@ -18,6 +18,7 @@ def get_available_openapi_endpoints():
     return [
         {"path": "/", "methods": ["GET"]},
         {"path": "/file_formats", "methods": ["GET"]},
+        {"path": "/.well-known/openeo", "methods": ["GET"]},
         {"path": "/udf_runtimes", "methods": ["GET"]},
         {"path": "/service_types", "methods": ["GET"]},
         {"path": "/collections", "methods": ["GET"]},
