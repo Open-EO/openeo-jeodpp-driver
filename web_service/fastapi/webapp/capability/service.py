@@ -12,6 +12,7 @@ def get_available_openapi_endpoints():
     return [
         {"path": "/", "methods": ["GET"]},
         {"path": "/file_formats", "methods": ["GET"]},
+        {"path": "/udf_runtimes", "methods": ["GET"]},
         {"path": "/collections", "methods": ["GET"]},
         {"path": "/collections/{collection_id}", "methods": ["GET"]},
         {"path": "/processes", "methods": ["GET"]},
@@ -19,7 +20,7 @@ def get_available_openapi_endpoints():
         {"path": "/jobs", "methods": ["GET"]},
         {"path": "/jobs", "methods": ["POST"]},
         {"path": "/jobs/{job_id}", "methods": ["GET"]},
-        # {"path": "/jobs/{job_id}", "methods": ["PATCH"]},
+        {"path": "/jobs/{job_id}", "methods": ["PATCH"]},
         {"path": "/jobs/{job_id}", "methods": ["DELETE"]},
         # {"path": "/jobs/{job_id}/results", "methods": ["POST"]},
     ]
