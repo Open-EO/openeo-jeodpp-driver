@@ -76,12 +76,14 @@ def between(agraph, nodeid, jim):
 def load_collection(agraph, nodeid, jim, tileindex=None, tiletotal=None, virtual=False):
     verbose = True
     node = agraph[nodeid]
-    collectionId = node.content['arguments']['id'].split('.')
+    # collectionId = node.content['arguments']['id'].split('.')
+    collectionId = node.content['arguments']['id']
     if verbose:
         print("load_collection")
-    coll=Collection(collectionId[0])
-    if len(collectionId) > 1:
-        coll.filterOn('productType',collectionId[1])
+    # coll=Collection(collectionId[0])
+    coll=Collection(collectionId)
+    # if len(collectionId) > 1:
+    #     coll.filterOn('productType',collectionId[1])
     properties={}
 
     spatiallyFiltered = False
