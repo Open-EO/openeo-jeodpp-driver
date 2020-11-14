@@ -1001,7 +1001,12 @@ def load_uploaded_files(agraph, nodeid, jim):
         print("load_uploaded_files")
         print("paths: {}".format(paths))
         print("format: {}".format(format))
-        print("options: {}".options(options))
-    #todo: support multiple paths
-    jim[node.id] = pj.Jim(paths)
+        print("options: {}".format(options))
+    for path in paths:
+        if jim[node.id] is None:
+            jim[node.id] = pj.Jim(paths)
+        else:
+            jim[node.id].geometry.statckPlane(pj.Jim(path))
+        print("number of planes: {}".format(jim[node.id].properties.nrOfPlane()))
+        print("number of bands: {}".format(jim[node.id].properties.nrOfBand()))
     return jim[node.id]
