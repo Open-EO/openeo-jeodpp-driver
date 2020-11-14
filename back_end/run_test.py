@@ -50,6 +50,8 @@ graph = translate_process_graph("tests/process_graphs/min_evi_jeodpp.json")
 #graph = translate_process_graph("tests/process_graphs/jrc_usecase5_udf.json")
 #graph = translate_process_graph("tests/process_graphs/jrc_usecase5_noudf.json")
 #graph = translate_process_graph("tests/process_graphs/JRC_job.json")
+graph = translate_process_graph("tests/process_graphs/jrc_wetsnow_processgraph_v1.0.json")
+
 
 #print(graph)
 print(graph.sort())
