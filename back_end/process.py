@@ -838,7 +838,7 @@ def resample_cube_spatial(agraph, nodeid, jim):
         return jim[node.id]
     if not isinstance(jim[node.id],pj.Jim):
         raise TypeError("Error: {} not implemented for {}".format(node.content['process_id'], type(jim[node.id])))
-    jim[node.id].geometry.crop(dx = target.properties.getDeltaX(), dy = target.properties.getDeltaY())
+    jim[node.id].geometry.crop(bbox = target.properties.getBBox(), dx = target.properties.getDeltaX(), dy = target.properties.getDeltaY())
     jim[node.id].resolution['spatial'] = [jim[node.id].properties.getDeltaX(), jim[node.id].properties.getDeltaY()]
     return jim[node.id]
 
