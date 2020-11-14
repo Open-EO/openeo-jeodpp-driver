@@ -990,3 +990,18 @@ def aggregate_spatial(agraph, nodeid, jim):
     else:
         jim[node.id]=jim[reducer_node.id]
         return jim[node.id]
+
+def load_uploaded_files(agraph, nodeid, jim):
+    verbose = True
+    node = agraph[nodeid]
+    paths = node.content['paths']
+    format = node.content['format']
+    options = node.content['options']
+    if verbose:
+        print("load_uploaded_files")
+        print("paths: {}".format(paths))
+        print("format: {}".format(format))
+        print("options: {}".options(options))
+    #todo: support multiple paths
+    jim[node.id] = pj.Jim(paths)
+    return jim[node.id]

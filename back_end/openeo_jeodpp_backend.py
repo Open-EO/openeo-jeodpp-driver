@@ -164,7 +164,7 @@ class BackEnd:
         elif node.content['process_id'] == 'load_result':
             raise exceptions.NoSuchProcess("process not implemented yet")
         elif node.content['process_id'] == 'load_uploaded_files':
-            raise exceptions.NoSuchProcess("process not implemented yet")
+            return process.load_uploaded_files(agraph, nodeid, jim)
         elif node.content['process_id'] == 'log':
             raise exceptions.NoSuchProcess("process not implemented yet")
         elif node.content['process_id'] == 'lte':
