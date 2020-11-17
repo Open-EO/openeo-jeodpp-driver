@@ -10,7 +10,7 @@ Client requests start processing batch job. Job is queued by Kubernetes and stat
 ![alt text](figures/post_jobs_jobid_results.png "POST /jobs/{jobid}/restults")
 
 Process is started in Kubernetes cluster and status is set to `running` in database.
-![alt text](figures/figures/start_process.png "job running")
+![alt text](figures/start_process.png "job running")
 
 Process has ended and status is set to `finished` in database.
-![alt text](figures/figures/end_process.png "job finished")
+![alt text](figures/end_process.png "job finished")
