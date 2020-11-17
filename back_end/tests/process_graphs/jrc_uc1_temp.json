@@ -6,7 +6,7 @@
         "bands": [
           "VV"
         ],
-        "id": "sentinel1.GRD",
+        "id": "EarthObservation.Copernicus.Sentinel1.GRD",
         "spatial_extent": {
           "west": 16.06,
           "south": 48.1,
