@@ -28,7 +28,7 @@ jeodpp=BackEnd('jeodpp',user='kempepi')
 #graph = translate_process_graph("/home/kempepi/openeo-usecases/jrc_agriculture_monitoring_usecase/D35/jrc_noudf.json")
 #graph = translate_process_graph("/home/kempepi/openeo-usecases/jrc_agriculture_monitoring_usecase/D35/jrc_noudf.json")
 #graph = translate_process_graph("/home/kempepi/openeo-usecases/jrc_agriculture_monitoring_usecase/D35/jrc_noudf.json")
-graph = translate_process_graph("tests/process_graphs/jrc_d22_evi")
+graph = translate_process_graph("tests/process_graphs/jrc_d22_evi.json")
 
 print(graph.sort())
 jeodpp.processGraph(graph.sort(), tileindex=None, tiletotal=None)
