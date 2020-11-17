@@ -4,7 +4,7 @@
       "process_id": "load_collection",
       "description": "Loading the data; The order of the specified bands is important for the following reduce operation.",
       "arguments": {
-        "id": "sentinel2.S2MSI2A",
+        "id": "EarthObservation.Copernicus.Sentinel2.Level2A",
         "spatial_extent": {
         "west":11.279182434082033,
         "south":46.464349400461145,
@@ -158,7 +158,7 @@
         "data": {
           "from_node": "mintime"
         },
-        "format": "GTiff"
+        "format": "GTIFF"
       },
       "result": true
     }
