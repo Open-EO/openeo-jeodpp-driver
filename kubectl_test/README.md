@@ -10,8 +10,7 @@ inside the **openeo** namespace
 
 `docker build -t kubectl -f Dockerfile_kubectl .`
 
-The file kube_config is not in this repo for security reason but is here in EOS
-`/eos/jeodpp/home/users/marlelu/openeo/kube_config`
+The file kube_config is not in this repo for security reasons
 
 `docker run -it  --name kubectl kubectl bash`
 
