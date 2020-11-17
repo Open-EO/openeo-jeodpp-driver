@@ -1,0 +1,33 @@
+FROM debian:buster
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Configure apt
+RUN set -xeu; \
+    echo 'APT::Install-Recommends "false";' | tee -a /etc/apt/apt.conf.d/99-install-suggests-recommends; \
+    echo 'APT::Install-Suggests "false";' | tee -a /etc/apt/apt.conf.d/99-install-suggests-recommends; \
+    echo 'Configuring apt: OK';
+
+# Setup the locales
+ENV LANG=en_US.UTF-8 \
+    LC_ALL=en_US.UTF-8 \
+    LANGUAGE=en_US:en
+
+# Install basic packages
+RUN set -xeu; \
+    apt update; \
+    apt install -yq \
+        bsdtar \
+        bzip2 \
+        curl \
+        libtool \
+      && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p /root/.kube
+
+COPY kube_config /root/.kube/config
+
+RUN cd /usr/local/bin/ \
+    && curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl" \
+    && chmod +x ./kubectl \
+    && echo "$(kubectl version --client)"
