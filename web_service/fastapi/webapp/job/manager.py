@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy.orm import Query
+import subprocess
 
 
 from .. import models
@@ -40,14 +41,15 @@ def update_job_status(
 
 
 def add_job_to_queue(db_session: Session, job_id: str):
-    """ Get process graph from database """
-    job_process_graph = get_job_process_graph(db_session=db_session, job_id=job_id)
-    """ Function to parse process_graph and to add job to a k8s / htcondor queue """
-    """ If sucesfully added to k8s update the job status to queued / running """
-    k8s_job_status = "queued"
-    update_job_status(db_session=db_session, job_id=job_id, job_status=k8s_job_status)
+    """ Function to add job to a k8s / htcondor queue """
+    try:
+        print("starting kubectl exec")
+        path = '/scratch2/kempepi'
+        subprocess.run(["kubectl exec", "-n openeo openeotest-6589984f8-9vxft -- python3 /home/install/openeo-master-cd09b74ea9eab60d60c225d9a843bfc9538a2c81/back_end/run.py -job_id " + job_id + " -path" + path])
+        update_job_status(db_session=db_session, job_id=job_id, job_status=models.job.ProcessStatus.queued)
+    except:
+        update_job_status(db_session, job_id, models.job.ProcessStatus.error)
     return k8s_job_status
-
 
 def is_job_running_in_k8s(job_id: str):
     return True

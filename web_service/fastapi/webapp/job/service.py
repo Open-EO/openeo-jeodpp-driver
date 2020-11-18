@@ -73,7 +73,6 @@ def get_job_estimate(job_id: UUID) -> models.JobEstimate:
     job_estimate_data = manager.job_estimate(job_id)
     return job_estimate_data
 
-
 def start_batch_job(*, db_session: Session, job_id: UUID) -> None:
     """ Check first if job status is not queued or running """
     query = get_query(db_session=db_session, job_id=job_id)
