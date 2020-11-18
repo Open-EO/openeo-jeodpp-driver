@@ -1,4 +1,5 @@
-def job_estimate(job_id: str):
+
+def job_queue(job_id: str):
     job_estimate = {
         "costs": 12.98,
         "duration": "P1Y2M10DT2H30M",
