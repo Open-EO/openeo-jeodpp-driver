@@ -100,11 +100,10 @@ def update_job_metadata(
 )
 def view_job_detail(job_id: UUID, db_session: Session = Depends(get_db)):
     job = service.get_job_by_id(job_id=str(job_id), db_session=db_session)
-    if not job:
-        raise HTTPException(
-            status_code=404,
-            detail=f"No job with id {job_id} have been created",
-        )
+    raise HTTPException(
+        status_code=404,
+        detail=f"No job with id {job_id} have been created",
+    )
     return job
 
 
@@ -129,3 +128,30 @@ def remove_collection_record(job_id: UUID, db_session: Session = Depends(get_db)
 def view_job_estimate(job_id: UUID):
     job_estimate_data = service.get_job_estimate(str(job_id))
     return job_estimate_data
+
+
+@router.post(
+    "/{job_id}/resuls",
+    summary="Adds a batch job to the processing queue to compute the results.",
+    status_code=status.HTTP_202_ACCEPTED,
+)
+def start_batch_job(job_id: UUID, db_session: Session = Depends(get_db)):
+    job_status = service.start_batch_job(db_session=db_session, job_id=str(job_id))
+    if job_status in ["queued", "running"]:
+        raise HTTPException(
+            status_code=409,
+            detail=f"Job with id {job_id} is {job_status}",
+        )
+
+
+@router.delete(
+    "/{job_id}/results",
+    summary="Cancels all related computations for this job at the back-end. It will stop generating additional costs for processing.",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def cancel_batch_job(job_id: UUID, db_session: Session = Depends(get_db)):
+    job_status = service.cancel_batch_job(db_session=db_session, job_id=job_id)
+    if job_status not in ["created", "canceled"]:
+        raise HTTPException(
+            status_code=500, detail=f"Job with id {job_id} has not been canceled {job_status}"
+        )
