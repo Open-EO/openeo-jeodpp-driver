@@ -7,7 +7,7 @@ from openeo_jeodpp_backend import BackEnd
 
 import json, urllib.request, ast
 import getpass
-# from uuid import UUID
+from uuid import UUID
 # from sqlalchemy.orm import Session
 # from openeo.web_service.fastapi.webapp.job.manager import get_job_process_graph
 # from openeo.web_service.fastapi.webapp.job.manager import update_job_status
@@ -33,10 +33,12 @@ def run_job_id(endPoint: str, job_id: UUID, user: str = None, path: str = None, 
         jeodpp.processGraph(graph.sort(), tileindex,tiletotal)
         #todo: cannot use db here, as long as we are not in the docker-compose scope
         # update_job_status(db_session, job_id, models.job.ProcessStatus.finished)
+        return "finished"
     except:
         print("Erorr: job {} did not process, error returned".format(job_id))
         #todo: cannot use db here, as long as we are not in the docker-compose scope
         # update_job_status(db_session, job_id, models.job.ProcessStatus.error)
+        return "error"
 
 def run_job_graph(process_graph: dict, user: str = None, path: str = None, tileindex: int = None, tiletotal: int = None):
     try:
@@ -45,7 +47,6 @@ def run_job_graph(process_graph: dict, user: str = None, path: str = None, tilei
         jeodpp.processGraph(translated_graph.sort(), tileindex,tiletotal)
         return "finished"
     except:
-        print("Erorr: job {} did not process, error returned".format(job_id))
         return "error"
 
 def main():

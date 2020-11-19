@@ -1,4 +1,4 @@
-from run import run_job
+from run import run_job_graph
 
 def main():
     tileindex = None
