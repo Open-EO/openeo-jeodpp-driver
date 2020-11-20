@@ -45,7 +45,9 @@ def add_job_to_queue(db_session: Session, job_id: str):
     try:
         print("starting kubectl exec")
         path = '/scratch2/kempepi'
-        subprocess.run(["kubectl exec", "-n openeo openeotest-6589984f8-9vxft -- python3 /home/install/openeo-master-cd09b74ea9eab60d60c225d9a843bfc9538a2c81/back_end/run.py -job_id " + job_id + " -path" + path])
+        #this is working for old image:
+        # subprocess.call(["/bin/bash", "-c", "kubectl exec -n openeo openeotest-6589984f8-9vxft -- python3 /home/install/openeo-master-cd09b74ea9eab60d60c225d9a843bfc9538a2c81/back_end/run_test.py"])
+        subprocess.call(["/bin/bash", "-c", "kubectl exec -n openeo openeotest-6589984f8-9vxft -- python3 /home/install/openeo-master-cd09b74ea9eab60d60c225d9a843bfc9538a2c81/back_end/run.py -job_id " + job_id + " -path " + path])
         update_job_status(db_session=db_session, job_id=job_id, job_status=models.job.ProcessStatus.queued)
     except:
         update_job_status(db_session, job_id, models.job.ProcessStatus.error)
