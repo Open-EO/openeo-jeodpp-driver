@@ -7,7 +7,7 @@ fastapi-utils==0.2.1
 geoalchemy2==0.8.4
 h11==0.9.0
 httptools==0.1.1; sys_platform != "win32" and sys_platform != "cygwin" and platform_python_implementation != "PyPy"
-mako==1.1.3
+mako==1.2.2
 markupsafe==1.1.1
 mypy-extensions==0.4.3
 pathspec==0.8.0
